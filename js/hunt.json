@@ -76,11 +76,18 @@
         "Sites":"Mega",
         "State":"Devour"
     },
-        {
+    {
         "District":23,
         "Name":"Archive - Mega Cloud",
         "Path":"https://mega.nz/folder/augW1bwJ#7P-oARIkFMXVmNK6YmwA5Q",
         "Sites":"Mega",
         "State":"Devour"
+    },
+    {
+        "District":10,
+        "Name":"Aria",
+        "Path":"https://www.reddit.com/r/hentai/comments/1lqty5a/airas_purification_ride/",
+        "Sites":"Reddit",
+        "State":"Parody"
     }
 ]
