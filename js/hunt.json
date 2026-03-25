@@ -47,5 +47,40 @@
         "Path":"https://www.xnxx.com/search/hentai+honkai/3",
         "Sites":"XNXX",
         "State":"Hunt"
+    },
+    {
+        "District":18,
+        "Name":"NaN",
+        "Path":"https://japaneseasmr.com/141240/",
+        "Sites":"Jappanese ASMR",
+        "State":"Devour"
+    },
+    {
+        "District":15,
+        "Name":"Project - Mega Cloud",
+        "Path":"https://mega.nz/folder/S2ghEZjB#YXu08I_cB690f3b0pRYklg",
+        "Sites":"Mega",
+        "State":"Devour"
+    },
+        {
+        "District":18,
+        "Name":"Area - Mega Cloud",
+        "Path":"https://mega.nz/folder/z3gmDAgJ#dulinS8HiYFP3KY2exILyg",
+        "Sites":"Mega",
+        "State":"Devour"
+    },
+        {
+        "District":24,
+        "Name":"Resource - Mega Cloud",
+        "Path":"https://mega.nz/folder/6z4zhD5B#EYu3v-6pDdQH-uH1IHc8Dg",
+        "Sites":"Mega",
+        "State":"Devour"
+    },
+        {
+        "District":23,
+        "Name":"Archive - Mega Cloud",
+        "Path":"https://mega.nz/folder/augW1bwJ#7P-oARIkFMXVmNK6YmwA5Q",
+        "Sites":"Mega",
+        "State":"Devour"
     }
 ]

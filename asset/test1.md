@@ -1,6 +1,6 @@
 # Main Info
 
-## Strucute
+## JSON Strcutre
  ### hunt.json
     {
         "District":12,
