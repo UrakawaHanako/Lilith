@@ -7,3 +7,4 @@ let sites = {
 */
 
 document.getElementById("B-Description").textContent = "Sin";
+document.getElementById("B-CheckBox-1").textContent = "Sin";
