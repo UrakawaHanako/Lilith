@@ -77,39 +77,44 @@
             </div>
         </nav>
 
+        <!-- Id A Segment -->
         <div id="header-carousel" class="carousel slide" data-bs-ride="carousel">
             <div class="carousel-inner">
                 <div class="carousel-item active">
-                    <img class="w-100" src="img/carousel-1.jpg" alt="Image">
+                    <img class="w-100" src="img/carousel-1.jpg" alt="Image" id="A-Image-1">
                     <div class="carousel-caption d-flex flex-column align-items-center justify-content-center">
                         <div class="title mx-5 px-5 animated slideInDown">
                             <div class="title-center">
-                                <h5>Welcome</h5>
-                                <h1 class="display-1">Modeling Agency</h1>
+                                <h5 id="A-SubTitle">Welcome</h5>
+                                <h1 class="display-1" id="A-Title">Modeling Agency</h1>
                             </div>
                         </div>
-                        <p class="fs-5 mb-5 animated slideInDown">Lorem ipsum dolor sit amet, consectetur adipiscing
-                            elit.<br> Sed erat lectus, venenatis sit amet egestas eget, aliquet a nisl.</p>
-                        <a href="#!" class="btn btn-outline-primary border-2 py-3 px-5 animated slideInDown">Explore
-                            More</a>
+                        <p class="fs-5 mb-5 animated slideInDown" id="A-Description">
+                            Lorem ipsum dolor sit amet, consectetur adipiscing
+                            elit.<br> Sed erat lectus, venenatis sit amet egestas eget, aliquet a nisl.
+                        </p>
+                        <a href="#!" class="btn btn-outline-primary border-2 py-3 px-5 animated slideInDown" id="A-Button">
+                            Explore More
+                        </a>
                     </div>
                 </div>
                 <div class="carousel-item">
-                    <img class="w-100" src="img/carousel-2.jpg" alt="Image">
+                    <img class="w-100" src="img/carousel-2.jpg" alt="Image" id="A-Image-2">
                     <div class="carousel-caption d-flex flex-column align-items-center justify-content-center">
                         <div class="title mx-5 px-5 animated slideInDown">
                             <div class="title-center">
-                                <h5>Welcome</h5>
-                                <h1 class="display-1">Modeling Agency</h1>
+                                <h5 id="A2-SubTitle">Welcome</h5>
+                                <h1 class="display-1" id="A2-Title">Modeling Agency</h1>
                             </div>
                         </div>
-                        <p class="fs-5 mb-5 animated slideInDown">Lorem ipsum dolor sit amet, consectetur adipiscing
+                        <p class="fs-5 mb-5 animated slideInDown" id="A2-Description">Lorem ipsum dolor sit amet, consectetur adipiscing
                             elit.<br> Sed erat lectus, venenatis sit amet egestas eget, aliquet a nisl.</p>
-                        <a href="#!" class="btn btn-outline-primary border-2 py-3 px-5 animated slideInDown">Explore
+                        <a href="#!" class="btn btn-outline-primary border-2 py-3 px-5 animated slideInDown" id="A2-Button">Explore
                             More</a>
                     </div>
                 </div>
             </div>
+            <!-- End Of Id A -->
             <button class="carousel-control-prev" type="button" data-bs-target="#header-carousel" data-bs-slide="prev">
                 <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                 <span class="visually-hidden">Previous</span>
@@ -123,7 +128,7 @@
     <!-- Header End -->
 
 
-    <!-- About Start -->
+    <!-- About Start + Id B Segment -->
     <div class="container-fluid bg-secondary">
         <div class="container">
             <div class="row g-5 align-items-center">
@@ -131,7 +136,7 @@
                     <div class="pb-0 pb-lg-5 py-5">
                         <div class="title wow fadeInUp" data-wow-delay="0.1s">
                             <div class="title-left">
-                                <h5 id="B-Sub-Title">History</h5>
+                                <h5 id="B-SubTitle">History</h5>
                                 <h1 id="B-Title">About Our Agency</h1>
                             </div>
                         </div>
@@ -142,34 +147,35 @@
                             ut dolore vero eos.
                         </p>
                         <ul class="list-group list-group-flush mb-5 wow fadeInUp" data-wow-delay="0.3s">
-                            <li class="list-group-item bg-dark text-body border-secondary ps-0" id="B-CheckBox-1">
-                                <i class="fa fa-check-circle text-primary me-1"></i> 
-                                Lorem ipsum dolor sit amet
-                                consectetur elit.
+                            <li class="list-group-item bg-dark text-body border-secondary ps-0">
+                                <i class="fa fa-check-circle text-primary me-1"></i>
+                                <span id="B-CheckBox-1">ipsum dolor sit amet consectetur elit.</span>
                             </li>
                             <li class="list-group-item bg-dark text-body border-secondary ps-0">
-                                <i class="fa fa-check-circle text-primary me-1"></i> 
-                                Donec vehicula, sem ut tempus
-                                tempus.
+                                <i class="fa fa-check-circle text-primary me-1"></i>
+                                <span id="B-CheckBox-2">ipsum dolor sit amet consectetur elit.</span>
                             </li>
                             <li class="list-group-item bg-dark text-body border-secondary ps-0">
-                                <i class="fa fa-check-circle text-primary me-1"></i> 
-                                Morbi mi dapibus, feugiat nisi non
-                                mollis justo.
+                                <i class="fa fa-check-circle text-primary me-1"></i>
+                                <span id="B-CheckBox-3">ipsum dolor sit amet consectetur elit.</span>
                             </li>
                         </ul>
                         <div class="row wow fadeInUp" data-wow-delay="0.4s">
                             <div class="col-6">
-                                <a href="#!" class="btn btn-outline-primary border-2 py-3 w-100">Become A Model</a>
+                                <a href="#!" class="btn btn-outline-primary border-2 py-3 w-100" id="B-Button-UnActive">
+                                    Become A Model
+                                </a>
                             </div>
                             <div class="col-6">
-                                <a href="#!" class="btn btn-primary py-3 w-100">Schedule Casting</a>
+                                <a href="#!" class="btn btn-primary py-3 w-100" id="B-Button-Active">
+                                    Schedule Casting
+                                </a>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="col-lg-5 wow fadeInUp" data-wow-delay="0.5s">
-                    <img class="img-fluid" src="img/about.png" alt="">
+                    <img class="img-fluid" src="img/about.png" alt="" id="B-Image">
                 </div>
             </div>
         </div>
@@ -177,92 +183,104 @@
     <!-- About End -->
 
 
-    <!-- Service Start -->
+    <!-- Service Start / Id C Segment -->
     <div class="container-fluid py-5">
         <div class="container py-5">
             <div class="text-center">
                 <div class="title wow fadeInUp" data-wow-delay="0.1s">
                     <div class="title-center">
-                        <h5>Services</h5>
-                        <h1>How We Help You</h1>
+                        <h5 id="C-SubTitle">Services</h5>
+                        <h1 id="C-Title">How We Help You</h1>
                     </div>
                 </div>
             </div>
+
+            <!-- Service C1 -->
             <div class="service-item service-item-left">
                 <div class="row g-0 align-items-center">
                     <div class="col-md-5">
                         <div class="service-img p-5 wow fadeInRight" data-wow-delay="0.2s">
-                            <img class="img-fluid rounded-circle" src="img/service-1.jpg" alt="">
+                            <img id="C-Service-1-Image" class="img-fluid rounded-circle" src="img/service-1.jpg" alt="">
                         </div>
                     </div>
                     <div class="col-md-7">
                         <div class="service-text px-5 px-md-0 py-md-5 wow fadeInRight" data-wow-delay="0.5s">
-                            <h3 class="text-uppercase">Fashion Shows</h3>
-                            <p class="mb-4">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam feugiat
+                            <h3 class="text-uppercase" id="C-Service-1-Title">Fashion Shows</h3>
+                            <p class="mb-4" id="C-Service-1-Description">
+                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam feugiat
                                 fermentum urna, sed gravida enim eleifend vitae. Ut rhoncus non metus at convallis.
                                 Maecenas pharetra placerat mauris. Phasellus quis egestas dui. Nullam ornare consectetur
-                                rhoncus. Praesent elit mauris, feugiat quis convallis et, egestas a tellus.</p>
-                            <a class="btn btn-outline-primary border-2 px-4" href="#!">Read More <i
-                                    class="fa fa-arrow-right ms-1"></i></a>
+                                rhoncus. Praesent elit mauris, feugiat quis convallis et, egestas a tellus.
+                            </p>
+                            <a class="btn btn-outline-primary border-2 px-4" href="#!" id="C-Service-1-Button">
+                                <i>Read More </i>
+                                <i class="fa fa-arrow-right ms-1"></i>
+                            </a>
                         </div>
                     </div>
                 </div>
             </div>
+
+            <!-- Service C2 -->
             <div class="service-item service-item-right">
                 <div class="row g-0 align-items-center">
                     <div class="col-md-5 order-md-1 text-md-end">
                         <div class="service-img p-5 wow fadeInLeft" data-wow-delay="0.2s">
-                            <img class="img-fluid rounded-circle" src="img/service-2.jpg" alt="">
+                            <img class="img-fluid rounded-circle" src="img/service-2.jpg" alt="" id="C-Service-2-Image">
                         </div>
                     </div>
                     <div class="col-md-7">
                         <div class="service-text px-5 px-md-0 py-md-5 text-md-end wow fadeInLeft" data-wow-delay="0.5s">
-                            <h3 class="text-uppercase">Corporate Events</h3>
-                            <p class="mb-4">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam feugiat
+                            <h3 class="text-uppercase" id="C-Service-2-Title">Corporate Events</h3>
+                            <p class="mb-4" id="C-Service-2-Description">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam feugiat
                                 fermentum urna, sed gravida enim eleifend vitae. Ut rhoncus non metus at convallis.
                                 Maecenas pharetra placerat mauris. Phasellus quis egestas dui. Nullam ornare consectetur
                                 rhoncus. Praesent elit mauris, feugiat quis convallis et, egestas a tellus.</p>
-                            <a class="btn btn-outline-primary border-2 px-4" href="#!">Read More <i
+                            <a class="btn btn-outline-primary border-2 px-4" href="#!" id="C-Service-2-Button">Read More <i
                                     class="fa fa-arrow-right ms-1"></i></a>
                         </div>
                     </div>
                 </div>
             </div>
+
+            <!-- Service C3 -->
             <div class="service-item service-item-left">
                 <div class="row g-0 align-items-center">
                     <div class="col-md-5">
                         <div class="service-img p-5 wow fadeInRight" data-wow-delay="0.2s">
-                            <img class="img-fluid rounded-circle" src="img/service-3.jpg" alt="">
+                            <img class="img-fluid rounded-circle" src="img/service-3.jpg" alt="" id="C-Service-3-Image">
                         </div>
                     </div>
                     <div class="col-md-7">
                         <div class="service-text px-5 px-md-0 py-md-5 wow fadeInRight" data-wow-delay="0.5s">
-                            <h3 class="text-uppercase">Commercial Photo Shots</h3>
-                            <p class="mb-4">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam feugiat
+                            <h3 class="text-uppercase" id="C-Service-3-Title">Commercial Photo Shots</h3>
+                            <p class="mb-4" id="C-Service-3-Description">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam feugiat
                                 fermentum urna, sed gravida enim eleifend vitae. Ut rhoncus non metus at convallis.
                                 Maecenas pharetra placerat mauris. Phasellus quis egestas dui. Nullam ornare consectetur
                                 rhoncus. Praesent elit mauris, feugiat quis convallis et, egestas a tellus.</p>
-                            <a class="btn btn-outline-primary border-2 px-4" href="#!">Read More <i
+                            <a class="btn btn-outline-primary border-2 px-4" href="#!" id="C-Service-3-Button">Read More <i
                                     class="fa fa-arrow-right ms-1"></i></a>
                         </div>
                     </div>
                 </div>
             </div>
+
+            <!-- Service C4 -->
             <div class="service-item service-item-right">
                 <div class="row g-0 align-items-center">
                     <div class="col-md-5 order-md-1 text-md-end">
                         <div class="service-img p-5 wow fadeInLeft" data-wow-delay="0.2s">
-                            <img class="img-fluid rounded-circle" src="img/service-4.jpg" alt="">
+                            <img class="img-fluid rounded-circle" src="img/service-4.jpg" alt="" id="C-Service-4-Image">
                         </div>
                     </div>
                     <div class="col-md-7">
                         <div class="service-text px-5 px-md-0 py-md-5 text-md-end wow fadeInLeft" data-wow-delay="0.5s">
-                            <h3 class="text-uppercase">Professional Modeling</h3>
-                            <p class="mb-4">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam feugiat
+                            <h3 class="text-uppercase" id="C-Service-4-Title">Professional Modeling</h3>
+                            <p class="mb-4" id="C-Service-4-Description">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam feugiat
                                 fermentum urna, sed gravida enim eleifend vitae. Ut rhoncus non metus at convallis.
                                 Maecenas pharetra placerat mauris. Phasellus quis egestas dui. Nullam ornare consectetur
                                 rhoncus. Praesent elit mauris, feugiat quis convallis et, egestas a tellus.</p>
-                            <a class="btn btn-outline-primary border-2 px-4" href="#!">Read More <i
+                            <a class="btn btn-outline-primary border-2 px-4" href="#!" id="C-Service-4-Button">Read More <i
                                     class="fa fa-arrow-right ms-1"></i></a>
                         </div>
                     </div>
@@ -273,24 +291,24 @@
     <!-- Service End -->
 
 
-    <!-- Banner Start -->
+    <!-- Banner Start / Id D Segment -->
     <div class="container-fluid py-5 bg-secondary">
         <div class="container py-5">
             <div class="row g-0 justify-content-center">
                 <div class="col-lg-7 text-center">
                     <div class="title mx-5 px-5 wow fadeInUp" data-wow-delay="0.1s">
                         <div class="title-center">
-                            <h5>Casting</h5>
-                            <h1>Want to be a Model?</h1>
+                            <h5 id="D-SubTitle">Casting</h5>
+                            <h1 id="D-Title">Want to be a Model?</h1>
                         </div>
                     </div>
-                    <p class="fs-5 mb-5 wow fadeInUp" data-wow-delay="0.2s">Lorem ipsum dolor sit amet, consectetur
+                    <p class="fs-5 mb-5 wow fadeInUp" data-wow-delay="0.2s" id="D-Description">Lorem ipsum dolor sit amet, consectetur
                         adipiscing elit. Sed erat lectus, venenatis sit amet egestas eget, aliquet a nisl.</p>
                     <div class="position-relative wow fadeInUp" data-wow-delay="0.3s">
                         <input class="form-control border-0 bg-dark rounded-pill w-100 py-4 ps-4 pe-5" type="text"
-                            placeholder="Your email">
+                            placeholder="Your email" id="D-Input">
                         <button type="button" class="btn btn-primary py-3 px-4 position-absolute top-0 end-0 me-2"
-                            style="margin-top: 7px;">SignUp</button>
+                            style="margin-top: 7px;" id="D-Button">SignUp</button>
                     </div>
                 </div>
             </div>
@@ -299,223 +317,199 @@
     <!-- Banner End -->
 
 
-    <!-- Team Start -->
+    <!-- Team Start / Id E Segment -->
     <div class="container-fluid py-5">
         <div class="container py-5">
             <div class="text-center">
                 <div class="title wow fadeInUp" data-wow-delay="0.1s">
                     <div class="title-center">
-                        <h5>Models</h5>
-                        <h1>Meet Our Models</h1>
+                        <h5 id="E-SubTitle">Models</h5>
+                        <h1 id="E-Title">Meet Our Models</h1>
                     </div>
                 </div>
             </div>
             <div class="row g-4">
+                <!-- Team E1 -->
                 <div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
                     <div class="team-item">
                         <div class="team-body">
                             <div class="team-before">
-                                <span>Age</span>
-                                <span>Height</span>
-                                <span>Weight</span>
-                                <span>Bust</span>
-                                <span>Waist</span>
-                                <span>Hips</span>
+                                <span>Age</span><span>Height</span><span>Weight</span>
+                                <span>Bust</span><span>Waist</span><span>Hips</span>
                             </div>
-                            <img class="img-fluid" src="img/team-1.jpg" alt="">
+                            <img class="img-fluid" src="img/team-1.jpg" alt="" id="E-Team-1-Image">
                             <div class="team-after">
-                                <span>22</span>
-                                <span>185</span>
-                                <span>55</span>
-                                <span>79</span>
-                                <span>59</span>
-                                <span>89</span>
+                                <span id="E-Team-1-Age">22</span>
+                                <span id="E-Team-1-Height">185</span>
+                                <span id="E-Team-1-Weight">55</span>
+                                <span id="E-Team-1-Bust">79</span>
+                                <span id="E-Team-1-Waist">59</span>
+                                <span id="E-Team-1-Hips">89</span>
                             </div>
                         </div>
-                        <a class="team-name" href="#">
-                            <h5 class="text-uppercase mb-0">Naomy Olsen</h5>
+                        <a class="team-name" href="#" id="E-Team-1-Link">
+                            <h5 class="text-uppercase mb-0" id="E-Team-1-Name">Naomy Olsen</h5>
                         </a>
                     </div>
                 </div>
+                <!-- Team E2 -->
                 <div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.3s">
                     <div class="team-item">
                         <div class="team-body">
                             <div class="team-before">
-                                <span>Age</span>
-                                <span>Height</span>
-                                <span>Weight</span>
-                                <span>Bust</span>
-                                <span>Waist</span>
-                                <span>Hips</span>
+                                <span>Age</span><span>Height</span><span>Weight</span>
+                                <span>Bust</span><span>Waist</span><span>Hips</span>
                             </div>
-                            <img class="img-fluid" src="img/team-2.jpg" alt="">
+                            <img class="img-fluid" src="img/team-2.jpg" alt="" id="E-Team-2-Image">
                             <div class="team-after">
-                                <span>22</span>
-                                <span>185</span>
-                                <span>55</span>
-                                <span>79</span>
-                                <span>59</span>
-                                <span>89</span>
+                                <span id="E-Team-2-Age">22</span>
+                                <span id="E-Team-2-Height">185</span>
+                                <span id="E-Team-2-Weight">55</span>
+                                <span id="E-Team-2-Bust">79</span>
+                                <span id="E-Team-2-Waist">59</span>
+                                <span id="E-Team-2-Hips">89</span>
                             </div>
                         </div>
-                        <a class="team-name" href="#">
-                            <h5 class="text-uppercase mb-0">Pamela Torney</h5>
+                        <a class="team-name" href="#" id="E-Team-2-Link">
+                            <h5 class="text-uppercase mb-0" id="E-Team-2-Name">Pamela Torney</h5>
                         </a>
                     </div>
                 </div>
+                <!-- Team E3 -->
                 <div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.5s">
                     <div class="team-item">
                         <div class="team-body">
                             <div class="team-before">
-                                <span>Age</span>
-                                <span>Height</span>
-                                <span>Weight</span>
-                                <span>Bust</span>
-                                <span>Waist</span>
-                                <span>Hips</span>
+                                <span>Age</span><span>Height</span><span>Weight</span>
+                                <span>Bust</span><span>Waist</span><span>Hips</span>
                             </div>
-                            <img class="img-fluid" src="img/team-3.jpg" alt="">
+                            <img class="img-fluid" src="img/team-3.jpg" alt="" id="E-Team-3-Image">
                             <div class="team-after">
-                                <span>22</span>
-                                <span>185</span>
-                                <span>55</span>
-                                <span>79</span>
-                                <span>59</span>
-                                <span>89</span>
+                                <span id="E-Team-3-Age">22</span>
+                                <span id="E-Team-3-Height">185</span>
+                                <span id="E-Team-3-Weight">55</span>
+                                <span id="E-Team-3-Bust">79</span>
+                                <span id="E-Team-3-Waist">59</span>
+                                <span id="E-Team-3-Hips">89</span>
                             </div>
                         </div>
-                        <a class="team-name" href="#">
-                            <h5 class="text-uppercase mb-0">Joanne Irwin</h5>
+                        <a class="team-name" href="#" id="E-Team-3-Link">
+                            <h5 class="text-uppercase mb-0" id="E-Team-3-Name">Joanne Irwin</h5>
                         </a>
                     </div>
                 </div>
+                <!-- Team E4 -->
                 <div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.7s">
                     <div class="team-item">
                         <div class="team-body">
                             <div class="team-before">
-                                <span>Age</span>
-                                <span>Height</span>
-                                <span>Weight</span>
-                                <span>Bust</span>
-                                <span>Waist</span>
-                                <span>Hips</span>
+                                <span>Age</span><span>Height</span><span>Weight</span>
+                                <span>Bust</span><span>Waist</span><span>Hips</span>
                             </div>
-                            <img class="img-fluid" src="img/team-4.jpg" alt="">
+                            <img class="img-fluid" src="img/team-4.jpg" alt="" id="E-Team-4-Image">
                             <div class="team-after">
-                                <span>22</span>
-                                <span>185</span>
-                                <span>55</span>
-                                <span>79</span>
-                                <span>59</span>
-                                <span>89</span>
+                                <span id="E-Team-4-Age">22</span>
+                                <span id="E-Team-4-Height">185</span>
+                                <span id="E-Team-4-Weight">55</span>
+                                <span id="E-Team-4-Bust">79</span>
+                                <span id="E-Team-4-Waist">59</span>
+                                <span id="E-Team-4-Hips">89</span>
                             </div>
                         </div>
-                        <a class="team-name" href="#">
-                            <h5 class="text-uppercase mb-0">Gillian Rowe</h5>
+                        <a class="team-name" href="#" id="E-Team-4-Link">
+                            <h5 class="text-uppercase mb-0" id="E-Team-4-Name">Gillian Rowe</h5>
                         </a>
                     </div>
                 </div>
+                <!-- Team E5 -->
                 <div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
                     <div class="team-item">
                         <div class="team-body">
                             <div class="team-before">
-                                <span>Age</span>
-                                <span>Height</span>
-                                <span>Weight</span>
-                                <span>Bust</span>
-                                <span>Waist</span>
-                                <span>Hips</span>
+                                <span>Age</span><span>Height</span><span>Weight</span>
+                                <span>Bust</span><span>Waist</span><span>Hips</span>
                             </div>
-                            <img class="img-fluid" src="img/team-5.jpg" alt="">
+                            <img class="img-fluid" src="img/team-5.jpg" alt="" id="E-Team-5-Image">
                             <div class="team-after">
-                                <span>22</span>
-                                <span>185</span>
-                                <span>55</span>
-                                <span>79</span>
-                                <span>59</span>
-                                <span>89</span>
+                                <span id="E-Team-5-Age">22</span>
+                                <span id="E-Team-5-Height">185</span>
+                                <span id="E-Team-5-Weight">55</span>
+                                <span id="E-Team-5-Bust">79</span>
+                                <span id="E-Team-5-Waist">59</span>
+                                <span id="E-Team-5-Hips">89</span>
                             </div>
                         </div>
-                        <a class="team-name" href="#">
-                            <h5 class="text-uppercase mb-0">Naomy Olsen</h5>
+                        <a class="team-name" href="#" id="E-Team-5-Link">
+                            <h5 class="text-uppercase mb-0" id="E-Team-5-Name">Naomy Olsen</h5>
                         </a>
                     </div>
                 </div>
+                <!-- Team E6 -->
                 <div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.3s">
                     <div class="team-item">
                         <div class="team-body">
                             <div class="team-before">
-                                <span>Age</span>
-                                <span>Height</span>
-                                <span>Weight</span>
-                                <span>Bust</span>
-                                <span>Waist</span>
-                                <span>Hips</span>
+                                <span>Age</span><span>Height</span><span>Weight</span>
+                                <span>Bust</span><span>Waist</span><span>Hips</span>
                             </div>
-                            <img class="img-fluid" src="img/team-6.jpg" alt="">
+                            <img class="img-fluid" src="img/team-6.jpg" alt="" id="E-Team-6-Image">
                             <div class="team-after">
-                                <span>22</span>
-                                <span>185</span>
-                                <span>55</span>
-                                <span>79</span>
-                                <span>59</span>
-                                <span>89</span>
+                                <span id="E-Team-6-Age">22</span>
+                                <span id="E-Team-6-Height">185</span>
+                                <span id="E-Team-6-Weight">55</span>
+                                <span id="E-Team-6-Bust">79</span>
+                                <span id="E-Team-6-Waist">59</span>
+                                <span id="E-Team-6-Hips">89</span>
                             </div>
                         </div>
-                        <a class="team-name" href="#">
-                            <h5 class="text-uppercase mb-0">Pamela Torney</h5>
+                        <a class="team-name" href="#" id="E-Team-6-Link">
+                            <h5 class="text-uppercase mb-0" id="E-Team-6-Name">Pamela Torney</h5>
                         </a>
                     </div>
                 </div>
+                <!-- Team E7 -->
                 <div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.5s">
                     <div class="team-item">
                         <div class="team-body">
                             <div class="team-before">
-                                <span>Age</span>
-                                <span>Height</span>
-                                <span>Weight</span>
-                                <span>Bust</span>
-                                <span>Waist</span>
-                                <span>Hips</span>
+                                <span>Age</span><span>Height</span><span>Weight</span>
+                                <span>Bust</span><span>Waist</span><span>Hips</span>
                             </div>
-                            <img class="img-fluid" src="img/team-7.jpg" alt="">
+                            <img class="img-fluid" src="img/team-7.jpg" alt="" id="E-Team-7-Image">
                             <div class="team-after">
-                                <span>22</span>
-                                <span>185</span>
-                                <span>55</span>
-                                <span>79</span>
-                                <span>59</span>
-                                <span>89</span>
+                                <span id="E-Team-7-Age">22</span>
+                                <span id="E-Team-7-Height">185</span>
+                                <span id="E-Team-7-Weight">55</span>
+                                <span id="E-Team-7-Bust">79</span>
+                                <span id="E-Team-7-Waist">59</span>
+                                <span id="E-Team-7-Hips">89</span>
                             </div>
                         </div>
-                        <a class="team-name" href="#">
-                            <h5 class="text-uppercase mb-0">Joanne Irwin</h5>
+                        <a class="team-name" href="#" id="E-Team-7-Link">
+                            <h5 class="text-uppercase mb-0" id="E-Team-7-Name">Joanne Irwin</h5>
                         </a>
                     </div>
                 </div>
+                <!-- Team E8 -->
                 <div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.7s">
                     <div class="team-item">
                         <div class="team-body">
                             <div class="team-before">
-                                <span>Age</span>
-                                <span>Height</span>
-                                <span>Weight</span>
-                                <span>Bust</span>
-                                <span>Waist</span>
-                                <span>Hips</span>
+                                <span>Age</span><span>Height</span><span>Weight</span>
+                                <span>Bust</span><span>Waist</span><span>Hips</span>
                             </div>
-                            <img class="img-fluid" src="img/team-8.jpg" alt="">
+                            <img class="img-fluid" src="img/team-8.jpg" alt="" id="E-Team-8-Image">
                             <div class="team-after">
-                                <span>22</span>
-                                <span>185</span>
-                                <span>55</span>
-                                <span>79</span>
-                                <span>59</span>
-                                <span>89</span>
+                                <span id="E-Team-8-Age">22</span>
+                                <span id="E-Team-8-Height">185</span>
+                                <span id="E-Team-8-Weight">55</span>
+                                <span id="E-Team-8-Bust">79</span>
+                                <span id="E-Team-8-Waist">59</span>
+                                <span id="E-Team-8-Hips">89</span>
                             </div>
                         </div>
-                        <a class="team-name" href="#">
-                            <h5 class="text-uppercase mb-0">Gillian Rowe</h5>
+                        <a class="team-name" href="#" id="E-Team-8-Link">
+                            <h5 class="text-uppercase mb-0" id="E-Team-8-Name">Gillian Rowe</h5>
                         </a>
                     </div>
                 </div>
@@ -525,41 +519,41 @@
     <!-- Team End -->
 
 
-    <!-- Testimonial Start -->
+    <!-- Testimonial Start / Id F Segment -->
     <div class="container-fluid py-5 bg-secondary">
         <div class="container py-5">
             <div class="text-center">
                 <div class="title wow fadeInUp" data-wow-delay="0.1s">
                     <div class="title-center">
-                        <h5>Testimonial</h5>
-                        <h1>Our Clients Say</h1>
+                        <h5 id="F-SubTitle">Testimonial</h5>
+                        <h1 id="F-Title">Our Clients Say</h1>
                     </div>
                 </div>
             </div>
             <div class="owl-carousel testimonial-carousel wow fadeInUp" data-wow-delay="0.3s">
                 <div class="testimonial-item text-center"
                     data-dot="<img class='img-fluid' src='img/testimonial-1.jpg' alt=''>">
-                    <p class="fs-5">Clita clita tempor justo dolor ipsum amet kasd amet duo justo duo duo labore sed
+                    <p class="fs-5" id="F-Testimonial-1-Description">Clita clita tempor justo dolor ipsum amet kasd amet duo justo duo duo labore sed
                         sed. Magna ut diam sit et amet stet eos sed clita erat magna elitr erat sit sit erat at rebum
                         justo sea clita.</p>
-                    <h5 class="text-uppercase">Joanne Irwin</h5>
-                    <span class="text-primary">Profession</span>
+                    <h5 class="text-uppercase" id="F-Testimonial-1-Name">Joanne Irwin</h5>
+                    <span class="text-primary" id="F-Testimonial-1-Profession">Profession</span>
                 </div>
                 <div class="testimonial-item text-center"
                     data-dot="<img class='img-fluid' src='img/testimonial-2.jpg' alt=''>">
-                    <p class="fs-5">Clita clita tempor justo dolor ipsum amet kasd amet duo justo duo duo labore sed
+                    <p class="fs-5" id="F-Testimonial-2-Description">Clita clita tempor justo dolor ipsum amet kasd amet duo justo duo duo labore sed
                         sed. Magna ut diam sit et amet stet eos sed clita erat magna elitr erat sit sit erat at rebum
                         justo sea clita.</p>
-                    <h5 class="text-uppercase">Lana Anderson</h5>
-                    <span class="text-primary">Profession</span>
+                    <h5 class="text-uppercase" id="F-Testimonial-2-Name">Lana Anderson</h5>
+                    <span class="text-primary" id="F-Testimonial-2-Profession">Profession</span>
                 </div>
                 <div class="testimonial-item text-center"
                     data-dot="<img class='img-fluid' src='img/testimonial-3.jpg' alt=''>">
-                    <p class="fs-5">Clita clita tempor justo dolor ipsum amet kasd amet duo justo duo duo labore sed
+                    <p class="fs-5" id="F-Testimonial-3-Description">Clita clita tempor justo dolor ipsum amet kasd amet duo justo duo duo labore sed
                         sed. Magna ut diam sit et amet stet eos sed clita erat magna elitr erat sit sit erat at rebum
                         justo sea clita.</p>
-                    <h5 class="text-uppercase">Pamela Torney</h5>
-                    <span class="text-primary">Profession</span>
+                    <h5 class="text-uppercase" id="F-Testimonial-3-Name">Pamela Torney</h5>
+                    <span class="text-primary" id="F-Testimonial-3-Profession">Profession</span>
                 </div>
             </div>
         </div>
@@ -575,20 +569,14 @@
                         class="fa-regular fa-face-smile me-1"></i>Poseify</h1>
             </a>
             <div class="d-flex justify-content-center mb-4">
-                <a class="btn btn-lg-square btn-outline-primary border-2 m-1" href="#!"><i
-                        class="fab fa-x-twitter"></i></a>
-                <a class="btn btn-lg-square btn-outline-primary border-2 m-1" href="#!"><i
-                        class="fab fa-facebook-f"></i></a>
-                <a class="btn btn-lg-square btn-outline-primary border-2 m-1" href="#!"><i
-                        class="fab fa-youtube"></i></a>
-                <a class="btn btn-lg-square btn-outline-primary border-2 m-1" href="#!"><i
-                        class="fab fa-linkedin-in"></i></a>
+                <a class="btn btn-lg-square btn-outline-primary border-2 m-1" href="#!"><i class="fab fa-x-twitter"></i></a>
+                <a class="btn btn-lg-square btn-outline-primary border-2 m-1" href="#!"><i class="fab fa-facebook-f"></i></a>
+                <a class="btn btn-lg-square btn-outline-primary border-2 m-1" href="#!"><i class="fab fa-youtube"></i></a>
+                <a class="btn btn-lg-square btn-outline-primary border-2 m-1" href="#!"><i class="fab fa-linkedin-in"></i></a>
             </div>
             <p>&copy; <a class="border-bottom" href="#">Your Site Name</a>, All Right Reserved.</p>
-
-            <!--/*** The author’s attribution link must remain intact in the template. ***/-->
-            <!--/*** If you wish to remove this credit link, please purchase the Pro Version . ***/-->
-            <p class="mb-0">Designed By <a class="border-bottom" href="https://htmlcodex.com">HTML Codex</a>. Distributed by <a href="https://themewagon.com" target="_blank">ThemeWagon</a>.</p>
+            <p class="mb-0">Designed By <a class="border-bottom" href="https://htmlcodex.com">HTML Codex</a>.
+                Distributed by <a href="https://themewagon.com" target="_blank">ThemeWagon</a>.</p>
         </div>
     </div>
     <!-- Footer End -->
