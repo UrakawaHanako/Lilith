@@ -34,7 +34,7 @@ document.getElementById("A2-Button").href          = "#!";
 // ================================================
 document.getElementById("B-SubTitle").textContent    = "History";
 document.getElementById("B-Title").textContent       = "About Our Agency";
-document.getElementById("B-Description").textContent = "Tempor erat elitr rebum at clita. Diam dolor diam ipsum sit. Aliqu diam amet diam et eos. Clita erat ipsum et lorem et sit.";
+document.getElementById("B-Description").textContent = "WTF Did you expect ?.";
 document.getElementById("B-CheckBox-1").textContent  = "ipsum dolor sit amet consectetur elit.";
 document.getElementById("B-CheckBox-2").textContent  = "ipsum dolor sit amet consectetur elit.";
 document.getElementById("B-CheckBox-3").textContent  = "ipsum dolor sit amet consectetur elit.";
