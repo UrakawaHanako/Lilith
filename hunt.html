@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Data Hunt</title>
+
+<style>
+body {
+    font-family: Arial, sans-serif;
+    background: #0f172a;
+    color: #e2e8f0;
+    padding: 20px;
+}
+
+h1 {
+    text-align: center;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background: #1e293b;
+}
+
+th, td {
+    padding: 10px;
+    border: 1px solid #334155;
+    text-align: left;
+}
+
+th {
+    background: #334155;
+}
+
+tr:nth-child(even) {
+    background: #0f172a;
+}
+
+.loading {
+    text-align: center;
+    margin-top: 20px;
+}
+</style>
+</head>
+
+<body>
+
+<h1>Data Hunt</h1>
+<div class="loading" id="loading">Loading data...</div>
+
+<table id="table" style="display:none;">
+    <thead>
+        <tr id="table-head"></tr>
+    </thead>
+    <tbody id="table-body"></tbody>
+</table>
+
+<script>
+const API_URL = "https://x8ki-letl-twmt.n7.xano.io/api:X6h8irt0/hunt";
+
+async function loadData() {
+    try {
+        const response = await fetch(API_URL);
+        const data = await response.json();
+
+        const table = document.getElementById("table");
+        const head = document.getElementById("table-head");
+        const body = document.getElementById("table-body");
+        const loading = document.getElementById("loading");
+
+        if (!data || data.length === 0) {
+            loading.innerText = "Data kosong";
+            return;
+        }
+
+        // Ambil keys dari object pertama
+        const keys = Object.keys(data[0]);
+
+        // Buat header tabel
+        keys.forEach(key => {
+            const th = document.createElement("th");
+            th.innerText = key;
+            head.appendChild(th);
+        });
+
+        // Isi data
+        data.forEach(item => {
+    const tr = document.createElement("tr");
+
+    // isi data biasa
+    keys.forEach(key => {
+        const td = document.createElement("td");
+        td.innerText = item[key] ?? "NaN";
+        tr.appendChild(td);
+    });
+
+    // 🔗 PATH (link)
+    const tdPath = document.createElement("td");
+    const link = document.createElement("a");
+    link.href = item.Path;
+    link.innerText = "Open";
+    link.target = "_blank";
+    tdPath.appendChild(link);
+    tr.appendChild(tdPath);
+
+    // ⚙️ ACTION (button)
+    const tdAction = document.createElement("td");
+
+    const btnDelete = document.createElement("button");
+    btnDelete.innerText = "Claim";
+
+    btnDelete.onclick = async () => {
+        await fetch(`https://x8ki-letl-twmt.n7.xano.io/api:X6h8irt0/hunt/${item.id}`, {
+            method: "DELETE"
+        });
+
+        tr.remove(); // hapus row ini saja
+    };
+
+    tdAction.appendChild(btnDelete);
+    tr.appendChild(tdAction);
+
+    body.appendChild(tr);
+});
+        loading.style.display = "none";
+        table.style.display = "table";
+
+    } catch (error) {
+        document.getElementById("loading").innerText = "Gagal mengambil data";
+        console.error(error);
+    }
+}
+
+loadData();
+</script>
+
+</body>
+</html>
