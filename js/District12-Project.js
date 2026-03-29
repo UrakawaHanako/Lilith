@@ -53,25 +53,25 @@ document.getElementById("C-Title").textContent    = "How you do it";
 // Service 1
 document.getElementById("C-Service-1-Image").src           = "img/service-1.jpg";
 //document.getElementById("C-Service-1-Title").textContent   = "XNXX";
-document.getElementById("C-Service-1-Description").textContent = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam feugiat fermentum urna, sed gravida enim eleifend vitae.";
+document.getElementById("C-Service-1-Description").textContent = "Be Patient on this page, as its often mixed with other Franchises, Settling your mind on certain Character can give different Result.";
 //document.getElementById("C-Service-1-Button").href         = "";
 
 // Service 2
 document.getElementById("C-Service-2-Image").src           = "img/service-2.jpg";
 document.getElementById("C-Service-2-Title").textContent   = "X Videos";
-document.getElementById("C-Service-2-Description").textContent = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam feugiat fermentum urna, sed gravida enim eleifend vitae.";
+document.getElementById("C-Service-2-Description").textContent = "When i open this page it was filled with every sort of Related Video in Animation format, I can say it was Fearsome to controll.";
 //document.getElementById("C-Service-2-Button").href         = "#!";
 
 // Service 3
 document.getElementById("C-Service-3-Image").src           = "img/service-3.jpg";
 document.getElementById("C-Service-3-Title").textContent   = "Nekopoi";
-document.getElementById("C-Service-3-Description").textContent = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam feugiat fermentum urna, sed gravida enim eleifend vitae.";
+document.getElementById("C-Service-3-Description").textContent = "For this part quickly open and add them to the inventory would be a good Procedure to limit your desire.";
 //document.getElementById("C-Service-3-Button").href         = "#!";
 
 // Service 4
 document.getElementById("C-Service-4-Image").src           = "img/service-4.jpg";
 //document.getElementById("C-Service-4-Title").textContent   = "Professional Modeling";
-document.getElementById("C-Service-4-Description").textContent = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam feugiat fermentum urna, sed gravida enim eleifend vitae.";
+document.getElementById("C-Service-4-Description").textContent = "Though this one a bit troublesome to Limit them in Devourer state, but Many Resource are able because this state.";
 //document.getElementById("C-Service-4-Button").href         = "#!";
 
 // ================================================
