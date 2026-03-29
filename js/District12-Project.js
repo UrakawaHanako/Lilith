@@ -52,27 +52,27 @@ document.getElementById("C-Title").textContent    = "How you do it";
 
 // Service 1
 document.getElementById("C-Service-1-Image").src           = "img/service-1.jpg";
-document.getElementById("C-Service-1-Title").textContent   = "Fashion Shows";
+//document.getElementById("C-Service-1-Title").textContent   = "XNXX";
 document.getElementById("C-Service-1-Description").textContent = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam feugiat fermentum urna, sed gravida enim eleifend vitae.";
-document.getElementById("C-Service-1-Button").href         = "#!";
+//document.getElementById("C-Service-1-Button").href         = "";
 
 // Service 2
 document.getElementById("C-Service-2-Image").src           = "img/service-2.jpg";
-document.getElementById("C-Service-2-Title").textContent   = "Corporate Events";
+document.getElementById("C-Service-2-Title").textContent   = "X Videos";
 document.getElementById("C-Service-2-Description").textContent = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam feugiat fermentum urna, sed gravida enim eleifend vitae.";
-document.getElementById("C-Service-2-Button").href         = "#!";
+//document.getElementById("C-Service-2-Button").href         = "#!";
 
 // Service 3
 document.getElementById("C-Service-3-Image").src           = "img/service-3.jpg";
-document.getElementById("C-Service-3-Title").textContent   = "Commercial Photo Shots";
+document.getElementById("C-Service-3-Title").textContent   = "Nekopoi";
 document.getElementById("C-Service-3-Description").textContent = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam feugiat fermentum urna, sed gravida enim eleifend vitae.";
-document.getElementById("C-Service-3-Button").href         = "#!";
+//document.getElementById("C-Service-3-Button").href         = "#!";
 
 // Service 4
 document.getElementById("C-Service-4-Image").src           = "img/service-4.jpg";
-document.getElementById("C-Service-4-Title").textContent   = "Professional Modeling";
+//document.getElementById("C-Service-4-Title").textContent   = "Professional Modeling";
 document.getElementById("C-Service-4-Description").textContent = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam feugiat fermentum urna, sed gravida enim eleifend vitae.";
-document.getElementById("C-Service-4-Button").href         = "#!";
+//document.getElementById("C-Service-4-Button").href         = "#!";
 
 // ================================================
 // SEGMENT D - Banner / CTA
