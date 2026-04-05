@@ -14,20 +14,28 @@ let sites = {
 // ================================================
 // SEGMENT A - Hero Carousel (Slide 1)
 // ================================================
-document.getElementById("A-Image-1").src           = "img/carousel-1.jpg";
+document.getElementById("A-Image-1").src           = "img/illust_120205174_20240827_212910.png";
 document.getElementById("A-SubTitle").textContent  = "Welcome";
-document.getElementById("A-Title").textContent     = "Modeling Agency";
-document.getElementById("A-Description").textContent = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed erat lectus, venenatis sit amet egestas eget, aliquet a nisl.";
+document.getElementById("A-Title").textContent     = "District 12 - Blue Archive";
+document.getElementById("A-Description").textContent = "At that time... what were we thinking ?.";
 document.getElementById("A-Button").textContent    = "Explore More";
-document.getElementById("A-Button").href           = "#!";
+document.getElementById("A-Button").href           = "District12.html";
 
 // SEGMENT A - Hero Carousel (Slide 2)
-document.getElementById("A-Image-2").src           = "img/carousel-2.jpg";
+document.getElementById("A-Image-2").src           = "img/illust_103827103_20241226_211024.jpg";
 document.getElementById("A2-SubTitle").textContent = "Welcome";
-document.getElementById("A2-Title").textContent    = "Modeling Agency";
-document.getElementById("A2-Description").textContent = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed erat lectus, venenatis sit amet egestas eget, aliquet a nisl.";
+document.getElementById("A2-Title").textContent    = "District 4 - Azur Lane";
+document.getElementById("A2-Description").textContent = "The Sea always tells about us.";
 document.getElementById("A2-Button").textContent   = "Explore More";
-document.getElementById("A2-Button").href          = "#!";
+document.getElementById("A2-Button").href          = "District4.html";
+
+// SEGMENT A - Hero Carousel (Slide 3)
+document.getElementById("A-Image-3").src           = "img/38629fc88e25f6695032190dea66c5a3.png";
+document.getElementById("A3-SubTitle").textContent = "Welcome";
+document.getElementById("A3-Title").textContent    = "District 18 - Lilith";
+document.getElementById("A3-Description").textContent = "Accepting who we are, and the paradox within need Strength in resolve.";
+document.getElementById("A3-Button").textContent   = "Explore More";
+document.getElementById("A3-Button").href          = "District-18.html";
 
 // ================================================
 // SEGMENT B - About
@@ -89,15 +97,15 @@ document.getElementById("E-SubTitle").textContent = "Models";
 document.getElementById("E-Title").textContent    = "Meet Our Models";
 
 // Team 1
-document.getElementById("E-Team-1-Image").src    = "img/team-1.jpg";
-document.getElementById("E-Team-1-Name").textContent  = "Naomy Olsen";
+document.getElementById("E-Team-1-Image").src    = "img/cover/s_Shakuen-no-Eris-Hentai-Haven.png";
+document.getElementById("E-Team-1-Name").textContent  = "Shakuen No Eris";
 document.getElementById("E-Team-1-Age").textContent   = "22";
 document.getElementById("E-Team-1-Height").textContent = "185";
 document.getElementById("E-Team-1-Weight").textContent = "55";
 document.getElementById("E-Team-1-Bust").textContent  = "79";
 document.getElementById("E-Team-1-Waist").textContent = "59";
 document.getElementById("E-Team-1-Hips").textContent  = "89";
-document.getElementById("E-Team-1-Link").href         = "#";
+document.getElementById("E-Team-1-Link").href         = "https://hentaihaven.xxx/watch/shakuen-no-eris/#";
 
 // Team 2
 document.getElementById("E-Team-2-Image").src    = "img/team-2.jpg";
@@ -179,11 +187,11 @@ document.getElementById("E-Team-8-Link").href         = "#";
 // ================================================
 // SEGMENT F - Testimonial
 // ================================================
-document.getElementById("F-SubTitle").textContent = "Testimonial";
-document.getElementById("F-Title").textContent    = "Our Clients Say";
+document.getElementById("F-SubTitle").textContent = "Notes";
+document.getElementById("F-Title").textContent    = "What we think..?";
 
 // Testimonial 1
-document.getElementById("F-Testimonial-1-Description").textContent = "Clita clita tempor justo dolor ipsum amet kasd amet duo justo duo duo labore sed sed.";
+document.getElementById("F-Testimonial-1-Description").textContent = "First, What the hell... Second, I see it make sense but WTF ?!.";
 document.getElementById("F-Testimonial-1-Name").textContent        = "Joanne Irwin";
 document.getElementById("F-Testimonial-1-Profession").textContent  = "Profession";
 

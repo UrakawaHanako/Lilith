@@ -1,0 +1,6 @@
+carousel = 1920 x 1080
+about = 600 x 800
+service = 500 x 500
+model = 450 x 600
+testimonial = 100 x 100
+footer bg = 1920 x 500
