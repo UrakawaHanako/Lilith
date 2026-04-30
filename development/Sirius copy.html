@@ -1,0 +1,131 @@
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Theseus</title>
+        <link rel="stylesheet" href="./Asset/css/sirius.css">
+        <style>
+            .top-nav {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 12px 16px;
+                border-bottom: 1px solid #ddd;
+                background: #fff;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+
+            .nav-title {
+                font-weight: 600;
+                font-size: 16px;
+            }
+
+            .nav-links {
+                display: none; /* default closed */
+                gap: 16px;
+            }
+
+            .nav-links a {
+                text-decoration: none;
+                color: #333;
+                font-size: 14px;
+            }
+
+            .nav-links a:hover {
+                text-decoration: underline;
+            }
+
+            .nav-toggle {
+                background: none;
+                border: none;
+                font-size: 20px;
+                cursor: pointer;
+            }
+
+            .nav-links.active {
+                display: flex;
+            }
+            html {
+                scroll-behavior: smooth;
+            }
+        </style>
+    </head>
+ <body>
+    <header class="top-nav">
+        <div class="nav-title">Theseus</div>
+
+        <nav class="nav-links">
+            <a href="#">Home</a>
+            <a href="Observer-0.html">Observer</a>
+            <a href="/">Saule</a>
+            <a href="javascript:void(0)" onclick="goToAbout()">About</a>
+        </nav>
+
+        <button class="nav-toggle" onclick="toggleMenu()">☰</button>
+    </header>
+
+        <div class="content-wrap">
+            <div class="viewer-container">
+                <img id="viewer" alt="viewer" height="800" width="200" 
+                    style="object-fit: cover; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.08);">
+                        <div class="controls">
+                            <button onclick="prev()">⏮ Sebelumnya</button>
+                            <button onclick="next()">⏭ Selanjutnya</button>
+                            <button onclick="random()">🎲 Acak</button>
+                        </div>
+
+            </div>
+        </div>
+
+        <div class="audio-container">
+                <audio id="audio-player" autoplay controls>
+                    <source id="audio-source" src="" type="audio/mpeg">
+                    <source id="audio-source" src="" type="audio/ogg">
+                    Browser Anda tidak mendukung elemen audio.
+                </audio>
+
+                
+        </div>
+        <section id="about" style="margin-top: 80px;">
+            <h2>About</h2>
+            <p>
+                Proyek JS ini adalah realisasi dari 2012 lalu yang baru bisa di realisasikan sekarnag, 
+                jujur kesal iya dan banyak hal lain yang harus aku ceritakan ?, atau sepertinya tidak. <br>
+                Hari ini 30 Januari 2026, 11 Syaban 1447.<br>
+                Aku tidak tau harus merespon apa....., aku hanya ingin terus belajar, karena aku tidak mau
+                lagi teringgal, dan aku tidak ingin menkhianati harapan.
+                <br>
+                Terlepas itu aku sendiri lagi, ya... tidak juga sih :v <br>
+                aku sadar ketika aku berani mengungkapkan diriku tanpa pikir panjang, mereka menerima ku.
+                <br>
+                Karena itu aku membuat Kwitansi mental, agar aku bisa terus kembali ke Deen Islam.
+                <br>
+                Aku membuat Galeri, Dalam kesepian aku mendekat
+
+             <br>
+            </p>
+            <strong>Theseus</strong>
+            <p>Sebuah paradox dimana suatu kapal secara wujud sudah bukan kapal yang sama meski terus diperbaiki</p>
+        </section>
+
+        <script src="Asset/js/audio.js"></script>
+        <script src="Asset/js/picture.js"></script>
+        <script>
+            function toggleMenu() {
+                document
+                    .querySelector(".nav-links")
+                    .classList.toggle("active");
+            }
+            function goToAbout() {
+                    document.getElementById("about").scrollIntoView({
+                        behavior: "smooth",
+                        block: "start"
+                    });
+                }
+
+        </script>
+    </body>
+</html>

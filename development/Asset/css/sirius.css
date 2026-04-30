@@ -1,0 +1,161 @@
+/* ===============================
+   BASE RESET & GLOBAL
+================================ */
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 16px;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+    background: #fff;
+    color: #222;
+}
+
+h3 {
+    margin-top: 16px;
+}
+
+/* ===============================
+   TOP NAV (MENU)
+================================ */
+
+
+/* ===============================
+   MAIN CONTENT
+================================ */
+
+.content-wrap {
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+    margin-top: 20px;
+}
+
+iframe {
+    border: 1px solid #000;
+    width: 800px;
+    height: 400px;
+    max-width: 100%;
+}
+
+/* ===============================
+   VIEWER (IMAGE)
+================================ */
+
+.viewer-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+}
+
+img {
+    max-width: 300px;
+    max-height: 400px;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    border-radius: 10px;
+}
+
+/* ===============================
+   CONTROLS (STATE CONTROLLER)
+================================ */
+
+.controls {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.controls button {
+    padding: 8px 14px;
+    border-radius: 6px;
+    background: #444;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+}
+
+.controls button:hover {
+    background: #666;
+}
+
+/* ===============================
+   AUDIO (DESKTOP)
+================================ */
+
+.audio-container {
+    margin-top: 20px;
+    padding: 16px;
+    background: #fafafa;
+    border-radius: 12px;
+    border: 1px solid #ddd;
+    max-width: 500px;
+}
+
+/* ===============================
+   DESKTOP MENU LAYOUT
+================================ */
+
+@media (min-width: 769px) {
+
+    .nav-links.active {
+        flex-direction: row;
+    }
+}
+
+/* ===============================
+   MOBILE MODE
+================================ */
+
+@media (max-width: 768px) {
+
+    /* Layout stack */
+    .content-wrap {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    iframe {
+        width: 100%;
+        height: 240px;
+    }
+
+    img {
+        max-width: 90%;
+        max-height: 320px;
+    }
+
+    /* Menu mobile layout */
+    .top-nav {
+        flex-wrap: wrap;
+    }
+
+    .nav-links.active {
+        width: 100%;
+        flex-direction: column;
+        padding-top: 12px;
+    }
+
+    .nav-links a {
+        padding: 8px 0;
+        border-top: 1px solid #eee;
+    }
+
+    /* Bigger buttons for touch */
+    .controls button {
+        flex: 1;
+        padding: 12px 0;
+        font-size: 14px;
+    }
+
+    /* 🔕 Hide audio UI on mobile */
+    .audio-container {
+        display: none;
+    }
+}

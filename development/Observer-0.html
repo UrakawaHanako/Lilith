@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            margin: 0;
+            padding: 16px;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #0f1115;
+            color: #e6e6e6;
+        }
+        /* Container utama */
+        .content-wrap {
+            display: flex;
+            align-items: flex-start; /* sejajarkan dari atas */
+            gap: 20px; /* jarak antara iframe dan gambar */
+            margin-top: 20px;
+        }
+
+        iframe {
+            border: 1px solid black;
+        }
+
+        img {
+            max-width: 600px;   /* batas lebar gambar */
+            max-height: 500px;  /* batas tinggi gambar */
+            width: auto;        /* tetap proporsional */
+            height: auto;       /* tetap proporsional */
+            object-fit: contain; /* scale tanpa terpotong */
+            border-radius: 10px;
+        }
+        /* ===============================
+        TOP NAV (MENU)
+        ================================ */
+
+        .top-nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 16px;
+            border-bottom: 1px solid #1f2228;
+            background: #141720;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-title {
+            font-weight: 600;
+            font-size: 16px;
+            color: #ffffff;
+        }
+
+        .nav-links {
+            display: none;
+            gap: 16px;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #cfd3ff;
+            font-size: 14px;
+        }
+
+        .nav-links a:hover {
+            color: #ffffff;
+            text-decoration: underline;
+        }
+
+        .nav-toggle {
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            color: #ffffff;
+        }
+
+        .nav-links.active {
+            display: flex;
+        }
+
+    </style>
+</head>
+<body>
+      <header class="top-nav">
+        <div class="nav-title">Theseus</div>
+
+        <nav class="nav-links">
+            <a href="Sirius.html">Home</a>
+            <a href="Observer-0.html">Observer</a>
+            <a href="/">Saule</a>
+            <a href="#">About</a>
+        </nav>
+
+        <button class="nav-toggle" onclick="toggleMenu()">☰</button>
+    </header>
+        <div class="content-wrap">
+            <iframe 
+                id="content-frame"
+                src=""
+                width="750" 
+                height="400">
+            </iframe>
+
+
+            <img src="/REAP/4_Ponder/Neo Beta/Asset/420936903b48dbc2477422f330e112b04d16ef23.jpg">
+        </div>
+            <div class="controls">
+                <button onclick="prevIframe()">⏮ Konten</button>
+                <button onclick="nextIframe()">⏭ Konten</button>
+                <button onclick="randomIframe()">🎲 Konten</button>
+            </div>
+
+        <section id="about" style="margin-top: 80px;">
+            <h2>About</h2>
+            <p>
+                Proyek JS ini adalah realisasi dari 2012 lalu yang baru bisa di realisasikan sekarnag, 
+                jujur kesal iya dan banyak hal lain yang harus aku ceritakan ?, atau sepertinya tidak. <br>
+                Hari ini 30 Januari 2026, 11 Syaban 1447.<br>
+                Aku mencoba untuk menyimpan sisi Gelap yang pasti aku butuhkan untuk bertahan, dan sisi gelap itu,
+                aku sistemasi, buat dinding psikis, dan kini.<br>
+                Aku berhasil membentuk dinding Informasi, Amarah ini kini bukan milikku... aku harap bukan.
+                <br>
+                Terlepas semua itu aku sendiri lagi, kelemahan hanya membebani mereka yang lemah, tidak ada yang peduli 
+                pada yang lemah, apakah itu terlalu dramatis ?.
+                <br>
+                Karena itu aku membuat Kwitansi mental, aku hanya membuat kenangan sebagai manusia 
+                <br>
+                Aku membuat Galeri, dalam sendiri aku terus berlari
+
+                
+                
+                <br>
+            </p>
+            <strong>Theseus</strong>
+            <p>Sebuah paradox dimana suatu kapal secara wujud sudah bukan kapal yang sama meski terus diperbaiki</p>
+        </section>
+        
+    <script src="./Asset/js/iframe.js"></script>
+    <script>
+            function toggleMenu() {
+                document
+                    .querySelector(".nav-links")
+                    .classList.toggle("active");
+            }
+            function goToAbout() {
+                document.getElementById("about").scrollIntoView({
+                    behavior: "smooth",
+                    block: "start"
+                });
+            }
+
+    </script>
+
+</body>
+</html>

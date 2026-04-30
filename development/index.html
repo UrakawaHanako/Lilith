@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RJ212400</title>
+    <style>
+        /* Dark Theme */
+    body{
+        background:#0f1115;
+        color:#e4e6eb;
+        font-family:Segoe UI, Arial, sans-serif;
+    }
+
+    /* Heading */
+    h1, h2, h3, h4, h5{
+        color:#ffffff;
+        border-left:4px solid #4da3ff;
+        padding-left:12px;
+        margin-top:30px;
+    }
+
+    /* Decorative underline */
+    h1{
+        font-size:32px;
+        border-bottom:2px solid #4da3ff;
+        padding-bottom:6px;
+    }
+
+    h2{
+        font-size:26px;
+        border-bottom:1px solid #333;
+    }
+
+    h3{
+        font-size:22px;
+    }
+
+    h4{
+        font-size:18px;
+    }
+
+    h5{
+        font-size:16px;
+    }
+    audio{
+        width:100%;
+        max-width:500px;
+        margin:10px 0;
+        border-radius:8px;
+        padding:5px;
+    }
+    </style>
+</head>
+<body>
+    <div>
+        <h3>Encount</h3>
+        <audio id="player" controls>
+            <source src="１日目_淫魔との出会い.mp3" type="audio/mpeg">
+        </audio>
+        <div>
+            <button onclick="jumpTime('04:48')">Lesson 1</button>
+            <button onclick="jumpTime('08:50')">Prep Up</button>
+            <button onclick="jumpTime('09:50')">Warm Up</button>
+            <button onclick="jumpTime('11:08')">Intercourse</button>
+        </div>
+    </div>
+    
+        
+    <div>
+        <h3>Succubus' Lecture (ear licking / prostate and balls massage )</h3>
+        <audio src="２日目_淫魔の性感レクチャー.mp3" controls></audio>
+    </div>
+    <div>
+        <h3>Intercourse</h3>
+        <audio src="３日目_淫魔とSEXそして夢精へ.mp3" controls></audio>
+    </div>
+    <div>
+        <h3>Relapse</h3>
+        <audio id="Intercourse" controls>
+            <source src="リタイヤトラック.mp3" type="audio/mpeg">
+        </audio>
+        <div>
+            <button onclick="jumpTime('03:15')">Excite</button>
+            <button onclick="jumpTime('08:50')">Prep Up</button>
+            <button onclick="jumpTime('11:10')">2nd Round</button>
+            <button onclick="jumpTime('12:27')">Pumpin Up</button>
+        </div>
+    </div>
+    <div>
+        <h3>Reorient</h3>
+        <audio src="後日談.mp3" controls></audio>
+    </div>
+
+<script>
+function jumpTime(timeString){
+    const audio = document.getElementById("player");
+    const parts = timeString.split(":");
+    const seconds = (parseInt(parts[0]) * 60) + parseInt(parts[1]);
+    audio.currentTime = seconds;
+    audio.play();
+}
+function jumpTime(timeString){
+    const audio = document.getElementById("Intercourse");
+    const parts = timeString.split(":");
+    const seconds = (parseInt(parts[0]) * 60) + parseInt(parts[1]);
+    audio.currentTime = seconds;
+    audio.play();
+}
+</script>
+</body>
+</html>
