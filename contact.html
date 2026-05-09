@@ -150,21 +150,29 @@
                         </div>
                         <div class="col-12">
                             <div class="form-floating">
-                                <select class="form-control bg-secondary border-0" id="sites">
-                                    <option value="Undefined">Select Sites</option>
-                                    <option value="Pixiv">Pixiv</option>
-                                    <option value="Rule34">R34</option>
-                                    <option value="Reddit">Reddit</option>
-                                    <option value="Twitter">Twitter</option>
-                                    <option value="Pornhub">Pornhub</option>
-                                    <option value="XNXX">XNXX</option>
-                                    <option value="XVideos">XVideos</option>
-                                    <option value="Nekopoi">Nekopoi</option>
-                                    <option value="Kemoni">Kemono</option>
-                                    <option value="SocialPlat">Platform</option>
-                                    <option value="Undefined">Undefined</option>
-                                </select>
-                            </div>
+                                    <input 
+                                        class="form-control bg-secondary border-0" 
+                                        list="sitesList" 
+                                        id="sites"
+                                        placeholder="Select or type Sites"
+                                    >
+                                
+                                    <datalist id="sitesList">
+                                        <option value="Pixiv">
+                                        <option value="Rule34">
+                                        <option value="Reddit">
+                                        <option value="Twitter">
+                                        <option value="Pornhub">
+                                        <option value="XNXX">
+                                        <option value="XVideos">
+                                        <option value="Nekopoi">
+                                        <option value="Kemono">
+                                        <option value="Platform">
+                                        <option value="Undefined">
+                                    </datalist>
+                                
+                                    <label for="sites">Sites</label>
+                                </div>
                         </div>
                         <div class="col-12">
                             <div class="form-floating">
