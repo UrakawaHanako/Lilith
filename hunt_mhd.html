@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hunt — Market · Hunt · Devour</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@300;700&family=Work+Sans:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:      #03060a;
+    --surface: #6c757d10;
+    --border: #d63384;
+    --accent: #d63384;
+    --text:    #cde4f5;
+    --muted:   #9b4a8f;
+
+    --market: #f59e0b;
+    --hunt:   #a78bfa;
+    --devour: #ff5e5b;
+
+    --current-accent: var(--accent);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Work Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    padding: 48px 28px;
+  }
+
+  /* ── HEADER ── */
+  .page-header {
+    text-align: center;
+    margin-bottom: 40px;
+  }
+
+  .page-header .sub {
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 300;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 10px;
+  }
+
+  .page-header h1 {
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: clamp(2rem, 5vw, 3.2rem);
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    text-shadow: 0 0 32px #da109d;
+    margin-bottom: 12px;
+  }
+
+  .page-header .desc {
+    font-size: 0.88rem;
+    color: var(--muted);
+    letter-spacing: 0.04em;
+    max-width: 520px;
+    margin: 0 auto;
+    line-height: 1.7;
+  }
+
+  /* thin rule under header */
+  .page-header::after {
+    content: '';
+    display: block;
+    width: 60px;
+    height: 2px;
+    background: var(--accent);
+    margin: 20px auto 0;
+    opacity: 0.4;
+  }
+
+  /* ── TABS ── */
+  .tabs {
+    display: flex;
+    gap: 0;
+    margin-bottom: 24px;
+    border-radius: 0;
+    overflow: hidden;
+    border: 1px solid var(--border);
+  }
+
+  .tab-btn {
+    flex: 1;
+    padding: 13px;
+    background: var(--surface);
+    border: none;
+    color: var(--muted);
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 0.82rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+    border-right: 1px solid var(--border);
+  }
+  .tab-btn:last-child { border-right: none; }
+
+  .tab-btn[data-state="Market"].active  { background: #f59e0b14; color: var(--market); box-shadow: inset 0 -2px 0 var(--market); }
+  .tab-btn[data-state="Hunt"].active    { background: #a78bfa14; color: var(--hunt);   box-shadow: inset 0 -2px 0 var(--hunt);   }
+  .tab-btn[data-state="Devour"].active  { background: #ff5e5b14; color: var(--devour); box-shadow: inset 0 -2px 0 var(--devour); }
+  .tab-btn:hover:not(.active) { background: #da109d; color: var(--text); }
+
+  /* ── FILTER BAR ── */
+  .filter-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 16px 20px;
+    margin-bottom: 16px;
+  }
+
+  .filter-bar input,
+  .filter-bar select {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: 'Work Sans', sans-serif;
+    font-size: 0.83rem;
+    padding: 9px 14px;
+    border-radius: 0;
+    outline: none;
+    transition: border-color 0.2s;
+    flex: 1;
+    min-width: 140px;
+  }
+
+  .filter-bar input::placeholder { color: var(--muted); }
+
+  .filter-bar input:focus,
+  .filter-bar select:focus {
+    border-color: var(--current-accent);
+    box-shadow: 0 0 0 1px color-mix(in srgb, var(--current-accent) 20%, transparent);
+  }
+
+  .filter-bar button {
+    background: transparent;
+    border: 2px solid var(--current-accent);
+    color: var(--current-accent);
+    font-family: 'Josefin Sans', sans-serif;
+    font-weight: 700;
+    font-size: 0.82rem;
+    padding: 9px 24px;
+    border-radius: 0;
+    cursor: pointer;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+    white-space: nowrap;
+  }
+  .filter-bar button:hover {
+    background: var(--current-accent);
+    color: var(--bg);
+    box-shadow: 0 0 16px color-mix(in srgb, var(--current-accent) 40%, transparent);
+  }
+
+  /* ── STATS ── */
+  .stats-bar {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 16px;
+    font-size: 0.76rem;
+    color: var(--muted);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+  .stats-bar .val {
+    color: var(--current-accent);
+    font-weight: 600;
+  }
+
+  /* ── LOADING ── */
+  #loading {
+    text-align: center;
+    color: var(--muted);
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 0.82rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    padding: 40px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+  }
+
+  /* ── TABLE ── */
+  .table-wrap {
+    overflow-x: auto;
+    border: 1px solid var(--border);
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--surface);
+    font-size: 0.81rem;
+  }
+
+  th {
+    background: #080e1a;
+    color: var(--current-accent);
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 0.73rem;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    padding: 13px 16px;
+    border-bottom: 2px solid var(--border);
+    white-space: nowrap;
+  }
+
+  td {
+    padding: 11px 16px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: middle;
+    color: var(--text);
+    max-width: 220px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-family: 'Work Sans', sans-serif;
+  }
+
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: #d60aa3; }
+
+  a {
+    color: var(--accent);
+    text-decoration: none;
+    font-weight: 600;
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 0.78rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+  a:hover { color: #fff; text-decoration: underline; }
+
+  /* ── CLAIM BUTTON ── */
+  .btn-claim {
+    background: transparent;
+    border: 1px solid var(--devour);
+    color: var(--devour);
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 5px 14px;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+    white-space: nowrap;
+  }
+  .btn-claim:hover {
+    background: var(--devour);
+    color: #fff;
+    box-shadow: 0 0 12px #ff5e5b44;
+  }
+  .btn-claim:disabled { opacity: 0.35; cursor: not-allowed; }
+
+  /* ── BADGES ── */
+  .badge-district {
+    display: inline-block;
+    background: #00cfff0d;
+    color: var(--accent);
+    border: 1px solid #00cfff33;
+    padding: 2px 10px;
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .badge-state-Market {
+    display: inline-block;
+    background: #f59e0b0d;
+    color: var(--market);
+    border: 1px solid #f59e0b33;
+    padding: 2px 10px;
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  .badge-state-Hunt {
+    display: inline-block;
+    background: #a78bfa0d;
+    color: var(--hunt);
+    border: 1px solid #a78bfa33;
+    padding: 2px 10px;
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  .badge-state-Devour {
+    display: inline-block;
+    background: #ff5e5b0d;
+    color: var(--devour);
+    border: 1px solid #ff5e5b33;
+    padding: 2px 10px;
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  /* ── FOOTER ── */
+  .page-footer {
+    margin-top: 48px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+    text-align: center;
+  }
+  .page-footer h2 {
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--text);
+    margin-bottom: 6px;
+  }
+  .page-footer p {
+    font-size: 0.75rem;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+  }
+
+  /* ── SELECT OPTION dark ── */
+  option { background: #0d1a2e; color: var(--text); }
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<div class="page-header">
+  <div class="sub">Boreas Archive System</div>
+  <h1>Data Hunt</h1>
+  <p class="desc">Structured observation of transitional market states. Select a layer to begin traversal.</p>
+</div>
+
+<!-- Tabs -->
+<div class="tabs">
+  <button class="tab-btn active" data-state="Market" onclick="switchTab('Market')">Market</button>
+  <button class="tab-btn" data-state="Hunt"   onclick="switchTab('Hunt')">Hunt</button>
+  <button class="tab-btn" data-state="Devour" onclick="switchTab('Devour')">Devour</button>
+</div>
+
+<!-- Filter -->
+<div class="filter-bar">
+  <input type="text" id="filterName" placeholder="Filter Name...">
+  <select id="filterDistrict">
+    <option value="">All Districts</option>
+  </select>
+  <button onclick="loadData()">Apply</button>
+</div>
+
+<!-- Stats -->
+<div class="stats-bar" id="stats" style="display:none;">
+  Showing <span class="val" id="countResult">0</span> entries &nbsp;|&nbsp;
+  District: <span class="val" id="activeDistrict">—</span> &nbsp;|&nbsp;
+  State: <span class="val" id="activeState">—</span>
+</div>
+
+<!-- Loading -->
+<div id="loading">Initializing archive...</div>
+
+<!-- Table -->
+<div class="table-wrap">
+  <table id="table" style="display:none;">
+    <thead><tr id="table-head"></tr></thead>
+    <tbody id="table-body"></tbody>
+  </table>
+</div>
+
+<!-- Footer -->
+<div class="page-footer">
+  <h2>Boreas Archive System</h2>
+  <p>Continuity through Observation</p>
+</div>
+
+<script>
+const API_URL = "https://x8ki-letl-twmt.n7.xano.io/api:X6h8irt0/hunt";
+const DISPLAY_KEYS = ["id", "District", "Name", "Sites", "State", "created_at"];
+const STATE_COLORS = { Market: "#f59e0b", Hunt: "#a78bfa", Devour: "#ff5e5b" };
+
+let allData = [];
+let currentState = "Market";
+
+async function init() {
+  try {
+    const response = await fetch(API_URL);
+    allData = await response.json();
+
+    if (!allData || allData.length === 0) {
+      document.getElementById("loading").innerText = "Archive empty.";
+      return;
+    }
+
+    switchTab("Market");
+  } catch (err) {
+    document.getElementById("loading").innerText = "Failed to retrieve archive data.";
+    console.error(err);
+  }
+}
+
+function switchTab(state) {
+  currentState = state;
+
+  document.querySelectorAll(".tab-btn").forEach(btn => {
+    btn.classList.toggle("active", btn.dataset.state === state);
+  });
+
+  document.documentElement.style.setProperty("--current-accent", STATE_COLORS[state]);
+
+  const stateData = allData.filter(i => i.State === state);
+  const districts = [...new Set(stateData.map(i => i.District))].sort((a, b) => a - b);
+
+  const select = document.getElementById("filterDistrict");
+  select.innerHTML = `<option value="">All Districts</option>`;
+  districts.forEach(d => {
+    const opt = document.createElement("option");
+    opt.value = d;
+    opt.innerText = `District ${d}`;
+    select.appendChild(opt);
+  });
+  if (districts.length > 0) select.value = districts[0];
+
+  document.getElementById("filterName").value = "";
+
+  loadData();
+}
+
+function loadData() {
+  const filterName     = document.getElementById("filterName").value.toLowerCase().trim();
+  const filterDistrict = document.getElementById("filterDistrict").value;
+
+  const head    = document.getElementById("table-head");
+  const body    = document.getElementById("table-body");
+  const table   = document.getElementById("table");
+  const loading = document.getElementById("loading");
+
+  head.innerHTML = "";
+  body.innerHTML = "";
+
+  let filtered = allData.filter(item => {
+    const matchState    = item.State === currentState;
+    const matchDistrict = !filterDistrict || String(item.District) === String(filterDistrict);
+    const matchName     = !filterName || (item.Name && item.Name.toLowerCase().includes(filterName));
+    return matchState && matchDistrict && matchName;
+  });
+
+  if (filtered.length === 0) {
+    loading.style.display = "block";
+    loading.innerText = "No entries found.";
+    table.style.display = "none";
+    document.getElementById("stats").style.display = "none";
+    return;
+  }
+
+  DISPLAY_KEYS.forEach(key => {
+    const th = document.createElement("th");
+    th.innerText = key === "created_at" ? "Created At" : key;
+    head.appendChild(th);
+  });
+  ["Path", "Action"].forEach(label => {
+    const th = document.createElement("th");
+    th.innerText = label;
+    head.appendChild(th);
+  });
+
+  filtered.forEach(item => {
+    const tr = document.createElement("tr");
+
+    DISPLAY_KEYS.forEach(key => {
+      const td = document.createElement("td");
+      if (key === "created_at") {
+        td.innerText = item[key] ? new Date(item[key]).toLocaleString("id-ID") : "NaN";
+      } else if (key === "District") {
+        td.innerHTML = `<span class="badge-district">D-${item[key] ?? "NaN"}</span>`;
+      } else if (key === "State") {
+        td.innerHTML = `<span class="badge-state-${item[key]}">${item[key] ?? "NaN"}</span>`;
+      } else {
+        td.innerText = item[key] ?? "NaN";
+        td.title = item[key] ?? "";
+      }
+      tr.appendChild(td);
+    });
+
+    const tdPath = document.createElement("td");
+    if (item.Path) {
+      const link = document.createElement("a");
+      link.href = item.Path;
+      link.innerText = "Open ↗";
+      link.target = "_blank";
+      link.rel = "noopener noreferrer";
+      tdPath.appendChild(link);
+    } else {
+      tdPath.innerText = "—";
+    }
+    tr.appendChild(tdPath);
+
+    const tdAction = document.createElement("td");
+    const btnClaim = document.createElement("button");
+    btnClaim.innerText = "Claim";
+    btnClaim.className = "btn-claim";
+    btnClaim.onclick = async () => {
+      btnClaim.disabled = true;
+      btnClaim.innerText = "...";
+      try {
+        await fetch(`https://x8ki-letl-twmt.n7.xano.io/api:X6h8irt0/hunt/${item.id}`, { method: "DELETE" });
+        tr.style.opacity = "0";
+        tr.style.transition = "opacity 0.3s";
+        setTimeout(() => {
+          tr.remove();
+          const el = document.getElementById("countResult");
+          el.innerText = parseInt(el.innerText) - 1;
+        }, 300);
+      } catch (e) {
+        btnClaim.disabled = false;
+        btnClaim.innerText = "Claim";
+        alert("Failed to claim entry.");
+      }
+    };
+    tdAction.appendChild(btnClaim);
+    tr.appendChild(tdAction);
+
+    body.appendChild(tr);
+  });
+
+  loading.style.display = "none";
+  table.style.display = "table";
+
+  const stats = document.getElementById("stats");
+  stats.style.display = "flex";
+  document.getElementById("countResult").innerText = filtered.length;
+  document.getElementById("activeDistrict").innerText = filterDistrict ? `District ${filterDistrict}` : "All";
+  document.getElementById("activeState").innerText = currentState;
+}
+
+init();
+</script>
+</body>
+</html>
