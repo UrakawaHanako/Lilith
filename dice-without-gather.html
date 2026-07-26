@@ -152,6 +152,22 @@
     color:var(--grey);
   }
 
+  .path-link{
+    color:var(--pink-soft);
+    text-decoration:none;
+    border-bottom:1px dotted var(--pink-dim);
+    word-break:break-all;
+  }
+  .path-link:hover{
+    color:var(--pink);
+    border-bottom-color:var(--pink);
+  }
+  .path-link:empty::after{
+    content:"—";
+    color:var(--grey);
+    border-bottom:none;
+  }
+
   .actions{
     padding:24px 32px 32px;
     display:flex;
@@ -232,7 +248,7 @@
       </div>
       <div class="row">
         <div class="label">Path</div>
-        <div class="value" id="path"></div>
+        <div class="value"><a class="path-link" id="path" href="#" target="_blank" rel="noopener"></a></div>
       </div>
       <div class="row">
         <div class="label">Sites</div>
@@ -246,7 +262,6 @@
 
     <div class="actions">
       <button id="btnRandom">Draw Again</button>
-      <button id="btnOpen">Open File</button>
     </div>
 
     <p class="foot">Lilith Registry · No. —</p>
@@ -266,6 +281,15 @@ const DETAIL_URL = "view.html?id=";
 let characters = [];
 let currentIndex = -1;
 let currentItem = null;
+
+function isSafeUrl(url){
+    try{
+        const u = new URL(url, window.location.href);
+        return u.protocol === "http:" || u.protocol === "https:";
+    }catch(e){
+        return false;
+    }
+}
 
 async function loadData(){
 
@@ -317,9 +341,20 @@ function randomPick(){
 
     document.getElementById("district").textContent = currentItem.District;
     document.getElementById("name").textContent = currentItem.Name;
-    document.getElementById("path").textContent = currentItem.Path;
     document.getElementById("sites").textContent = currentItem.Sites;
     document.getElementById("state").textContent = currentItem.State;
+
+    const pathEl = document.getElementById("path");
+    const pathUrl = isSafeUrl(currentItem.Path) ? currentItem.Path : "";
+    pathEl.textContent = currentItem.Path || "";
+    pathEl.href = pathUrl || "#";
+    if(!pathUrl){
+        pathEl.removeAttribute("target");
+        pathEl.style.pointerEvents = "none";
+    }else{
+        pathEl.setAttribute("target", "_blank");
+        pathEl.style.pointerEvents = "";
+    }
 
     document.querySelector(".foot").textContent =
         "Lilith Registry · No. " + String(currentItem.id ?? "—").padStart(3, "0");
