@@ -1,0 +1,1717 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dice — All Other States</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap');
+
+  :root {
+    --bg: #14161c;
+    --panel: #1c1f27;
+    --panel-2: #23262f;
+    --line: #33363f;
+    --ink: #e9e7e0;
+    --ink-dim: #9c9fab;
+    --gold: #c9a24b;
+    --gold-dim: #8a7239;
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin:0; padding:0; }
+
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Inter', system-ui, sans-serif;
+    min-height: 100vh;
+    padding: 48px 24px 80px;
+  }
+
+  .wrap { max-width: 1180px; margin: 0 auto; }
+
+  header.top {
+    display:flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    gap: 24px;
+    border-bottom: 1px solid var(--line);
+    padding-bottom: 28px;
+    margin-bottom: 32px;
+  }
+
+  .brand { display:flex; align-items:center; gap:16px; }
+
+  .brand-die {
+    width: 46px; height: 46px;
+    border: 2px solid var(--gold);
+    border-radius: 12px;
+    display:flex; align-items:center; justify-content:center;
+    position:relative;
+    background: linear-gradient(160deg, #23262f, #181a20);
+    flex-shrink:0;
+  }
+  .brand-die svg { width:26px; height:26px; }
+  .brand-die circle { fill: var(--gold); }
+
+  h1 {
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    font-size: 38px;
+    letter-spacing: -0.01em;
+    margin: 0;
+    line-height: 1;
+  }
+  h1 .sub {
+    display:block;
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 500;
+    font-size: 12px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 8px;
+  }
+
+  .meta {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    color: var(--ink-dim);
+    text-align:right;
+  }
+  .meta .count { color: var(--ink); font-size: 22px; font-weight:500; display:block; }
+
+  .desc {
+    color: var(--ink-dim);
+    font-size: 15px;
+    max-width: 640px;
+    line-height: 1.55;
+    margin: -12px 0 28px;
+  }
+
+  .controls {
+    display:flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+  .controls input, .controls select {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    color: var(--ink);
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-family: 'Inter', sans-serif;
+    font-size: 13.5px;
+    outline: none;
+  }
+  .controls input { flex: 1 1 220px; }
+  .controls input::placeholder { color: var(--ink-dim); }
+  .controls input:focus, .controls select:focus { border-color: var(--gold-dim); }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  thead th {
+    text-align: left;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-dim);
+    font-weight: 500;
+    padding: 14px 18px;
+    border-bottom: 1px solid var(--line);
+    background: var(--panel-2);
+  }
+  tbody td {
+    padding: 13px 18px;
+    border-bottom: 1px solid var(--line);
+    font-size: 14.5px;
+    vertical-align: middle;
+  }
+  tbody tr:last-child td { border-bottom: none; }
+  tbody tr:hover { background: rgba(201,162,75,0.05); }
+
+  .die { display:block; }
+  .die rect { fill: #181a20; stroke: var(--line); stroke-width: 3; }
+  .die circle { fill: var(--ink-dim); }
+  tbody tr:hover .die circle { fill: var(--gold); }
+
+  .chip {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    background: var(--panel-2);
+    border: 1px solid var(--line);
+    padding: 4px 8px;
+    border-radius: 6px;
+    color: var(--ink-dim);
+  }
+  .chip.muted { opacity: 0.6; }
+
+  .cell-name { font-weight: 500; }
+  .cell-site { color: var(--ink-dim); font-size: 13.5px; }
+
+  .state-pill {
+    display:inline-block;
+    padding: 4px 11px;
+    border-radius: 20px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11.5px;
+    letter-spacing: 0.04em;
+    color: var(--fg);
+    background: var(--bg, var(--panel-2));
+    border: 1px solid var(--fg);
+  }
+
+  .link-btn {
+    color: var(--gold);
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 500;
+    border-bottom: 1px solid transparent;
+  }
+  .link-btn:hover { border-bottom-color: var(--gold); }
+
+  .empty-state {
+    text-align:center;
+    padding: 60px 20px;
+    color: var(--ink-dim);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+  }
+
+  footer {
+    margin-top: 28px;
+    color: var(--ink-dim);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11.5px;
+    text-align: center;
+    letter-spacing: 0.05em;
+  }
+
+  @media (max-width: 640px) {
+    body { padding: 28px 14px 60px; }
+    h1 { font-size: 28px; }
+    thead th:nth-child(3), tbody td:nth-child(3) { display:none; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div class="brand">
+      <div class="brand-die">
+        <svg viewBox="0 0 100 100"><circle cx="28" cy="28" r="8"/><circle cx="72" cy="28" r="8"/><circle cx="50" cy="50" r="8"/><circle cx="28" cy="72" r="8"/><circle cx="72" cy="72" r="8"/></svg>
+      </div>
+      <h1><span class="sub">Dice · Hunt Ledger</span>All Other States</h1>
+    </div>
+    <div class="meta">
+      <span class="count">176</span>
+      entries logged
+    </div>
+  </header>
+
+  <p class="desc">Every entry outside of Gather — Hunt, Devour, Market, Excite, and the rest of the board, in one ledger.</p>
+
+  <div class="controls">
+    <input type="text" id="search" placeholder="Search by name…">
+    <select id="districtFilter"><option value="">All districts</option><option value="3">District 3</option><option value="4">District 4</option><option value="5">District 5</option><option value="6">District 6</option><option value="8">District 8</option><option value="10">District 10</option><option value="12">District 12</option><option value="15">District 15</option><option value="16">District 16</option><option value="17">District 17</option><option value="18">District 18</option><option value="23">District 23</option><option value="24">District 24</option></select>
+    <select id="siteFilter"><option value="">All sites</option><option value="danbooru">Danbooru</option><option value="dl site">Dl Site</option><option value="gelboru">Gelboru</option><option value="hentai force">Hentai Force</option><option value="j asmr">J ASMR</option><option value="japanese asmr">Japanese ASMR</option><option value="jappanese asmr">Jappanese ASMR</option><option value="kemono">Kemono</option><option value="mega">Mega</option><option value="nhentai">NHentai</option><option value="nan">NaN</option><option value="nekopoi">Nekopoi</option><option value="pixiv">Pixiv</option><option value="pornhub">Pornhub</option><option value="reddit">Reddit</option><option value="rule 34">Rule 34</option><option value="rule34">Rule34</option><option value="undefined">Undefined</option><option value="x videos">X Videos</option><option value="xnxx">XNXX</option><option value="xvideos">XVideos</option><option value="nhentai">nhentai</option><option value="xnxx">xnxx</option></select>
+    <select id="stateFilter"><option value="">All states</option><option value="bdsm - hunt">BDSM - Hunt</option><option value="devour">Devour</option><option value="excite">Excite</option><option value="hunt">Hunt</option><option value="market">Market</option><option value="ntr">NTR</option><option value="nan">NaN</option><option value="parody">Parody</option><option value="post-hunt">Post-Hunt</option><option value="undefined">Undefined</option></select>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>District</th>
+        <th>Name</th>
+        <th>Site</th>
+        <th>State</th>
+        <th>Path</th>
+      </tr>
+    </thead>
+    <tbody id="tbody">
+      <tr class="row" data-district="23" data-site="rule34" data-state="hunt" data-name="mash krylieght">
+<td class="cell-district"><span class="chip">D23</span></td>
+<td class="cell-name">Mash Krylieght</td>
+<td class="cell-site">Rule34</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#c9a24b;--bg:#3a2f16">Hunt</span></td>
+<td class="cell-link"><a href="https://danbooru.donmai.us/posts/11752665" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="8" data-site="danbooru" data-state="undefined" data-name="arimura mao">
+<td class="cell-district"><span class="chip">D08</span></td>
+<td class="cell-name">Arimura Mao</td>
+<td class="cell-site">Danbooru</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#8a8d99;--bg:#26272c">Undefined</span></td>
+<td class="cell-link"><a href="https://danbooru.donmai.us/posts/11712084?q=arimura_mao" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="18" data-site="nekopoi" data-state="devour" data-name="nan">
+<td class="cell-district"><span class="chip">D18</span></td>
+<td class="cell-name">NaN</td>
+<td class="cell-site">Nekopoi</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#c1443c;--bg:#3a1715">Devour</span></td>
+<td class="cell-link"><a href="https://nekopoi.care/category/2d-animation/page/130/" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="12" data-site="rule 34" data-state="hunt" data-name="urakawa hanako">
+<td class="cell-district"><span class="chip">D12</span></td>
+<td class="cell-name">Urakawa Hanako</td>
+<td class="cell-site">Rule 34</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#c9a24b;--bg:#3a2f16">Hunt</span></td>
+<td class="cell-link"><a href="https://rule34.xxx/index.php?page=post&amp;s=list&amp;tags=hanako_%28blue_archive%29&amp;pid=294" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="23" data-site="rule 34" data-state="devour" data-name="ishtar">
+<td class="cell-district"><span class="chip">D23</span></td>
+<td class="cell-name">Ishtar</td>
+<td class="cell-site">Rule 34</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#c1443c;--bg:#3a1715">Devour</span></td>
+<td class="cell-link"><a href="https://ahrimp4.rule34.xxx//images/6367/0cd703a11889610c942d14d8eecccaf7.mp4?7252980" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="4" data-site="gelboru" data-state="hunt" data-name="saint louis">
+<td class="cell-district"><svg class="die" viewBox="0 0 100 100" width="26" height="26" aria-label="District 4">
+<rect x="4" y="4" width="92" height="92" rx="16"/>
+<g class="pips"><circle cx="28" cy="28" r="7"/><circle cx="72" cy="28" r="7"/><circle cx="28" cy="72" r="7"/><circle cx="72" cy="72" r="7"/></g>
+</svg></td>
+<td class="cell-name">Saint Louis</td>
+<td class="cell-site">Gelboru</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#c9a24b;--bg:#3a2f16">Hunt</span></td>
+<td class="cell-link"><a href="https://gelbooru.com/index.php?page=post&amp;s=view&amp;id=8529288&amp;tags=kirome_%28kamipaper%29+st._louis_%28azur_lane%29+" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="18" data-site="jappanese asmr" data-state="devour" data-name="nan">
+<td class="cell-district"><span class="chip">D18</span></td>
+<td class="cell-name">NaN</td>
+<td class="cell-site">Jappanese ASMR</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#c1443c;--bg:#3a1715">Devour</span></td>
+<td class="cell-link"><a href="https://japaneseasmr.com/138069/" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="18" data-site="japanese asmr" data-state="devour" data-name="nan">
+<td class="cell-district"><span class="chip">D18</span></td>
+<td class="cell-name">NaN</td>
+<td class="cell-site">Japanese ASMR</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#c1443c;--bg:#3a1715">Devour</span></td>
+<td class="cell-link"><a href="https://japaneseasmr.com/121703/" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="4" data-site="nekopoi" data-state="hunt" data-name="takao">
+<td class="cell-district"><svg class="die" viewBox="0 0 100 100" width="26" height="26" aria-label="District 4">
+<rect x="4" y="4" width="92" height="92" rx="16"/>
+<g class="pips"><circle cx="28" cy="28" r="7"/><circle cx="72" cy="28" r="7"/><circle cx="28" cy="72" r="7"/><circle cx="72" cy="72" r="7"/></g>
+</svg></td>
+<td class="cell-name">Takao</td>
+<td class="cell-site">Nekopoi</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#c9a24b;--bg:#3a2f16">Hunt</span></td>
+<td class="cell-link"><a href="https://nekopoi.care/l2d-uncensored-takao-azurlane/" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="16" data-site="xnxx" data-state="hunt" data-name="nan">
+<td class="cell-district"><span class="chip">D16</span></td>
+<td class="cell-name">NaN</td>
+<td class="cell-site">XNXX</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#c9a24b;--bg:#3a2f16">Hunt</span></td>
+<td class="cell-link"><a href="https://www.xnxx.com/search/hentai+honkai/3" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="18" data-site="jappanese asmr" data-state="devour" data-name="nan">
+<td class="cell-district"><span class="chip">D18</span></td>
+<td class="cell-name">NaN</td>
+<td class="cell-site">Jappanese ASMR</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#c1443c;--bg:#3a1715">Devour</span></td>
+<td class="cell-link"><a href="https://japaneseasmr.com/141240/" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="15" data-site="mega" data-state="devour" data-name="project - mega cloud">
+<td class="cell-district"><span class="chip">D15</span></td>
+<td class="cell-name">Project - Mega Cloud</td>
+<td class="cell-site">Mega</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#c1443c;--bg:#3a1715">Devour</span></td>
+<td class="cell-link"><a href="https://mega.nz/folder/S2ghEZjB#YXu08I_cB690f3b0pRYklg" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="18" data-site="mega" data-state="devour" data-name="area - mega cloud">
+<td class="cell-district"><span class="chip">D18</span></td>
+<td class="cell-name">Area - Mega Cloud</td>
+<td class="cell-site">Mega</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#c1443c;--bg:#3a1715">Devour</span></td>
+<td class="cell-link"><a href="https://mega.nz/folder/z3gmDAgJ#dulinS8HiYFP3KY2exILyg" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="24" data-site="mega" data-state="devour" data-name="resource - mega cloud">
+<td class="cell-district"><span class="chip">D24</span></td>
+<td class="cell-name">Resource - Mega Cloud</td>
+<td class="cell-site">Mega</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#c1443c;--bg:#3a1715">Devour</span></td>
+<td class="cell-link"><a href="https://mega.nz/folder/6z4zhD5B#EYu3v-6pDdQH-uH1IHc8Dg" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="23" data-site="mega" data-state="devour" data-name="archive - mega cloud">
+<td class="cell-district"><span class="chip">D23</span></td>
+<td class="cell-name">Archive - Mega Cloud</td>
+<td class="cell-site">Mega</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#c1443c;--bg:#3a1715">Devour</span></td>
+<td class="cell-link"><a href="https://mega.nz/folder/augW1bwJ#7P-oARIkFMXVmNK6YmwA5Q" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="12" data-site="xnxx" data-state="hunt" data-name="ichinose asuna">
+<td class="cell-district"><span class="chip">D12</span></td>
+<td class="cell-name">Ichinose Asuna</td>
+<td class="cell-site">XNXX</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#c9a24b;--bg:#3a2f16">Hunt</span></td>
+<td class="cell-link"><a href="https://www.xnxx.com/video-1hkwxsab/blue_archive_hentai" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="12" data-site="jappanese asmr" data-state="devour" data-name="kurodate haruna">
+<td class="cell-district"><span class="chip">D12</span></td>
+<td class="cell-name">Kurodate Haruna</td>
+<td class="cell-site">Jappanese ASMR</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#c1443c;--bg:#3a1715">Devour</span></td>
+<td class="cell-link"><a href="https://japaneseasmr.com/142826/" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="12" data-site="rule 34" data-state="devour" data-name="kurodate haruna">
+<td class="cell-district"><span class="chip">D12</span></td>
+<td class="cell-name">Kurodate Haruna</td>
+<td class="cell-site">Rule 34</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#c1443c;--bg:#3a1715">Devour</span></td>
+<td class="cell-link"><a href="https://wimg.rule34.xxx//images/2529/37367bd6408e17fc66f7705c024fb38d869d7ecd.png" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="12" data-site="xnxx" data-state="hunt" data-name="sunaokami shiroko">
+<td class="cell-district"><span class="chip">D12</span></td>
+<td class="cell-name">Sunaokami Shiroko</td>
+<td class="cell-site">XNXX</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#c9a24b;--bg:#3a2f16">Hunt</span></td>
+<td class="cell-link"><a href="https://www.xnxx.com/video-1h2yj465/_blue_archive_shiroko_s_heist_gone_wrong_bound_wolf_girl_and_pov_sandwich_dp_4k_" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="12" data-site="nekopoi" data-state="hunt" data-name="miyako tsukiyuki">
+<td class="cell-district"><span class="chip">D12</span></td>
+<td class="cell-name">Miyako Tsukiyuki</td>
+<td class="cell-site">Nekopoi</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#c9a24b;--bg:#3a2f16">Hunt</span></td>
+<td class="cell-link"><a href="https://nekopoi.care/l2d-blue-archive-miyako/" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="12" data-site="xnxx" data-state="devour" data-name="yuuka hayase">
+<td class="cell-district"><span class="chip">D12</span></td>
+<td class="cell-name">Yuuka Hayase</td>
+<td class="cell-site">XNXX</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#c1443c;--bg:#3a1715">Devour</span></td>
+<td class="cell-link"><a href="https://www.xnxx.com/search-video/placeholder" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="12" data-site="pornhub" data-state="devour" data-name="misono mika">
+<td class="cell-district"><span class="chip">D12</span></td>
+<td class="cell-name">Misono Mika</td>
+<td class="cell-site">Pornhub</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#c1443c;--bg:#3a1715">Devour</span></td>
+<td class="cell-link"><a href="https://www.pornhub.com/view_video.php?viewkey=6755a7ecc14c5" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="12" data-site="pornhub" data-state="devour" data-name="yuuka hayase">
+<td class="cell-district"><span class="chip">D12</span></td>
+<td class="cell-name">Yuuka Hayase</td>
+<td class="cell-site">Pornhub</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#c1443c;--bg:#3a1715">Devour</span></td>
+<td class="cell-link"><a href="https://www.pornhub.com/view_video.php?viewkey=6758400ca8c65" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="12" data-site="gelboru" data-state="hunt" data-name="akeboshi himari">
+<td class="cell-district"><span class="chip">D12</span></td>
+<td class="cell-name">Akeboshi Himari</td>
+<td class="cell-site">Gelboru</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#c9a24b;--bg:#3a2f16">Hunt</span></td>
+<td class="cell-link"><a href="https://img2.gelbooru.com/images/e0/e3/e0e3a807cb2f10813c89bcb7d17a4a59.jpg" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="18" data-site="jappanese asmr" data-state="devour" data-name="nan">
+<td class="cell-district"><span class="chip">D18</span></td>
+<td class="cell-name">NaN</td>
+<td class="cell-site">Jappanese ASMR</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#c1443c;--bg:#3a1715">Devour</span></td>
+<td class="cell-link"><a href="https://japaneseasmr.com/138632/" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="18" data-site="japanese asmr" data-state="devour" data-name="nan">
+<td class="cell-district"><span class="chip">D18</span></td>
+<td class="cell-name">NaN</td>
+<td class="cell-site">Japanese ASMR</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#c1443c;--bg:#3a1715">Devour</span></td>
+<td class="cell-link"><a href="https://japaneseasmr.com/70419/" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="10" data-site="xnxx" data-state="hunt" data-name="lisa">
+<td class="cell-district"><span class="chip">D10</span></td>
+<td class="cell-name">Lisa</td>
+<td class="cell-site">XNXX</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#c9a24b;--bg:#3a2f16">Hunt</span></td>
+<td class="cell-link"><a href="https://www.xnxx.com/video-1e5nrt36/lisa" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="12" data-site="x videos" data-state="hunt" data-name="sumi serina">
+<td class="cell-district"><span class="chip">D12</span></td>
+<td class="cell-name">Sumi Serina</td>
+<td class="cell-site">X Videos</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#c9a24b;--bg:#3a2f16">Hunt</span></td>
+<td class="cell-link"><a href="https://www.xvideos.com/video.ohapmbd1b9f/blue_archive_serina" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="12" data-site="x videos" data-state="hunt" data-name="izayoi nonomi">
+<td class="cell-district"><span class="chip">D12</span></td>
+<td class="cell-name">Izayoi Nonomi</td>
+<td class="cell-site">X Videos</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#c9a24b;--bg:#3a2f16">Hunt</span></td>
+<td class="cell-link"><a href="https://www.xvideos.com/video.ufkvtoheaa8/blue_archive" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="4" data-site="gelboru" data-state="hunt" data-name="saint louis">
+<td class="cell-district"><svg class="die" viewBox="0 0 100 100" width="26" height="26" aria-label="District 4">
+<rect x="4" y="4" width="92" height="92" rx="16"/>
+<g class="pips"><circle cx="28" cy="28" r="7"/><circle cx="72" cy="28" r="7"/><circle cx="28" cy="72" r="7"/><circle cx="72" cy="72" r="7"/></g>
+</svg></td>
+<td class="cell-name">Saint Louis</td>
+<td class="cell-site">Gelboru</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#c9a24b;--bg:#3a2f16">Hunt</span></td>
+<td class="cell-link"><a href="https://img2.gelbooru.com/images/03/4a/034a6b84bb672109e6c8c7d4041fbca9.jpeg" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="18" data-site="nan" data-state="devour" data-name="nan">
+<td class="cell-district"><span class="chip">D18</span></td>
+<td class="cell-name">NaN</td>
+<td class="cell-site">NaN</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#c1443c;--bg:#3a1715">Devour</span></td>
+<td class="cell-link"><a href="https://viideys.space/UXxs2l791" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="18" data-site="nan" data-state="devour" data-name="whatsapp">
+<td class="cell-district"><span class="chip">D18</span></td>
+<td class="cell-name">WhatsApp</td>
+<td class="cell-site">NaN</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#c1443c;--bg:#3a1715">Devour</span></td>
+<td class="cell-link"><a href="https://whatsapp.com/channel/0029Vb7vktd8qIzrLVRIF11U" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="4" data-site="hentai force" data-state="hunt" data-name="vestal">
+<td class="cell-district"><svg class="die" viewBox="0 0 100 100" width="26" height="26" aria-label="District 4">
+<rect x="4" y="4" width="92" height="92" rx="16"/>
+<g class="pips"><circle cx="28" cy="28" r="7"/><circle cx="72" cy="28" r="7"/><circle cx="28" cy="72" r="7"/><circle cx="72" cy="72" r="7"/></g>
+</svg></td>
+<td class="cell-name">Vestal</td>
+<td class="cell-site">Hentai Force</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#c9a24b;--bg:#3a2f16">Hunt</span></td>
+<td class="cell-link"><a href="https://m1.hentaiforce.net/img/569310-10.jpg" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="4" data-site="hentai force" data-state="hunt" data-name="vestal">
+<td class="cell-district"><svg class="die" viewBox="0 0 100 100" width="26" height="26" aria-label="District 4">
+<rect x="4" y="4" width="92" height="92" rx="16"/>
+<g class="pips"><circle cx="28" cy="28" r="7"/><circle cx="72" cy="28" r="7"/><circle cx="28" cy="72" r="7"/><circle cx="72" cy="72" r="7"/></g>
+</svg></td>
+<td class="cell-name">Vestal</td>
+<td class="cell-site">Hentai Force</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#c9a24b;--bg:#3a2f16">Hunt</span></td>
+<td class="cell-link"><a href="https://m1.hentaiforce.net/img/243671-17.jpg" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="4" data-site="hentai force" data-state="hunt" data-name="vestal">
+<td class="cell-district"><svg class="die" viewBox="0 0 100 100" width="26" height="26" aria-label="District 4">
+<rect x="4" y="4" width="92" height="92" rx="16"/>
+<g class="pips"><circle cx="28" cy="28" r="7"/><circle cx="72" cy="28" r="7"/><circle cx="28" cy="72" r="7"/><circle cx="72" cy="72" r="7"/></g>
+</svg></td>
+<td class="cell-name">Vestal</td>
+<td class="cell-site">Hentai Force</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#c9a24b;--bg:#3a2f16">Hunt</span></td>
+<td class="cell-link"><a href="https://m1.hentaiforce.net/img/243671-18.jpg" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="4" data-site="hentai force" data-state="devour" data-name="multiple">
+<td class="cell-district"><svg class="die" viewBox="0 0 100 100" width="26" height="26" aria-label="District 4">
+<rect x="4" y="4" width="92" height="92" rx="16"/>
+<g class="pips"><circle cx="28" cy="28" r="7"/><circle cx="72" cy="28" r="7"/><circle cx="28" cy="72" r="7"/><circle cx="72" cy="72" r="7"/></g>
+</svg></td>
+<td class="cell-name">Multiple</td>
+<td class="cell-site">Hentai Force</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#c1443c;--bg:#3a1715">Devour</span></td>
+<td class="cell-link"><a href="https://hentaiforce.net/character/vestal" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="4" data-site="gelboru" data-state="hunt" data-name="saint louis">
+<td class="cell-district"><svg class="die" viewBox="0 0 100 100" width="26" height="26" aria-label="District 4">
+<rect x="4" y="4" width="92" height="92" rx="16"/>
+<g class="pips"><circle cx="28" cy="28" r="7"/><circle cx="72" cy="28" r="7"/><circle cx="28" cy="72" r="7"/><circle cx="72" cy="72" r="7"/></g>
+</svg></td>
+<td class="cell-name">Saint Louis</td>
+<td class="cell-site">Gelboru</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#c9a24b;--bg:#3a2f16">Hunt</span></td>
+<td class="cell-link"><a href="https://gelbooru.com/index.php?page=post&amp;s=view&amp;id=13393303" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="4" data-site="gelboru" data-state="hunt" data-name="saint louis">
+<td class="cell-district"><svg class="die" viewBox="0 0 100 100" width="26" height="26" aria-label="District 4">
+<rect x="4" y="4" width="92" height="92" rx="16"/>
+<g class="pips"><circle cx="28" cy="28" r="7"/><circle cx="72" cy="28" r="7"/><circle cx="28" cy="72" r="7"/><circle cx="72" cy="72" r="7"/></g>
+</svg></td>
+<td class="cell-name">Saint Louis</td>
+<td class="cell-site">Gelboru</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#c9a24b;--bg:#3a2f16">Hunt</span></td>
+<td class="cell-link"><a href="https://gelbooru.com/index.php?page=post&amp;s=view&amp;id=13728950" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="12" data-site="pornhub" data-state="nan" data-name="amau ako">
+<td class="cell-district"><span class="chip">D12</span></td>
+<td class="cell-name">Amau Ako</td>
+<td class="cell-site">Pornhub</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#8a8d99;--bg:#26272c">NaN</span></td>
+<td class="cell-link"><a href="https://www.pornhub.com/view_video.php?viewkey=697a8d3931975" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="12" data-site="pornhub" data-state="nan" data-name="asuma toki">
+<td class="cell-district"><span class="chip">D12</span></td>
+<td class="cell-name">Asuma Toki</td>
+<td class="cell-site">Pornhub</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#8a8d99;--bg:#26272c">NaN</span></td>
+<td class="cell-link"><a href="https://www.pornhub.com/view_video.php?viewkey=676c4e2264392" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="4" data-site="gelboru" data-state="hunt" data-name="saint louis">
+<td class="cell-district"><svg class="die" viewBox="0 0 100 100" width="26" height="26" aria-label="District 4">
+<rect x="4" y="4" width="92" height="92" rx="16"/>
+<g class="pips"><circle cx="28" cy="28" r="7"/><circle cx="72" cy="28" r="7"/><circle cx="28" cy="72" r="7"/><circle cx="72" cy="72" r="7"/></g>
+</svg></td>
+<td class="cell-name">Saint Louis</td>
+<td class="cell-site">Gelboru</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#c9a24b;--bg:#3a2f16">Hunt</span></td>
+<td class="cell-link"><a href="https://gelbooru.com/index.php?page=post&amp;s=view&amp;id=12523891" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="12" data-site="gelboru" data-state="hunt" data-name="miyako tsukiyuki">
+<td class="cell-district"><span class="chip">D12</span></td>
+<td class="cell-name">Miyako Tsukiyuki</td>
+<td class="cell-site">Gelboru</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#c9a24b;--bg:#3a2f16">Hunt</span></td>
+<td class="cell-link"><a href="https://gelbooru.com/index.php?page=post&amp;s=view&amp;id=13688278" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="12" data-site="gelboru" data-state="excite" data-name="miyako tsukiyuki">
+<td class="cell-district"><span class="chip">D12</span></td>
+<td class="cell-name">Miyako Tsukiyuki</td>
+<td class="cell-site">Gelboru</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#d98fd0;--bg:#331a30">Excite</span></td>
+<td class="cell-link"><a href="https://gelbooru.com/index.php?page=post&amp;s=view&amp;id=13350235" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="12" data-site="gelboru" data-state="hunt" data-name="akeboshi himari">
+<td class="cell-district"><span class="chip">D12</span></td>
+<td class="cell-name">Akeboshi Himari</td>
+<td class="cell-site">Gelboru</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#c9a24b;--bg:#3a2f16">Hunt</span></td>
+<td class="cell-link"><a href="https://urakawahanako.github.io/Lilith/contact.html" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="12" data-site="gelboru" data-state="hunt" data-name="akeboshi himari">
+<td class="cell-district"><span class="chip">D12</span></td>
+<td class="cell-name">Akeboshi Himari</td>
+<td class="cell-site">Gelboru</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#c9a24b;--bg:#3a2f16">Hunt</span></td>
+<td class="cell-link"><a href="https://img2.gelbooru.com/images/2f/d3/2fd3e953162df28f688de2a582bcef10.jpg" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="12" data-site="gelboru" data-state="hunt" data-name="akeboshi himari">
+<td class="cell-district"><span class="chip">D12</span></td>
+<td class="cell-name">Akeboshi Himari</td>
+<td class="cell-site">Gelboru</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#c9a24b;--bg:#3a2f16">Hunt</span></td>
+<td class="cell-link"><a href="https://img2.gelbooru.com/images/73/57/7357f129c9db17aea6fcb8b6c2f61cb3.png" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="12" data-site="gelboru" data-state="hunt" data-name="akeboshi himari">
+<td class="cell-district"><span class="chip">D12</span></td>
+<td class="cell-name">Akeboshi Himari</td>
+<td class="cell-site">Gelboru</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#c9a24b;--bg:#3a2f16">Hunt</span></td>
+<td class="cell-link"><a href="https://img2.gelbooru.com/images/43/10/4310ad804fd2330861939a209982316f.jpg" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="12" data-site="gelboru" data-state="hunt" data-name="akeboshi himari">
+<td class="cell-district"><span class="chip">D12</span></td>
+<td class="cell-name">Akeboshi Himari</td>
+<td class="cell-site">Gelboru</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#c9a24b;--bg:#3a2f16">Hunt</span></td>
+<td class="cell-link"><a href="https://img2.gelbooru.com/images/56/94/5694c41de8322289210583bca749fb87.jpg" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="4" data-site="gelboru" data-state="devour" data-name="yorktown">
+<td class="cell-district"><svg class="die" viewBox="0 0 100 100" width="26" height="26" aria-label="District 4">
+<rect x="4" y="4" width="92" height="92" rx="16"/>
+<g class="pips"><circle cx="28" cy="28" r="7"/><circle cx="72" cy="28" r="7"/><circle cx="28" cy="72" r="7"/><circle cx="72" cy="72" r="7"/></g>
+</svg></td>
+<td class="cell-name">Yorktown</td>
+<td class="cell-site">Gelboru</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#c1443c;--bg:#3a1715">Devour</span></td>
+<td class="cell-link"><a href="https://gelbooru.com/index.php?page=post&amp;s=view&amp;id=5138600" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="5" data-site="rule 34" data-state="market" data-name="darjeeling">
+<td class="cell-district"><svg class="die" viewBox="0 0 100 100" width="26" height="26" aria-label="District 5">
+<rect x="4" y="4" width="92" height="92" rx="16"/>
+<g class="pips"><circle cx="28" cy="28" r="7"/><circle cx="72" cy="28" r="7"/><circle cx="50" cy="50" r="7"/><circle cx="28" cy="72" r="7"/><circle cx="72" cy="72" r="7"/></g>
+</svg></td>
+<td class="cell-name">Darjeeling</td>
+<td class="cell-site">Rule 34</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#7fa7c9;--bg:#152534">Market</span></td>
+<td class="cell-link"><a href="https://rule34.xxx/index.php?page=post&amp;s=view&amp;id=16695450" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="5" data-site="rule34" data-state="hunt" data-name="darjeeling">
+<td class="cell-district"><svg class="die" viewBox="0 0 100 100" width="26" height="26" aria-label="District 5">
+<rect x="4" y="4" width="92" height="92" rx="16"/>
+<g class="pips"><circle cx="28" cy="28" r="7"/><circle cx="72" cy="28" r="7"/><circle cx="50" cy="50" r="7"/><circle cx="28" cy="72" r="7"/><circle cx="72" cy="72" r="7"/></g>
+</svg></td>
+<td class="cell-name">Darjeeling</td>
+<td class="cell-site">Rule34</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#c9a24b;--bg:#3a2f16">Hunt</span></td>
+<td class="cell-link"><a href="https://rule34.xxx/index.php?page=post&amp;s=view&amp;id=15840439" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="4" data-site="hentai force" data-state="hunt" data-name="vestal">
+<td class="cell-district"><svg class="die" viewBox="0 0 100 100" width="26" height="26" aria-label="District 4">
+<rect x="4" y="4" width="92" height="92" rx="16"/>
+<g class="pips"><circle cx="28" cy="28" r="7"/><circle cx="72" cy="28" r="7"/><circle cx="28" cy="72" r="7"/><circle cx="72" cy="72" r="7"/></g>
+</svg></td>
+<td class="cell-name">Vestal</td>
+<td class="cell-site">Hentai Force</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#c9a24b;--bg:#3a2f16">Hunt</span></td>
+<td class="cell-link"><a href="https://m1.hentaiforce.net/img/187804-10.jpg" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="18" data-site="x videos" data-state="devour" data-name="franchise - magicami">
+<td class="cell-district"><span class="chip">D18</span></td>
+<td class="cell-name">Franchise - Magicami</td>
+<td class="cell-site">X Videos</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#c1443c;--bg:#3a1715">Devour</span></td>
+<td class="cell-link"><a href="https://www.xvideos.com/?k=magicami" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="4" data-site="rule 34" data-state="hunt" data-name="enterprise">
+<td class="cell-district"><svg class="die" viewBox="0 0 100 100" width="26" height="26" aria-label="District 4">
+<rect x="4" y="4" width="92" height="92" rx="16"/>
+<g class="pips"><circle cx="28" cy="28" r="7"/><circle cx="72" cy="28" r="7"/><circle cx="28" cy="72" r="7"/><circle cx="72" cy="72" r="7"/></g>
+</svg></td>
+<td class="cell-name">Enterprise</td>
+<td class="cell-site">Rule 34</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#c9a24b;--bg:#3a2f16">Hunt</span></td>
+<td class="cell-link"><a href="https://rule34.xxx/index.php?page=post&amp;s=view&amp;id=3334150" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="4" data-site="rule 34" data-state="hunt" data-name="enterprise">
+<td class="cell-district"><svg class="die" viewBox="0 0 100 100" width="26" height="26" aria-label="District 4">
+<rect x="4" y="4" width="92" height="92" rx="16"/>
+<g class="pips"><circle cx="28" cy="28" r="7"/><circle cx="72" cy="28" r="7"/><circle cx="28" cy="72" r="7"/><circle cx="72" cy="72" r="7"/></g>
+</svg></td>
+<td class="cell-name">Enterprise</td>
+<td class="cell-site">Rule 34</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#c9a24b;--bg:#3a2f16">Hunt</span></td>
+<td class="cell-link"><a href="https://rule34.xxx/index.php?page=post&amp;s=view&amp;id=4467113" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="4" data-site="rule 34" data-state="hunt" data-name="enterprise">
+<td class="cell-district"><svg class="die" viewBox="0 0 100 100" width="26" height="26" aria-label="District 4">
+<rect x="4" y="4" width="92" height="92" rx="16"/>
+<g class="pips"><circle cx="28" cy="28" r="7"/><circle cx="72" cy="28" r="7"/><circle cx="28" cy="72" r="7"/><circle cx="72" cy="72" r="7"/></g>
+</svg></td>
+<td class="cell-name">Enterprise</td>
+<td class="cell-site">Rule 34</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#c9a24b;--bg:#3a2f16">Hunt</span></td>
+<td class="cell-link"><a href="https://rule34.xxx/index.php?page=post&amp;s=view&amp;id=2927390" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="4" data-site="rule 34" data-state="hunt" data-name="enterprise">
+<td class="cell-district"><svg class="die" viewBox="0 0 100 100" width="26" height="26" aria-label="District 4">
+<rect x="4" y="4" width="92" height="92" rx="16"/>
+<g class="pips"><circle cx="28" cy="28" r="7"/><circle cx="72" cy="28" r="7"/><circle cx="28" cy="72" r="7"/><circle cx="72" cy="72" r="7"/></g>
+</svg></td>
+<td class="cell-name">Enterprise</td>
+<td class="cell-site">Rule 34</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#c9a24b;--bg:#3a2f16">Hunt</span></td>
+<td class="cell-link"><a href="https://rule34.xxx/index.php?page=post&amp;s=view&amp;id=3240572" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="4" data-site="gelboru" data-state="hunt" data-name="enterprise">
+<td class="cell-district"><svg class="die" viewBox="0 0 100 100" width="26" height="26" aria-label="District 4">
+<rect x="4" y="4" width="92" height="92" rx="16"/>
+<g class="pips"><circle cx="28" cy="28" r="7"/><circle cx="72" cy="28" r="7"/><circle cx="28" cy="72" r="7"/><circle cx="72" cy="72" r="7"/></g>
+</svg></td>
+<td class="cell-name">Enterprise</td>
+<td class="cell-site">Gelboru</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#c9a24b;--bg:#3a2f16">Hunt</span></td>
+<td class="cell-link"><a href="https://gelbooru.com/index.php?page=post&amp;s=view&amp;id=5250015" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="10" data-site="rule 34" data-state="hunt" data-name="yae miko">
+<td class="cell-district"><span class="chip">D10</span></td>
+<td class="cell-name">Yae Miko</td>
+<td class="cell-site">Rule 34</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#c9a24b;--bg:#3a2f16">Hunt</span></td>
+<td class="cell-link"><a href="https://ahrimp4.rule34.xxx//images/5669/6c21d06ab7dd824891e7f64dc6ec5285.mp4?6448773" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="18" data-site="xvideos" data-state="hunt" data-name="goblin">
+<td class="cell-district"><span class="chip">D18</span></td>
+<td class="cell-name">Goblin</td>
+<td class="cell-site">XVideos</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#c9a24b;--bg:#3a2f16">Hunt</span></td>
+<td class="cell-link"><a href="https://www.xvideos.com/video.ummbivubb22/black_beast_16_goblin" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="10" data-site="rule 34" data-state="hunt" data-name="yae miko">
+<td class="cell-district"><span class="chip">D10</span></td>
+<td class="cell-name">Yae Miko</td>
+<td class="cell-site">Rule 34</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#c9a24b;--bg:#3a2f16">Hunt</span></td>
+<td class="cell-link"><a href="https://ahrimp4.rule34.xxx//images/6154/8eb698adb5ab46f69c4ea14bf13fc596.mp4?7001746" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="10" data-site="kemono" data-state="hunt" data-name="yae miko">
+<td class="cell-district"><span class="chip">D10</span></td>
+<td class="cell-name">Yae Miko</td>
+<td class="cell-site">Kemono</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#c9a24b;--bg:#3a2f16">Hunt</span></td>
+<td class="cell-link"><a href="https://kemono.cr/gumroad/user/2528008410755/post/bzhkcm" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="4" data-site="reddit" data-state="devour" data-name="sovetskaya soyuz">
+<td class="cell-district"><svg class="die" viewBox="0 0 100 100" width="26" height="26" aria-label="District 4">
+<rect x="4" y="4" width="92" height="92" rx="16"/>
+<g class="pips"><circle cx="28" cy="28" r="7"/><circle cx="72" cy="28" r="7"/><circle cx="28" cy="72" r="7"/><circle cx="72" cy="72" r="7"/></g>
+</svg></td>
+<td class="cell-name">Sovetskaya Soyuz</td>
+<td class="cell-site">Reddit</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#c1443c;--bg:#3a1715">Devour</span></td>
+<td class="cell-link"><a href="https://www.reddit.com/media?url=placeholder" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="23" data-site="x videos" data-state="devour" data-name="illya">
+<td class="cell-district"><span class="chip">D23</span></td>
+<td class="cell-name">Illya</td>
+<td class="cell-site">X Videos</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#c1443c;--bg:#3a1715">Devour</span></td>
+<td class="cell-link"><a href="https://www.xvideos.com/video.oiiuaemc64a/a_pleasurable_way" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="18" data-site="x videos" data-state="devour" data-name="goat">
+<td class="cell-district"><span class="chip">D18</span></td>
+<td class="cell-name">Goat</td>
+<td class="cell-site">X Videos</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#c1443c;--bg:#3a1715">Devour</span></td>
+<td class="cell-link"><a href="https://www.xvideos.com/video.ufdmihk57bd/goat_chan_new_year_s_special_" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="18" data-site="x videos" data-state="devour" data-name="goat">
+<td class="cell-district"><span class="chip">D18</span></td>
+<td class="cell-name">Goat</td>
+<td class="cell-site">X Videos</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#c1443c;--bg:#3a1715">Devour</span></td>
+<td class="cell-link"><a href="https://www.xvideos.com/video.ubuhkpk5c1b/goat-chan" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="18" data-site="rule 34" data-state="devour" data-name="tosaka">
+<td class="cell-district"><span class="chip">D18</span></td>
+<td class="cell-name">Tosaka</td>
+<td class="cell-site">Rule 34</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#c1443c;--bg:#3a1715">Devour</span></td>
+<td class="cell-link"><a href="https://rule34.xxx/index.php?page=post&amp;s=list&amp;tags=tosaka_%28tosaka0001%29&amp;pid=42" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="23" data-site="rule 34" data-state="devour" data-name="ishtar">
+<td class="cell-district"><span class="chip">D23</span></td>
+<td class="cell-name">Ishtar</td>
+<td class="cell-site">Rule 34</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#c1443c;--bg:#3a1715">Devour</span></td>
+<td class="cell-link"><a href="https://rule34.xxx/index.php?page=post&amp;s=view&amp;id=4855504" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="18" data-site="nan" data-state="nan" data-name="ginhaha">
+<td class="cell-district"><span class="chip">D18</span></td>
+<td class="cell-name">Ginhaha</td>
+<td class="cell-site">NaN</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#8a8d99;--bg:#26272c">NaN</span></td>
+<td class="cell-link"><span class="chip muted">no link</span></td>
+</tr>
+<tr class="row" data-district="4" data-site="japanese asmr" data-state="devour" data-name="prinz eugene">
+<td class="cell-district"><svg class="die" viewBox="0 0 100 100" width="26" height="26" aria-label="District 4">
+<rect x="4" y="4" width="92" height="92" rx="16"/>
+<g class="pips"><circle cx="28" cy="28" r="7"/><circle cx="72" cy="28" r="7"/><circle cx="28" cy="72" r="7"/><circle cx="72" cy="72" r="7"/></g>
+</svg></td>
+<td class="cell-name">Prinz Eugene</td>
+<td class="cell-site">Japanese ASMR</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#c1443c;--bg:#3a1715">Devour</span></td>
+<td class="cell-link"><a href="https://japaneseasmr.com/144434/" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="4" data-site="dl site" data-state="devour" data-name="prinz eugene">
+<td class="cell-district"><svg class="die" viewBox="0 0 100 100" width="26" height="26" aria-label="District 4">
+<rect x="4" y="4" width="92" height="92" rx="16"/>
+<g class="pips"><circle cx="28" cy="28" r="7"/><circle cx="72" cy="28" r="7"/><circle cx="28" cy="72" r="7"/><circle cx="72" cy="72" r="7"/></g>
+</svg></td>
+<td class="cell-name">Prinz Eugene</td>
+<td class="cell-site">Dl Site</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#c1443c;--bg:#3a1715">Devour</span></td>
+<td class="cell-link"><a href="https://www.dlsite.com/maniax/work/=/product_id/RJ01595571.html" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="12" data-site="nekopoi" data-state="devour" data-name="hayase yuuka">
+<td class="cell-district"><span class="chip">D12</span></td>
+<td class="cell-name">Hayase Yuuka</td>
+<td class="cell-site">Nekopoi</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#c1443c;--bg:#3a1715">Devour</span></td>
+<td class="cell-link"><a href="https://nekopoi.care/l2d-hubungan-nakal-yuuka" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="12" data-site="nekopoi" data-state="devour" data-name="rio takatsuki">
+<td class="cell-district"><span class="chip">D12</span></td>
+<td class="cell-name">Rio Takatsuki</td>
+<td class="cell-site">Nekopoi</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#c1443c;--bg:#3a1715">Devour</span></td>
+<td class="cell-link"><a href="https://nekopoi.care/l2d-rio-si-vampir" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="4" data-site="gelboru" data-state="hunt" data-name="enterprise">
+<td class="cell-district"><svg class="die" viewBox="0 0 100 100" width="26" height="26" aria-label="District 4">
+<rect x="4" y="4" width="92" height="92" rx="16"/>
+<g class="pips"><circle cx="28" cy="28" r="7"/><circle cx="72" cy="28" r="7"/><circle cx="28" cy="72" r="7"/><circle cx="72" cy="72" r="7"/></g>
+</svg></td>
+<td class="cell-name">Enterprise</td>
+<td class="cell-site">Gelboru</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#c9a24b;--bg:#3a2f16">Hunt</span></td>
+<td class="cell-link"><a href="https://gelbooru.com/index.php?page=post&amp;s=view&amp;id=5506212" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="4" data-site="gelboru" data-state="hunt" data-name="enterprise">
+<td class="cell-district"><svg class="die" viewBox="0 0 100 100" width="26" height="26" aria-label="District 4">
+<rect x="4" y="4" width="92" height="92" rx="16"/>
+<g class="pips"><circle cx="28" cy="28" r="7"/><circle cx="72" cy="28" r="7"/><circle cx="28" cy="72" r="7"/><circle cx="72" cy="72" r="7"/></g>
+</svg></td>
+<td class="cell-name">Enterprise</td>
+<td class="cell-site">Gelboru</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#c9a24b;--bg:#3a2f16">Hunt</span></td>
+<td class="cell-link"><a href="https://gelbooru.com/index.php?page=post&amp;s=view&amp;id=6684794" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="4" data-site="gelboru" data-state="hunt" data-name="enterprise">
+<td class="cell-district"><svg class="die" viewBox="0 0 100 100" width="26" height="26" aria-label="District 4">
+<rect x="4" y="4" width="92" height="92" rx="16"/>
+<g class="pips"><circle cx="28" cy="28" r="7"/><circle cx="72" cy="28" r="7"/><circle cx="28" cy="72" r="7"/><circle cx="72" cy="72" r="7"/></g>
+</svg></td>
+<td class="cell-name">Enterprise</td>
+<td class="cell-site">Gelboru</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#c9a24b;--bg:#3a2f16">Hunt</span></td>
+<td class="cell-link"><a href="https://gelbooru.com/index.php?page=post&amp;s=view&amp;id=6971596" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="16" data-site="xvideos" data-state="hunt" data-name="goblin">
+<td class="cell-district"><span class="chip">D16</span></td>
+<td class="cell-name">Goblin</td>
+<td class="cell-site">XVideos</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#c9a24b;--bg:#3a2f16">Hunt</span></td>
+<td class="cell-link"><a href="https://www.xvideos.com/video.uvlcdvh999a/hentai_game_escape_dungeon" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="10" data-site="rule 34" data-state="ntr" data-name="yae miko">
+<td class="cell-district"><span class="chip">D10</span></td>
+<td class="cell-name">Yae Miko</td>
+<td class="cell-site">Rule 34</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#c1443c;--bg:#3a1715">NTR</span></td>
+<td class="cell-link"><a href="https://ahrimp4.rule34.xxx//images/2068/e8c0e5e150d130cde998220431b5e59e.mp4?9972610" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="5" data-site="pixiv" data-state="market" data-name="darjeeling">
+<td class="cell-district"><svg class="die" viewBox="0 0 100 100" width="26" height="26" aria-label="District 5">
+<rect x="4" y="4" width="92" height="92" rx="16"/>
+<g class="pips"><circle cx="28" cy="28" r="7"/><circle cx="72" cy="28" r="7"/><circle cx="50" cy="50" r="7"/><circle cx="28" cy="72" r="7"/><circle cx="72" cy="72" r="7"/></g>
+</svg></td>
+<td class="cell-name">Darjeeling</td>
+<td class="cell-site">Pixiv</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#7fa7c9;--bg:#152534">Market</span></td>
+<td class="cell-link"><a href="https://www.pixiv.net/en/artworks/143363380" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="4" data-site="gelboru" data-state="hunt" data-name="saint louis">
+<td class="cell-district"><svg class="die" viewBox="0 0 100 100" width="26" height="26" aria-label="District 4">
+<rect x="4" y="4" width="92" height="92" rx="16"/>
+<g class="pips"><circle cx="28" cy="28" r="7"/><circle cx="72" cy="28" r="7"/><circle cx="28" cy="72" r="7"/><circle cx="72" cy="72" r="7"/></g>
+</svg></td>
+<td class="cell-name">Saint Louis</td>
+<td class="cell-site">Gelboru</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#c9a24b;--bg:#3a2f16">Hunt</span></td>
+<td class="cell-link"><a href="https://img2.gelbooru.com/images/6d/c8/6dc878baac00784439f67de0f65c541a.jpg" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="4" data-site="gelboru" data-state="market" data-name="new jersey">
+<td class="cell-district"><svg class="die" viewBox="0 0 100 100" width="26" height="26" aria-label="District 4">
+<rect x="4" y="4" width="92" height="92" rx="16"/>
+<g class="pips"><circle cx="28" cy="28" r="7"/><circle cx="72" cy="28" r="7"/><circle cx="28" cy="72" r="7"/><circle cx="72" cy="72" r="7"/></g>
+</svg></td>
+<td class="cell-name">New Jersey</td>
+<td class="cell-site">Gelboru</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#7fa7c9;--bg:#152534">Market</span></td>
+<td class="cell-link"><a href="https://gelbooru.com/index.php?page=post&amp;s=view&amp;id=13337270" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="4" data-site="undefined" data-state="hunt" data-name="st louis">
+<td class="cell-district"><svg class="die" viewBox="0 0 100 100" width="26" height="26" aria-label="District 4">
+<rect x="4" y="4" width="92" height="92" rx="16"/>
+<g class="pips"><circle cx="28" cy="28" r="7"/><circle cx="72" cy="28" r="7"/><circle cx="28" cy="72" r="7"/><circle cx="72" cy="72" r="7"/></g>
+</svg></td>
+<td class="cell-name">St Louis</td>
+<td class="cell-site">Undefined</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#c9a24b;--bg:#3a2f16">Hunt</span></td>
+<td class="cell-link"><a href="https://japaneseasmr.com/145142/" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="12" data-site="rule34" data-state="market" data-name="yuuka hayase">
+<td class="cell-district"><span class="chip">D12</span></td>
+<td class="cell-name">Yuuka Hayase</td>
+<td class="cell-site">Rule34</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#7fa7c9;--bg:#152534">Market</span></td>
+<td class="cell-link"><a href="https://gelbooru.com/index.php?page=post&amp;s=view&amp;id=14029542" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="5" data-site="rule34" data-state="hunt" data-name="darjeeling">
+<td class="cell-district"><svg class="die" viewBox="0 0 100 100" width="26" height="26" aria-label="District 5">
+<rect x="4" y="4" width="92" height="92" rx="16"/>
+<g class="pips"><circle cx="28" cy="28" r="7"/><circle cx="72" cy="28" r="7"/><circle cx="50" cy="50" r="7"/><circle cx="28" cy="72" r="7"/><circle cx="72" cy="72" r="7"/></g>
+</svg></td>
+<td class="cell-name">Darjeeling</td>
+<td class="cell-site">Rule34</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#c9a24b;--bg:#3a2f16">Hunt</span></td>
+<td class="cell-link"><a href="https://rule34.xxx/index.php?page=post&amp;s=view&amp;id=16096298" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="5" data-site="rule34" data-state="hunt" data-name="darjeeling">
+<td class="cell-district"><svg class="die" viewBox="0 0 100 100" width="26" height="26" aria-label="District 5">
+<rect x="4" y="4" width="92" height="92" rx="16"/>
+<g class="pips"><circle cx="28" cy="28" r="7"/><circle cx="72" cy="28" r="7"/><circle cx="50" cy="50" r="7"/><circle cx="28" cy="72" r="7"/><circle cx="72" cy="72" r="7"/></g>
+</svg></td>
+<td class="cell-name">Darjeeling</td>
+<td class="cell-site">Rule34</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#c9a24b;--bg:#3a2f16">Hunt</span></td>
+<td class="cell-link"><a href="https://rule34.xxx/index.php?page=post&amp;s=view&amp;id=16096616" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="12" data-site="undefined" data-state="hunt" data-name="kurodate haruna">
+<td class="cell-district"><span class="chip">D12</span></td>
+<td class="cell-name">Kurodate Haruna</td>
+<td class="cell-site">Undefined</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#c9a24b;--bg:#3a2f16">Hunt</span></td>
+<td class="cell-link"><a href="https://nhentai.net/g/579122/" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="12" data-site="undefined" data-state="hunt" data-name="kurodate haruna">
+<td class="cell-district"><span class="chip">D12</span></td>
+<td class="cell-name">Kurodate Haruna</td>
+<td class="cell-site">Undefined</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#c9a24b;--bg:#3a2f16">Hunt</span></td>
+<td class="cell-link"><a href="https://nhentai.net/g/485087/" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="6" data-site="nhentai" data-state="market" data-name="mantlecore">
+<td class="cell-district"><svg class="die" viewBox="0 0 100 100" width="26" height="26" aria-label="District 6">
+<rect x="4" y="4" width="92" height="92" rx="16"/>
+<g class="pips"><circle cx="28" cy="25" r="7"/><circle cx="72" cy="25" r="7"/><circle cx="28" cy="50" r="7"/><circle cx="72" cy="50" r="7"/><circle cx="28" cy="75" r="7"/><circle cx="72" cy="75" r="7"/></g>
+</svg></td>
+<td class="cell-name">Mantlecore</td>
+<td class="cell-site">nhentai</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#7fa7c9;--bg:#152534">Market</span></td>
+<td class="cell-link"><a href="https://nhentai.net/g/646208/" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="10" data-site="nhentai" data-state="hunt" data-name="ganyu">
+<td class="cell-district"><span class="chip">D10</span></td>
+<td class="cell-name">Ganyu</td>
+<td class="cell-site">NHentai</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#c9a24b;--bg:#3a2f16">Hunt</span></td>
+<td class="cell-link"><a href="https://nhentai.net/g/542170/" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="5" data-site="nhentai" data-state="market" data-name="miho nishizumi">
+<td class="cell-district"><svg class="die" viewBox="0 0 100 100" width="26" height="26" aria-label="District 5">
+<rect x="4" y="4" width="92" height="92" rx="16"/>
+<g class="pips"><circle cx="28" cy="28" r="7"/><circle cx="72" cy="28" r="7"/><circle cx="50" cy="50" r="7"/><circle cx="28" cy="72" r="7"/><circle cx="72" cy="72" r="7"/></g>
+</svg></td>
+<td class="cell-name">Miho Nishizumi</td>
+<td class="cell-site">NHentai</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#7fa7c9;--bg:#152534">Market</span></td>
+<td class="cell-link"><a href="https://nhentai.net/g/273327/" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="5" data-site="nhentai" data-state="devour" data-name="darjeeling">
+<td class="cell-district"><svg class="die" viewBox="0 0 100 100" width="26" height="26" aria-label="District 5">
+<rect x="4" y="4" width="92" height="92" rx="16"/>
+<g class="pips"><circle cx="28" cy="28" r="7"/><circle cx="72" cy="28" r="7"/><circle cx="50" cy="50" r="7"/><circle cx="28" cy="72" r="7"/><circle cx="72" cy="72" r="7"/></g>
+</svg></td>
+<td class="cell-name">Darjeeling</td>
+<td class="cell-site">NHentai</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#c1443c;--bg:#3a1715">Devour</span></td>
+<td class="cell-link"><a href="https://nhentai.net/g/323638/" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="10" data-site="reddit" data-state="parody" data-name="aria">
+<td class="cell-district"><span class="chip">D10</span></td>
+<td class="cell-name">Aria</td>
+<td class="cell-site">Reddit</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#d98fd0;--bg:#331a30">Parody</span></td>
+<td class="cell-link"><a href="https://www.reddit.com/r/hentai/comments/1lqty5a/airas_purification_ride/" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="18" data-site="xvideos" data-state="hunt" data-name="goblin">
+<td class="cell-district"><span class="chip">D18</span></td>
+<td class="cell-name">Goblin</td>
+<td class="cell-site">XVideos</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#c9a24b;--bg:#3a2f16">Hunt</span></td>
+<td class="cell-link"><a href="https://www.xvideos.com/video.uahhvmd00c6/ochi_mono_rpg" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="18" data-site="x videos" data-state="hunt" data-name="goblin">
+<td class="cell-district"><span class="chip">D18</span></td>
+<td class="cell-name">Goblin</td>
+<td class="cell-site">X Videos</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#c9a24b;--bg:#3a2f16">Hunt</span></td>
+<td class="cell-link"><a href="https://www.xvideos.com/video.otebbhk5be1/stream_yuusha-chan" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="18" data-site="xnxx" data-state="hunt" data-name="ravencloft">
+<td class="cell-district"><span class="chip">D18</span></td>
+<td class="cell-name">Ravencloft</td>
+<td class="cell-site">xnxx</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#c9a24b;--bg:#3a2f16">Hunt</span></td>
+<td class="cell-link"><a href="https://www.xnxx.com/video-1eintf4f/stream_yuusha-chan" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="18" data-site="rule34" data-state="hunt" data-name="goblin">
+<td class="cell-district"><span class="chip">D18</span></td>
+<td class="cell-name">Goblin</td>
+<td class="cell-site">Rule34</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#c9a24b;--bg:#3a2f16">Hunt</span></td>
+<td class="cell-link"><a href="https://ahrimp4.rule34.xxx//images/3070/e0f9ab4e8185894173004d2d0b7198ac.mp4?16398765" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="10" data-site="rule 34" data-state="bdsm - hunt" data-name="yae miko">
+<td class="cell-district"><span class="chip">D10</span></td>
+<td class="cell-name">Yae Miko</td>
+<td class="cell-site">Rule 34</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#c9a24b;--bg:#3a2f16">BDSM - Hunt</span></td>
+<td class="cell-link"><a href="https://ahrimp4.rule34.xxx//images/7287/d7c78fabe517e19936c71cac66a72c19.mp4?8321414" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="4" data-site="gelboru" data-state="hunt" data-name="new jersey">
+<td class="cell-district"><svg class="die" viewBox="0 0 100 100" width="26" height="26" aria-label="District 4">
+<rect x="4" y="4" width="92" height="92" rx="16"/>
+<g class="pips"><circle cx="28" cy="28" r="7"/><circle cx="72" cy="28" r="7"/><circle cx="28" cy="72" r="7"/><circle cx="72" cy="72" r="7"/></g>
+</svg></td>
+<td class="cell-name">New Jersey</td>
+<td class="cell-site">Gelboru</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#c9a24b;--bg:#3a2f16">Hunt</span></td>
+<td class="cell-link"><a href="https://gelbooru.com/index.php?page=post&amp;s=view&amp;id=9778740" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="4" data-site="gelboru" data-state="market" data-name="new jersey">
+<td class="cell-district"><svg class="die" viewBox="0 0 100 100" width="26" height="26" aria-label="District 4">
+<rect x="4" y="4" width="92" height="92" rx="16"/>
+<g class="pips"><circle cx="28" cy="28" r="7"/><circle cx="72" cy="28" r="7"/><circle cx="28" cy="72" r="7"/><circle cx="72" cy="72" r="7"/></g>
+</svg></td>
+<td class="cell-name">New Jersey</td>
+<td class="cell-site">Gelboru</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#7fa7c9;--bg:#152534">Market</span></td>
+<td class="cell-link"><a href="https://gelbooru.com/index.php?page=post&amp;s=view&amp;id=10608770" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="4" data-site="gelboru" data-state="hunt" data-name="new jersey">
+<td class="cell-district"><svg class="die" viewBox="0 0 100 100" width="26" height="26" aria-label="District 4">
+<rect x="4" y="4" width="92" height="92" rx="16"/>
+<g class="pips"><circle cx="28" cy="28" r="7"/><circle cx="72" cy="28" r="7"/><circle cx="28" cy="72" r="7"/><circle cx="72" cy="72" r="7"/></g>
+</svg></td>
+<td class="cell-name">New Jersey</td>
+<td class="cell-site">Gelboru</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#c9a24b;--bg:#3a2f16">Hunt</span></td>
+<td class="cell-link"><a href="https://gelbooru.com/index.php?page=post&amp;s=view&amp;id=12622443" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="4" data-site="gelboru" data-state="hunt" data-name="new jersey">
+<td class="cell-district"><svg class="die" viewBox="0 0 100 100" width="26" height="26" aria-label="District 4">
+<rect x="4" y="4" width="92" height="92" rx="16"/>
+<g class="pips"><circle cx="28" cy="28" r="7"/><circle cx="72" cy="28" r="7"/><circle cx="28" cy="72" r="7"/><circle cx="72" cy="72" r="7"/></g>
+</svg></td>
+<td class="cell-name">New Jersey</td>
+<td class="cell-site">Gelboru</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#c9a24b;--bg:#3a2f16">Hunt</span></td>
+<td class="cell-link"><a href="https://gelbooru.com/index.php?page=post&amp;s=view&amp;id=12513249" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="4" data-site="gelboru" data-state="hunt" data-name="new jersey">
+<td class="cell-district"><svg class="die" viewBox="0 0 100 100" width="26" height="26" aria-label="District 4">
+<rect x="4" y="4" width="92" height="92" rx="16"/>
+<g class="pips"><circle cx="28" cy="28" r="7"/><circle cx="72" cy="28" r="7"/><circle cx="28" cy="72" r="7"/><circle cx="72" cy="72" r="7"/></g>
+</svg></td>
+<td class="cell-name">New Jersey</td>
+<td class="cell-site">Gelboru</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#c9a24b;--bg:#3a2f16">Hunt</span></td>
+<td class="cell-link"><a href="https://gelbooru.com/index.php?page=post&amp;s=view&amp;id=8825873" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="4" data-site="gelboru" data-state="market" data-name="new jersey">
+<td class="cell-district"><svg class="die" viewBox="0 0 100 100" width="26" height="26" aria-label="District 4">
+<rect x="4" y="4" width="92" height="92" rx="16"/>
+<g class="pips"><circle cx="28" cy="28" r="7"/><circle cx="72" cy="28" r="7"/><circle cx="28" cy="72" r="7"/><circle cx="72" cy="72" r="7"/></g>
+</svg></td>
+<td class="cell-name">New Jersey</td>
+<td class="cell-site">Gelboru</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#7fa7c9;--bg:#152534">Market</span></td>
+<td class="cell-link"><a href="https://gelbooru.com/index.php?page=post&amp;s=view&amp;id=6146868" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="4" data-site="gelboru" data-state="hunt" data-name="saint louis">
+<td class="cell-district"><svg class="die" viewBox="0 0 100 100" width="26" height="26" aria-label="District 4">
+<rect x="4" y="4" width="92" height="92" rx="16"/>
+<g class="pips"><circle cx="28" cy="28" r="7"/><circle cx="72" cy="28" r="7"/><circle cx="28" cy="72" r="7"/><circle cx="72" cy="72" r="7"/></g>
+</svg></td>
+<td class="cell-name">Saint Louis</td>
+<td class="cell-site">Gelboru</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#c9a24b;--bg:#3a2f16">Hunt</span></td>
+<td class="cell-link"><a href="https://gelbooru.com/index.php?page=post&amp;s=view&amp;id=12734287" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="4" data-site="gelboru" data-state="hunt" data-name="saint louis">
+<td class="cell-district"><svg class="die" viewBox="0 0 100 100" width="26" height="26" aria-label="District 4">
+<rect x="4" y="4" width="92" height="92" rx="16"/>
+<g class="pips"><circle cx="28" cy="28" r="7"/><circle cx="72" cy="28" r="7"/><circle cx="28" cy="72" r="7"/><circle cx="72" cy="72" r="7"/></g>
+</svg></td>
+<td class="cell-name">Saint Louis</td>
+<td class="cell-site">Gelboru</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#c9a24b;--bg:#3a2f16">Hunt</span></td>
+<td class="cell-link"><a href="https://gelbooru.com/index.php?page=post&amp;s=view&amp;id=10670324" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="4" data-site="gelboru" data-state="hunt" data-name="saint louis">
+<td class="cell-district"><svg class="die" viewBox="0 0 100 100" width="26" height="26" aria-label="District 4">
+<rect x="4" y="4" width="92" height="92" rx="16"/>
+<g class="pips"><circle cx="28" cy="28" r="7"/><circle cx="72" cy="28" r="7"/><circle cx="28" cy="72" r="7"/><circle cx="72" cy="72" r="7"/></g>
+</svg></td>
+<td class="cell-name">Saint Louis</td>
+<td class="cell-site">Gelboru</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#c9a24b;--bg:#3a2f16">Hunt</span></td>
+<td class="cell-link"><a href="https://gelbooru.com/index.php?page=post&amp;s=view&amp;id=10670319" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="4" data-site="gelboru" data-state="hunt" data-name="saint louis">
+<td class="cell-district"><svg class="die" viewBox="0 0 100 100" width="26" height="26" aria-label="District 4">
+<rect x="4" y="4" width="92" height="92" rx="16"/>
+<g class="pips"><circle cx="28" cy="28" r="7"/><circle cx="72" cy="28" r="7"/><circle cx="28" cy="72" r="7"/><circle cx="72" cy="72" r="7"/></g>
+</svg></td>
+<td class="cell-name">Saint Louis</td>
+<td class="cell-site">Gelboru</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#c9a24b;--bg:#3a2f16">Hunt</span></td>
+<td class="cell-link"><a href="https://gelbooru.com/index.php?page=post&amp;s=view&amp;id=11260117" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="12" data-site="gelboru" data-state="post-hunt" data-name="miyako tsukiyuki">
+<td class="cell-district"><span class="chip">D12</span></td>
+<td class="cell-name">Miyako Tsukiyuki</td>
+<td class="cell-site">Gelboru</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#c9a24b;--bg:#3a2f16">Post-Hunt</span></td>
+<td class="cell-link"><a href="https://gelbooru.com/index.php?page=post&amp;s=view&amp;id=13666207" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="5" data-site="rule 34" data-state="market" data-name="darjeeling">
+<td class="cell-district"><svg class="die" viewBox="0 0 100 100" width="26" height="26" aria-label="District 5">
+<rect x="4" y="4" width="92" height="92" rx="16"/>
+<g class="pips"><circle cx="28" cy="28" r="7"/><circle cx="72" cy="28" r="7"/><circle cx="50" cy="50" r="7"/><circle cx="28" cy="72" r="7"/><circle cx="72" cy="72" r="7"/></g>
+</svg></td>
+<td class="cell-name">Darjeeling</td>
+<td class="cell-site">Rule 34</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#7fa7c9;--bg:#152534">Market</span></td>
+<td class="cell-link"><a href="https://rule34.xxx/index.php?page=post&amp;s=view&amp;id=16912558" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="5" data-site="rule34" data-state="hunt" data-name="darjeeling">
+<td class="cell-district"><svg class="die" viewBox="0 0 100 100" width="26" height="26" aria-label="District 5">
+<rect x="4" y="4" width="92" height="92" rx="16"/>
+<g class="pips"><circle cx="28" cy="28" r="7"/><circle cx="72" cy="28" r="7"/><circle cx="50" cy="50" r="7"/><circle cx="28" cy="72" r="7"/><circle cx="72" cy="72" r="7"/></g>
+</svg></td>
+<td class="cell-name">Darjeeling</td>
+<td class="cell-site">Rule34</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#c9a24b;--bg:#3a2f16">Hunt</span></td>
+<td class="cell-link"><a href="https://rule34.xxx/index.php?page=post&amp;s=view&amp;id=16912571" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="5" data-site="rule34" data-state="hunt" data-name="darjeeling">
+<td class="cell-district"><svg class="die" viewBox="0 0 100 100" width="26" height="26" aria-label="District 5">
+<rect x="4" y="4" width="92" height="92" rx="16"/>
+<g class="pips"><circle cx="28" cy="28" r="7"/><circle cx="72" cy="28" r="7"/><circle cx="50" cy="50" r="7"/><circle cx="28" cy="72" r="7"/><circle cx="72" cy="72" r="7"/></g>
+</svg></td>
+<td class="cell-name">Darjeeling</td>
+<td class="cell-site">Rule34</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#c9a24b;--bg:#3a2f16">Hunt</span></td>
+<td class="cell-link"><a href="https://rule34.xxx/index.php?page=post&amp;s=view&amp;id=16096607" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="12" data-site="undefined" data-state="hunt" data-name="kurodate haruna">
+<td class="cell-district"><span class="chip">D12</span></td>
+<td class="cell-name">Kurodate Haruna</td>
+<td class="cell-site">Undefined</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#c9a24b;--bg:#3a2f16">Hunt</span></td>
+<td class="cell-link"><a href="https://nhentai.net/g/531024/" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="6" data-site="nhentai" data-state="hunt" data-name="reed">
+<td class="cell-district"><svg class="die" viewBox="0 0 100 100" width="26" height="26" aria-label="District 6">
+<rect x="4" y="4" width="92" height="92" rx="16"/>
+<g class="pips"><circle cx="28" cy="25" r="7"/><circle cx="72" cy="25" r="7"/><circle cx="28" cy="50" r="7"/><circle cx="72" cy="50" r="7"/><circle cx="28" cy="75" r="7"/><circle cx="72" cy="75" r="7"/></g>
+</svg></td>
+<td class="cell-name">Reed</td>
+<td class="cell-site">NHentai</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#c9a24b;--bg:#3a2f16">Hunt</span></td>
+<td class="cell-link"><a href="https://nhentai.net/g/400725/" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="10" data-site="nhentai" data-state="hunt" data-name="ganyu">
+<td class="cell-district"><span class="chip">D10</span></td>
+<td class="cell-name">Ganyu</td>
+<td class="cell-site">NHentai</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#c9a24b;--bg:#3a2f16">Hunt</span></td>
+<td class="cell-link"><a href="https://nhentai.net/g/637074/" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="5" data-site="nhentai" data-state="devour" data-name="darjeeling">
+<td class="cell-district"><svg class="die" viewBox="0 0 100 100" width="26" height="26" aria-label="District 5">
+<rect x="4" y="4" width="92" height="92" rx="16"/>
+<g class="pips"><circle cx="28" cy="28" r="7"/><circle cx="72" cy="28" r="7"/><circle cx="50" cy="50" r="7"/><circle cx="28" cy="72" r="7"/><circle cx="72" cy="72" r="7"/></g>
+</svg></td>
+<td class="cell-name">Darjeeling</td>
+<td class="cell-site">NHentai</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#c1443c;--bg:#3a1715">Devour</span></td>
+<td class="cell-link"><a href="https://nhentai.net/g/280139/" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="5" data-site="nhentai" data-state="devour" data-name="darjeeling">
+<td class="cell-district"><svg class="die" viewBox="0 0 100 100" width="26" height="26" aria-label="District 5">
+<rect x="4" y="4" width="92" height="92" rx="16"/>
+<g class="pips"><circle cx="28" cy="28" r="7"/><circle cx="72" cy="28" r="7"/><circle cx="50" cy="50" r="7"/><circle cx="28" cy="72" r="7"/><circle cx="72" cy="72" r="7"/></g>
+</svg></td>
+<td class="cell-name">Darjeeling</td>
+<td class="cell-site">NHentai</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#c1443c;--bg:#3a1715">Devour</span></td>
+<td class="cell-link"><a href="https://nhentai.net/g/272034/" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="5" data-site="nhentai" data-state="devour" data-name="darjeeling">
+<td class="cell-district"><svg class="die" viewBox="0 0 100 100" width="26" height="26" aria-label="District 5">
+<rect x="4" y="4" width="92" height="92" rx="16"/>
+<g class="pips"><circle cx="28" cy="28" r="7"/><circle cx="72" cy="28" r="7"/><circle cx="50" cy="50" r="7"/><circle cx="28" cy="72" r="7"/><circle cx="72" cy="72" r="7"/></g>
+</svg></td>
+<td class="cell-name">Darjeeling</td>
+<td class="cell-site">NHentai</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#c1443c;--bg:#3a1715">Devour</span></td>
+<td class="cell-link"><a href="https://nhentai.net/g/276870/" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="5" data-site="nhentai" data-state="devour" data-name="darjeeling">
+<td class="cell-district"><svg class="die" viewBox="0 0 100 100" width="26" height="26" aria-label="District 5">
+<rect x="4" y="4" width="92" height="92" rx="16"/>
+<g class="pips"><circle cx="28" cy="28" r="7"/><circle cx="72" cy="28" r="7"/><circle cx="50" cy="50" r="7"/><circle cx="28" cy="72" r="7"/><circle cx="72" cy="72" r="7"/></g>
+</svg></td>
+<td class="cell-name">Darjeeling</td>
+<td class="cell-site">NHentai</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#c1443c;--bg:#3a1715">Devour</span></td>
+<td class="cell-link"><a href="https://nhentai.net/g/311644/" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="5" data-site="nhentai" data-state="devour" data-name="darjeeling">
+<td class="cell-district"><svg class="die" viewBox="0 0 100 100" width="26" height="26" aria-label="District 5">
+<rect x="4" y="4" width="92" height="92" rx="16"/>
+<g class="pips"><circle cx="28" cy="28" r="7"/><circle cx="72" cy="28" r="7"/><circle cx="50" cy="50" r="7"/><circle cx="28" cy="72" r="7"/><circle cx="72" cy="72" r="7"/></g>
+</svg></td>
+<td class="cell-name">Darjeeling</td>
+<td class="cell-site">NHentai</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#c1443c;--bg:#3a1715">Devour</span></td>
+<td class="cell-link"><a href="https://nhentai.net/g/312911/" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="18" data-site="jappanese asmr" data-state="market" data-name="nan">
+<td class="cell-district"><span class="chip">D18</span></td>
+<td class="cell-name">NaN</td>
+<td class="cell-site">Jappanese ASMR</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#7fa7c9;--bg:#152534">Market</span></td>
+<td class="cell-link"><a href="https://japaneseasmr.com/104279/" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="12" data-site="pixiv" data-state="devour" data-name="ushimaki juri">
+<td class="cell-district"><span class="chip">D12</span></td>
+<td class="cell-name">Ushimaki Juri</td>
+<td class="cell-site">Pixiv</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#c1443c;--bg:#3a1715">Devour</span></td>
+<td class="cell-link"><a href="https://www.pixiv.net/en/artworks/127664631" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="12" data-site="pixiv" data-state="devour" data-name="sumire otohana">
+<td class="cell-district"><span class="chip">D12</span></td>
+<td class="cell-name">Sumire Otohana</td>
+<td class="cell-site">Pixiv</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#c1443c;--bg:#3a1715">Devour</span></td>
+<td class="cell-link"><a href="https://www.pixiv.net/en/artworks/128594524" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="17" data-site="pixiv" data-state="devour" data-name="dark magician">
+<td class="cell-district"><span class="chip">D17</span></td>
+<td class="cell-name">Dark Magician</td>
+<td class="cell-site">Pixiv</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#c1443c;--bg:#3a1715">Devour</span></td>
+<td class="cell-link"><a href="https://www.pixiv.net/en/artworks/138000777" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="12" data-site="xnxx" data-state="market" data-name="kayoko">
+<td class="cell-district"><span class="chip">D12</span></td>
+<td class="cell-name">Kayoko</td>
+<td class="cell-site">XNXX</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#7fa7c9;--bg:#152534">Market</span></td>
+<td class="cell-link"><a href="https://www.xnxx.com/video-1hipwy2e/8/blue_archive_hentai" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="17" data-site="pixiv" data-state="devour" data-name="ip:masquarede">
+<td class="cell-district"><span class="chip">D17</span></td>
+<td class="cell-name">IP:Masquarede</td>
+<td class="cell-site">Pixiv</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#c1443c;--bg:#3a1715">Devour</span></td>
+<td class="cell-link"><a href="https://www.pixiv.net/en/artworks/125572695" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="5" data-site="pixiv" data-state="market" data-name="darjeeling">
+<td class="cell-district"><svg class="die" viewBox="0 0 100 100" width="26" height="26" aria-label="District 5">
+<rect x="4" y="4" width="92" height="92" rx="16"/>
+<g class="pips"><circle cx="28" cy="28" r="7"/><circle cx="72" cy="28" r="7"/><circle cx="50" cy="50" r="7"/><circle cx="28" cy="72" r="7"/><circle cx="72" cy="72" r="7"/></g>
+</svg></td>
+<td class="cell-name">Darjeeling</td>
+<td class="cell-site">Pixiv</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#7fa7c9;--bg:#152534">Market</span></td>
+<td class="cell-link"><a href="https://www.pixiv.net/en/artworks/141099876" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="12" data-site="rule34" data-state="devour" data-name="utazumi sakurako">
+<td class="cell-district"><span class="chip">D12</span></td>
+<td class="cell-name">Utazumi Sakurako</td>
+<td class="cell-site">Rule34</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#c1443c;--bg:#3a1715">Devour</span></td>
+<td class="cell-link"><a href="https://rule34.xxx/index.php?page=post&amp;s=view&amp;id=16558943" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="6" data-site="pixiv" data-state="hunt" data-name="franka">
+<td class="cell-district"><svg class="die" viewBox="0 0 100 100" width="26" height="26" aria-label="District 6">
+<rect x="4" y="4" width="92" height="92" rx="16"/>
+<g class="pips"><circle cx="28" cy="25" r="7"/><circle cx="72" cy="25" r="7"/><circle cx="28" cy="50" r="7"/><circle cx="72" cy="50" r="7"/><circle cx="28" cy="75" r="7"/><circle cx="72" cy="75" r="7"/></g>
+</svg></td>
+<td class="cell-name">Franka</td>
+<td class="cell-site">Pixiv</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#c9a24b;--bg:#3a2f16">Hunt</span></td>
+<td class="cell-link"><a href="https://www.pixiv.net/en/artworks/92111223" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="6" data-site="pixiv" data-state="hunt" data-name="franka">
+<td class="cell-district"><svg class="die" viewBox="0 0 100 100" width="26" height="26" aria-label="District 6">
+<rect x="4" y="4" width="92" height="92" rx="16"/>
+<g class="pips"><circle cx="28" cy="25" r="7"/><circle cx="72" cy="25" r="7"/><circle cx="28" cy="50" r="7"/><circle cx="72" cy="50" r="7"/><circle cx="28" cy="75" r="7"/><circle cx="72" cy="75" r="7"/></g>
+</svg></td>
+<td class="cell-name">Franka</td>
+<td class="cell-site">Pixiv</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#c9a24b;--bg:#3a2f16">Hunt</span></td>
+<td class="cell-link"><a href="https://www.pixiv.net/en/artworks/114794383" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="6" data-site="pixiv" data-state="hunt" data-name="blaze">
+<td class="cell-district"><svg class="die" viewBox="0 0 100 100" width="26" height="26" aria-label="District 6">
+<rect x="4" y="4" width="92" height="92" rx="16"/>
+<g class="pips"><circle cx="28" cy="25" r="7"/><circle cx="72" cy="25" r="7"/><circle cx="28" cy="50" r="7"/><circle cx="72" cy="50" r="7"/><circle cx="28" cy="75" r="7"/><circle cx="72" cy="75" r="7"/></g>
+</svg></td>
+<td class="cell-name">Blaze</td>
+<td class="cell-site">Pixiv</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#c9a24b;--bg:#3a2f16">Hunt</span></td>
+<td class="cell-link"><a href="https://www.pixiv.net/en/artworks/115230812" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="6" data-site="pixiv" data-state="hunt" data-name="blaze">
+<td class="cell-district"><svg class="die" viewBox="0 0 100 100" width="26" height="26" aria-label="District 6">
+<rect x="4" y="4" width="92" height="92" rx="16"/>
+<g class="pips"><circle cx="28" cy="25" r="7"/><circle cx="72" cy="25" r="7"/><circle cx="28" cy="50" r="7"/><circle cx="72" cy="50" r="7"/><circle cx="28" cy="75" r="7"/><circle cx="72" cy="75" r="7"/></g>
+</svg></td>
+<td class="cell-name">Blaze</td>
+<td class="cell-site">Pixiv</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#c9a24b;--bg:#3a2f16">Hunt</span></td>
+<td class="cell-link"><a href="https://www.pixiv.net/en/artworks/102634078" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="6" data-site="pixiv" data-state="hunt" data-name="chen">
+<td class="cell-district"><svg class="die" viewBox="0 0 100 100" width="26" height="26" aria-label="District 6">
+<rect x="4" y="4" width="92" height="92" rx="16"/>
+<g class="pips"><circle cx="28" cy="25" r="7"/><circle cx="72" cy="25" r="7"/><circle cx="28" cy="50" r="7"/><circle cx="72" cy="50" r="7"/><circle cx="28" cy="75" r="7"/><circle cx="72" cy="75" r="7"/></g>
+</svg></td>
+<td class="cell-name">Chen</td>
+<td class="cell-site">Pixiv</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#c9a24b;--bg:#3a2f16">Hunt</span></td>
+<td class="cell-link"><a href="https://www.pixiv.net/en/artworks/121816035" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="10" data-site="pixiv" data-state="hunt" data-name="ganyu">
+<td class="cell-district"><span class="chip">D10</span></td>
+<td class="cell-name">Ganyu</td>
+<td class="cell-site">Pixiv</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#c9a24b;--bg:#3a2f16">Hunt</span></td>
+<td class="cell-link"><a href="https://www.pixiv.net/en/artworks/138743075" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="4" data-site="undefined" data-state="hunt" data-name="shinano">
+<td class="cell-district"><svg class="die" viewBox="0 0 100 100" width="26" height="26" aria-label="District 4">
+<rect x="4" y="4" width="92" height="92" rx="16"/>
+<g class="pips"><circle cx="28" cy="28" r="7"/><circle cx="72" cy="28" r="7"/><circle cx="28" cy="72" r="7"/><circle cx="72" cy="72" r="7"/></g>
+</svg></td>
+<td class="cell-name">Shinano</td>
+<td class="cell-site">Undefined</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#c9a24b;--bg:#3a2f16">Hunt</span></td>
+<td class="cell-link"><a href="https://japaneseasmr.com/144056/" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="4" data-site="undefined" data-state="hunt" data-name="zara">
+<td class="cell-district"><svg class="die" viewBox="0 0 100 100" width="26" height="26" aria-label="District 4">
+<rect x="4" y="4" width="92" height="92" rx="16"/>
+<g class="pips"><circle cx="28" cy="28" r="7"/><circle cx="72" cy="28" r="7"/><circle cx="28" cy="72" r="7"/><circle cx="72" cy="72" r="7"/></g>
+</svg></td>
+<td class="cell-name">Zara</td>
+<td class="cell-site">Undefined</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#c9a24b;--bg:#3a2f16">Hunt</span></td>
+<td class="cell-link"><a href="https://japaneseasmr.com/145147/" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="12" data-site="xnxx" data-state="devour" data-name="hanekawa hasumi">
+<td class="cell-district"><span class="chip">D12</span></td>
+<td class="cell-name">Hanekawa Hasumi</td>
+<td class="cell-site">XNXX</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#c1443c;--bg:#3a1715">Devour</span></td>
+<td class="cell-link"><a href="https://www.xvideos.com/video.oieiuih242d/blue_archive_hasumi" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="18" data-site="xvideos" data-state="devour" data-name="reddit s2020">
+<td class="cell-district"><span class="chip">D18</span></td>
+<td class="cell-name">Reddit S2020</td>
+<td class="cell-site">XVideos</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#c1443c;--bg:#3a1715">Devour</span></td>
+<td class="cell-link"><a href="https://www.xvideos.com/video.uehpcdd1d45/stuffy_bunny" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="18" data-site="xvideos" data-state="devour" data-name="reddit s2020q6">
+<td class="cell-district"><span class="chip">D18</span></td>
+<td class="cell-name">Reddit S2020Q6</td>
+<td class="cell-site">XVideos</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#c1443c;--bg:#3a1715">Devour</span></td>
+<td class="cell-link"><a href="https://www.xvideos.com/video.udhvuof2278/rainy_day_lewdfroggo" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="4" data-site="jappanese asmr" data-state="devour" data-name="st.louis">
+<td class="cell-district"><svg class="die" viewBox="0 0 100 100" width="26" height="26" aria-label="District 4">
+<rect x="4" y="4" width="92" height="92" rx="16"/>
+<g class="pips"><circle cx="28" cy="28" r="7"/><circle cx="72" cy="28" r="7"/><circle cx="28" cy="72" r="7"/><circle cx="72" cy="72" r="7"/></g>
+</svg></td>
+<td class="cell-name">St.Louis</td>
+<td class="cell-site">Jappanese ASMR</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#c1443c;--bg:#3a1715">Devour</span></td>
+<td class="cell-link"><a href="https://japaneseasmr.com/145147/" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="6" data-site="undefined" data-state="devour" data-name="amiya">
+<td class="cell-district"><svg class="die" viewBox="0 0 100 100" width="26" height="26" aria-label="District 6">
+<rect x="4" y="4" width="92" height="92" rx="16"/>
+<g class="pips"><circle cx="28" cy="25" r="7"/><circle cx="72" cy="25" r="7"/><circle cx="28" cy="50" r="7"/><circle cx="72" cy="50" r="7"/><circle cx="28" cy="75" r="7"/><circle cx="72" cy="75" r="7"/></g>
+</svg></td>
+<td class="cell-name">Amiya</td>
+<td class="cell-site">Undefined</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#c1443c;--bg:#3a1715">Devour</span></td>
+<td class="cell-link"><a href="https://nhentai.net/g/601470/" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="12" data-site="xnxx" data-state="hunt" data-name="ichinose asuna">
+<td class="cell-district"><span class="chip">D12</span></td>
+<td class="cell-name">Ichinose Asuna</td>
+<td class="cell-site">XNXX</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#c9a24b;--bg:#3a2f16">Hunt</span></td>
+<td class="cell-link"><a href="https://www.xnxx.com/search-video/placeholder2" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="12" data-site="xnxx" data-state="hunt" data-name="ichinose asuna">
+<td class="cell-district"><span class="chip">D12</span></td>
+<td class="cell-name">Ichinose Asuna</td>
+<td class="cell-site">XNXX</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#c9a24b;--bg:#3a2f16">Hunt</span></td>
+<td class="cell-link"><a href="https://www.xnxx.com/search-video/placeholder3" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="12" data-site="xnxx" data-state="hunt" data-name="ichinose asuna">
+<td class="cell-district"><span class="chip">D12</span></td>
+<td class="cell-name">Ichinose Asuna</td>
+<td class="cell-site">XNXX</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#c9a24b;--bg:#3a2f16">Hunt</span></td>
+<td class="cell-link"><a href="https://www.xnxx.com/search-video/placeholder4" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="12" data-site="xnxx" data-state="hunt" data-name="sunaokami shiroko">
+<td class="cell-district"><span class="chip">D12</span></td>
+<td class="cell-name">Sunaokami Shiroko</td>
+<td class="cell-site">XNXX</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#c9a24b;--bg:#3a2f16">Hunt</span></td>
+<td class="cell-link"><a href="https://www.xnxx.com/search-video/placeholder5" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="12" data-site="xnxx" data-state="hunt" data-name="ichinose asuna">
+<td class="cell-district"><span class="chip">D12</span></td>
+<td class="cell-name">Ichinose Asuna</td>
+<td class="cell-site">XNXX</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#c9a24b;--bg:#3a2f16">Hunt</span></td>
+<td class="cell-link"><a href="https://www.xnxx.com/search-video/placeholder6" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="12" data-site="xnxx" data-state="hunt" data-name="sakuragi mio">
+<td class="cell-district"><span class="chip">D12</span></td>
+<td class="cell-name">Sakuragi Mio</td>
+<td class="cell-site">XNXX</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#c9a24b;--bg:#3a2f16">Hunt</span></td>
+<td class="cell-link"><a href="https://www.xnxx.com/search-video/placeholder7" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="12" data-site="xnxx" data-state="hunt" data-name="sakuragi mio">
+<td class="cell-district"><span class="chip">D12</span></td>
+<td class="cell-name">Sakuragi Mio</td>
+<td class="cell-site">XNXX</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#c9a24b;--bg:#3a2f16">Hunt</span></td>
+<td class="cell-link"><a href="https://www.xnxx.com/video-1hkhnp00/23/blue_archive_hentai" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="12" data-site="xnxx" data-state="hunt" data-name="kirifuji nagisa">
+<td class="cell-district"><span class="chip">D12</span></td>
+<td class="cell-name">Kirifuji Nagisa</td>
+<td class="cell-site">XNXX</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#c9a24b;--bg:#3a2f16">Hunt</span></td>
+<td class="cell-link"><a href="https://www.xnxx.com/video-1hic87db/25/blue_archive_hentai" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="12" data-site="xnxx" data-state="hunt" data-name="kirifuji nagisa">
+<td class="cell-district"><span class="chip">D12</span></td>
+<td class="cell-name">Kirifuji Nagisa</td>
+<td class="cell-site">XNXX</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#c9a24b;--bg:#3a2f16">Hunt</span></td>
+<td class="cell-link"><a href="https://www.xnxx.com/video-1hjg1s49/blue_archive_hentai" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="12" data-site="xnxx" data-state="hunt" data-name="tsukatsuki rio">
+<td class="cell-district"><span class="chip">D12</span></td>
+<td class="cell-name">Tsukatsuki Rio</td>
+<td class="cell-site">XNXX</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#c9a24b;--bg:#3a2f16">Hunt</span></td>
+<td class="cell-link"><a href="https://www.xnxx.com/video-1hhli4b3/23/blue_archive_hentai" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="12" data-site="xnxx" data-state="hunt" data-name="tsukatsuki rio">
+<td class="cell-district"><span class="chip">D12</span></td>
+<td class="cell-name">Tsukatsuki Rio</td>
+<td class="cell-site">XNXX</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#c9a24b;--bg:#3a2f16">Hunt</span></td>
+<td class="cell-link"><a href="https://www.xnxx.com/video-1hfx8y1d/24/blue_archive_hentai" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="12" data-site="xnxx" data-state="devour" data-name="sunaokami shiroko">
+<td class="cell-district"><span class="chip">D12</span></td>
+<td class="cell-name">Sunaokami Shiroko</td>
+<td class="cell-site">XNXX</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#c1443c;--bg:#3a1715">Devour</span></td>
+<td class="cell-link"><a href="https://www.xnxx.com/video-1hh99m22/11/blue_archive_hentai" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="4" data-site="xnxx" data-state="hunt" data-name="z23">
+<td class="cell-district"><svg class="die" viewBox="0 0 100 100" width="26" height="26" aria-label="District 4">
+<rect x="4" y="4" width="92" height="92" rx="16"/>
+<g class="pips"><circle cx="28" cy="28" r="7"/><circle cx="72" cy="28" r="7"/><circle cx="28" cy="72" r="7"/><circle cx="72" cy="72" r="7"/></g>
+</svg></td>
+<td class="cell-name">Z23</td>
+<td class="cell-site">XNXX</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#c9a24b;--bg:#3a2f16">Hunt</span></td>
+<td class="cell-link"><a href="https://www.xnxx.com/video-1hkhaj61/7/azur_lane_hentai" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="12" data-site="xnxx" data-state="hunt" data-name="urawa hanako">
+<td class="cell-district"><span class="chip">D12</span></td>
+<td class="cell-name">Urawa Hanako</td>
+<td class="cell-site">XNXX</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#c9a24b;--bg:#3a2f16">Hunt</span></td>
+<td class="cell-link"><a href="https://www.xnxx.com/search-video/placeholder8" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="12" data-site="pixiv" data-state="devour" data-name="ushio noa">
+<td class="cell-district"><span class="chip">D12</span></td>
+<td class="cell-name">Ushio Noa</td>
+<td class="cell-site">Pixiv</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#c1443c;--bg:#3a1715">Devour</span></td>
+<td class="cell-link"><a href="https://www.pixiv.net/en/artworks/143592380" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="12" data-site="pixiv" data-state="devour" data-name="ushio noa">
+<td class="cell-district"><span class="chip">D12</span></td>
+<td class="cell-name">Ushio Noa</td>
+<td class="cell-site">Pixiv</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#c1443c;--bg:#3a1715">Devour</span></td>
+<td class="cell-link"><a href="https://www.pixiv.net/en/artworks/144057005" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="12" data-site="pixiv" data-state="hunt" data-name="professor niyaniya">
+<td class="cell-district"><span class="chip">D12</span></td>
+<td class="cell-name">Professor Niyaniya</td>
+<td class="cell-site">Pixiv</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#c9a24b;--bg:#3a2f16">Hunt</span></td>
+<td class="cell-link"><a href="https://www.pixiv.net/en/artworks/145079448" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="12" data-site="pixiv" data-state="hunt" data-name="asagi mutsiki">
+<td class="cell-district"><span class="chip">D12</span></td>
+<td class="cell-name">Asagi Mutsiki</td>
+<td class="cell-site">Pixiv</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#c9a24b;--bg:#3a2f16">Hunt</span></td>
+<td class="cell-link"><a href="https://www.pixiv.net/en/artworks/145495303" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="12" data-site="pixiv" data-state="hunt" data-name="kirifuji nagisa">
+<td class="cell-district"><span class="chip">D12</span></td>
+<td class="cell-name">Kirifuji Nagisa</td>
+<td class="cell-site">Pixiv</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#c9a24b;--bg:#3a2f16">Hunt</span></td>
+<td class="cell-link"><a href="https://www.pixiv.net/en/artworks/135209086" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="12" data-site="pixiv" data-state="hunt" data-name="shirao eri">
+<td class="cell-district"><span class="chip">D12</span></td>
+<td class="cell-name">Shirao Eri</td>
+<td class="cell-site">Pixiv</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#c9a24b;--bg:#3a2f16">Hunt</span></td>
+<td class="cell-link"><a href="https://www.pixiv.net/en/artworks/145598640" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="12" data-site="pixiv" data-state="hunt" data-name="otohana sumire">
+<td class="cell-district"><span class="chip">D12</span></td>
+<td class="cell-name">Otohana Sumire</td>
+<td class="cell-site">Pixiv</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#c9a24b;--bg:#3a2f16">Hunt</span></td>
+<td class="cell-link"><a href="https://www.pixiv.net/en/artworks/128880691" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="12" data-site="pixiv" data-state="hunt" data-name="kurimura airi">
+<td class="cell-district"><span class="chip">D12</span></td>
+<td class="cell-name">Kurimura Airi</td>
+<td class="cell-site">Pixiv</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#c9a24b;--bg:#3a2f16">Hunt</span></td>
+<td class="cell-link"><a href="https://www.pixiv.net/en/artworks/145164900" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="12" data-site="pixiv" data-state="hunt" data-name="kurimura airi">
+<td class="cell-district"><span class="chip">D12</span></td>
+<td class="cell-name">Kurimura Airi</td>
+<td class="cell-site">Pixiv</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#c9a24b;--bg:#3a2f16">Hunt</span></td>
+<td class="cell-link"><a href="https://www.pixiv.net/en/artworks/145201293" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="3" data-site="pixiv" data-state="hunt" data-name="malty melroromarc">
+<td class="cell-district"><svg class="die" viewBox="0 0 100 100" width="26" height="26" aria-label="District 3">
+<rect x="4" y="4" width="92" height="92" rx="16"/>
+<g class="pips"><circle cx="28" cy="28" r="7"/><circle cx="50" cy="50" r="7"/><circle cx="72" cy="72" r="7"/></g>
+</svg></td>
+<td class="cell-name">Malty Melroromarc</td>
+<td class="cell-site">Pixiv</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#c9a24b;--bg:#3a2f16">Hunt</span></td>
+<td class="cell-link"><a href="https://www.pixiv.net/en/artworks/74986954" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="18" data-site="pixiv" data-state="devour" data-name="sword maiden">
+<td class="cell-district"><span class="chip">D18</span></td>
+<td class="cell-name">Sword Maiden</td>
+<td class="cell-site">Pixiv</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#c1443c;--bg:#3a1715">Devour</span></td>
+<td class="cell-link"><a href="https://www.pixiv.net/en/artworks/96681592" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="18" data-site="pixiv" data-state="devour" data-name="female fighter">
+<td class="cell-district"><span class="chip">D18</span></td>
+<td class="cell-name">Female Fighter</td>
+<td class="cell-site">Pixiv</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#c1443c;--bg:#3a1715">Devour</span></td>
+<td class="cell-link"><a href="https://www.pixiv.net/en/artworks/71186576" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="18" data-site="pixiv" data-state="devour" data-name="female fighter">
+<td class="cell-district"><span class="chip">D18</span></td>
+<td class="cell-name">Female Fighter</td>
+<td class="cell-site">Pixiv</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#c1443c;--bg:#3a1715">Devour</span></td>
+<td class="cell-link"><a href="https://www.pixiv.net/en/artworks/71129065" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="12" data-site="pixiv" data-state="hunt" data-name="shirao eri">
+<td class="cell-district"><span class="chip">D12</span></td>
+<td class="cell-name">Shirao Eri</td>
+<td class="cell-site">Pixiv</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#c9a24b;--bg:#3a2f16">Hunt</span></td>
+<td class="cell-link"><a href="https://www.pixiv.net/en/artworks/139328745" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="12" data-site="pixiv" data-state="devour" data-name="asuma toki">
+<td class="cell-district"><span class="chip">D12</span></td>
+<td class="cell-name">Asuma Toki</td>
+<td class="cell-site">Pixiv</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#c1443c;--bg:#3a1715">Devour</span></td>
+<td class="cell-link"><a href="https://www.pixiv.net/en/artworks/145690712" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="12" data-site="j asmr" data-state="hunt" data-name="izayoi nonomi">
+<td class="cell-district"><span class="chip">D12</span></td>
+<td class="cell-name">Izayoi Nonomi</td>
+<td class="cell-site">J ASMR</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#c9a24b;--bg:#3a2f16">Hunt</span></td>
+<td class="cell-link"><a href="https://japaneseasmr.com/146592/" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="12" data-site="undefined" data-state="undefined" data-name="mayoi shigure">
+<td class="cell-district"><span class="chip">D12</span></td>
+<td class="cell-name">Mayoi Shigure</td>
+<td class="cell-site">Undefined</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#8a8d99;--bg:#26272c">Undefined</span></td>
+<td class="cell-link"><a href="https://japaneseasmr.com/142886/" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="12" data-site="undefined" data-state="undefined" data-name="miyo sakuragi">
+<td class="cell-district"><span class="chip">D12</span></td>
+<td class="cell-name">Miyo Sakuragi</td>
+<td class="cell-site">Undefined</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#8a8d99;--bg:#26272c">Undefined</span></td>
+<td class="cell-link"><a href="https://japaneseasmr.com/146250/" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="4" data-site="pixiv" data-state="hunt" data-name="kms prinz eugene">
+<td class="cell-district"><svg class="die" viewBox="0 0 100 100" width="26" height="26" aria-label="District 4">
+<rect x="4" y="4" width="92" height="92" rx="16"/>
+<g class="pips"><circle cx="28" cy="28" r="7"/><circle cx="72" cy="28" r="7"/><circle cx="28" cy="72" r="7"/><circle cx="72" cy="72" r="7"/></g>
+</svg></td>
+<td class="cell-name">KMS Prinz Eugene</td>
+<td class="cell-site">Pixiv</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#c9a24b;--bg:#3a2f16">Hunt</span></td>
+<td class="cell-link"><a href="https://www.pixiv.net/en/artworks/139385199" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="4" data-site="pixiv" data-state="hunt" data-name="hms belfast">
+<td class="cell-district"><svg class="die" viewBox="0 0 100 100" width="26" height="26" aria-label="District 4">
+<rect x="4" y="4" width="92" height="92" rx="16"/>
+<g class="pips"><circle cx="28" cy="28" r="7"/><circle cx="72" cy="28" r="7"/><circle cx="28" cy="72" r="7"/><circle cx="72" cy="72" r="7"/></g>
+</svg></td>
+<td class="cell-name">HMS Belfast</td>
+<td class="cell-site">Pixiv</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#c9a24b;--bg:#3a2f16">Hunt</span></td>
+<td class="cell-link"><a href="https://www.pixiv.net/en/artworks/140859155" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="4" data-site="pixiv" data-state="hunt" data-name="uss enterprise">
+<td class="cell-district"><svg class="die" viewBox="0 0 100 100" width="26" height="26" aria-label="District 4">
+<rect x="4" y="4" width="92" height="92" rx="16"/>
+<g class="pips"><circle cx="28" cy="28" r="7"/><circle cx="72" cy="28" r="7"/><circle cx="28" cy="72" r="7"/><circle cx="72" cy="72" r="7"/></g>
+</svg></td>
+<td class="cell-name">USS Enterprise</td>
+<td class="cell-site">Pixiv</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#c9a24b;--bg:#3a2f16">Hunt</span></td>
+<td class="cell-link"><a href="https://www.pixiv.net/en/artworks/133555412" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="12" data-site="jappanese asmr" data-state="hunt" data-name="miyo sakuragi">
+<td class="cell-district"><span class="chip">D12</span></td>
+<td class="cell-name">Miyo Sakuragi</td>
+<td class="cell-site">Jappanese ASMR</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#c9a24b;--bg:#3a2f16">Hunt</span></td>
+<td class="cell-link"><a href="https://japaneseasmr.com/146250/" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+    </tbody>
+  </table>
+  <div class="empty-state" id="emptyState" style="display:none;">No entries match those filters.</div>
+
+  <footer>Source · Xano hunt endpoint — state != Gather</footer>
+</div>
+
+<script>
+const search = document.getElementById('search');
+const districtFilter = document.getElementById('districtFilter');
+const siteFilter = document.getElementById('siteFilter');
+const stateFilter = document.getElementById('stateFilter');
+const rows = Array.from(document.querySelectorAll('#tbody .row'));
+const emptyState = document.getElementById('emptyState');
+
+function applyFilters() {
+  const q = search.value.trim().toLowerCase();
+  const dist = districtFilter.value;
+  const site = siteFilter.value;
+  const state = stateFilter.value;
+  let visible = 0;
+  rows.forEach(r => {
+    const matchesQ = !q || r.dataset.name.includes(q);
+    const matchesDist = !dist || r.dataset.district === dist;
+    const matchesSite = !site || r.dataset.site === site;
+    const matchesState = !state || r.dataset.state === state;
+    const show = matchesQ && matchesDist && matchesSite && matchesState;
+    r.style.display = show ? '' : 'none';
+    if (show) visible++;
+  });
+  emptyState.style.display = visible === 0 ? 'block' : 'none';
+}
+
+[search, districtFilter, siteFilter, stateFilter].forEach(el => {
+  el.addEventListener('input', applyFilters);
+  el.addEventListener('change', applyFilters);
+});
+</script>
+</body>
+</html>

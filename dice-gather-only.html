@@ -1,0 +1,891 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dice — Gather Only</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap');
+
+  :root {
+    --bg: #14161c;
+    --panel: #1c1f27;
+    --panel-2: #23262f;
+    --line: #33363f;
+    --ink: #e9e7e0;
+    --ink-dim: #9c9fab;
+    --gold: #c9a24b;
+    --gold-dim: #8a7239;
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin:0; padding:0; }
+
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Inter', system-ui, sans-serif;
+    min-height: 100vh;
+    padding: 48px 24px 80px;
+  }
+
+  .wrap { max-width: 1180px; margin: 0 auto; }
+
+  header.top {
+    display:flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    gap: 24px;
+    border-bottom: 1px solid var(--line);
+    padding-bottom: 28px;
+    margin-bottom: 32px;
+  }
+
+  .brand { display:flex; align-items:center; gap:16px; }
+
+  .brand-die {
+    width: 46px; height: 46px;
+    border: 2px solid var(--gold);
+    border-radius: 12px;
+    display:flex; align-items:center; justify-content:center;
+    position:relative;
+    background: linear-gradient(160deg, #23262f, #181a20);
+    flex-shrink:0;
+  }
+  .brand-die svg { width:26px; height:26px; }
+  .brand-die circle { fill: var(--gold); }
+
+  h1 {
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    font-size: 38px;
+    letter-spacing: -0.01em;
+    margin: 0;
+    line-height: 1;
+  }
+  h1 .sub {
+    display:block;
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 500;
+    font-size: 12px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 8px;
+  }
+
+  .meta {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    color: var(--ink-dim);
+    text-align:right;
+  }
+  .meta .count { color: var(--ink); font-size: 22px; font-weight:500; display:block; }
+
+  .desc {
+    color: var(--ink-dim);
+    font-size: 15px;
+    max-width: 640px;
+    line-height: 1.55;
+    margin: -12px 0 28px;
+  }
+
+  .controls {
+    display:flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+  .controls input, .controls select {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    color: var(--ink);
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-family: 'Inter', sans-serif;
+    font-size: 13.5px;
+    outline: none;
+  }
+  .controls input { flex: 1 1 220px; }
+  .controls input::placeholder { color: var(--ink-dim); }
+  .controls input:focus, .controls select:focus { border-color: var(--gold-dim); }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  thead th {
+    text-align: left;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-dim);
+    font-weight: 500;
+    padding: 14px 18px;
+    border-bottom: 1px solid var(--line);
+    background: var(--panel-2);
+  }
+  tbody td {
+    padding: 13px 18px;
+    border-bottom: 1px solid var(--line);
+    font-size: 14.5px;
+    vertical-align: middle;
+  }
+  tbody tr:last-child td { border-bottom: none; }
+  tbody tr:hover { background: rgba(201,162,75,0.05); }
+
+  .die { display:block; }
+  .die rect { fill: #181a20; stroke: var(--line); stroke-width: 3; }
+  .die circle { fill: var(--ink-dim); }
+  tbody tr:hover .die circle { fill: var(--gold); }
+
+  .chip {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    background: var(--panel-2);
+    border: 1px solid var(--line);
+    padding: 4px 8px;
+    border-radius: 6px;
+    color: var(--ink-dim);
+  }
+  .chip.muted { opacity: 0.6; }
+
+  .cell-name { font-weight: 500; }
+  .cell-site { color: var(--ink-dim); font-size: 13.5px; }
+
+  .state-pill {
+    display:inline-block;
+    padding: 4px 11px;
+    border-radius: 20px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11.5px;
+    letter-spacing: 0.04em;
+    color: var(--fg);
+    background: var(--bg, var(--panel-2));
+    border: 1px solid var(--fg);
+  }
+
+  .link-btn {
+    color: var(--gold);
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 500;
+    border-bottom: 1px solid transparent;
+  }
+  .link-btn:hover { border-bottom-color: var(--gold); }
+
+  .empty-state {
+    text-align:center;
+    padding: 60px 20px;
+    color: var(--ink-dim);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+  }
+
+  footer {
+    margin-top: 28px;
+    color: var(--ink-dim);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11.5px;
+    text-align: center;
+    letter-spacing: 0.05em;
+  }
+
+  @media (max-width: 640px) {
+    body { padding: 28px 14px 60px; }
+    h1 { font-size: 28px; }
+    thead th:nth-child(3), tbody td:nth-child(3) { display:none; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div class="brand">
+      <div class="brand-die">
+        <svg viewBox="0 0 100 100"><circle cx="28" cy="28" r="8"/><circle cx="72" cy="28" r="8"/><circle cx="50" cy="50" r="8"/><circle cx="28" cy="72" r="8"/><circle cx="72" cy="72" r="8"/></svg>
+      </div>
+      <h1><span class="sub">Dice · Hunt Ledger</span>Gather Only</h1>
+    </div>
+    <div class="meta">
+      <span class="count">67</span>
+      entries logged
+    </div>
+  </header>
+
+  <p class="desc">Every entry currently sitting in the Gather state — pulled straight from the hunt endpoint, filtered to just this one stage.</p>
+
+  <div class="controls">
+    <input type="text" id="search" placeholder="Search by name…">
+    <select id="districtFilter"><option value="">All districts</option><option value="1">District 1</option><option value="4">District 4</option><option value="6">District 6</option><option value="12">District 12</option></select>
+    <select id="siteFilter"><option value="">All sites</option><option value="gelbooru">GelBooru</option><option value="gelboru">Gelboru</option><option value="pixiv">Pixiv</option><option value="safebooru">SafeBooru</option><option value="safebooru">Safebooru</option></select>
+    <select id="stateFilter"><option value="">All states</option><option value="gather">Gather</option></select>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>District</th>
+        <th>Name</th>
+        <th>Site</th>
+        <th>State</th>
+        <th>Path</th>
+      </tr>
+    </thead>
+    <tbody id="tbody">
+      <tr class="row" data-district="12" data-site="pixiv" data-state="gather" data-name="murokase ayane">
+<td class="cell-district"><span class="chip">D12</span></td>
+<td class="cell-name">Murokase Ayane</td>
+<td class="cell-site">Pixiv</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#6fae8f;--bg:#16332a">Gather</span></td>
+<td class="cell-link"><a href="https://www.pixiv.net/en/artworks/144089504" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="4" data-site="gelboru" data-state="gather" data-name="new jersey">
+<td class="cell-district"><svg class="die" viewBox="0 0 100 100" width="26" height="26" aria-label="District 4">
+<rect x="4" y="4" width="92" height="92" rx="16"/>
+<g class="pips"><circle cx="28" cy="28" r="7"/><circle cx="72" cy="28" r="7"/><circle cx="28" cy="72" r="7"/><circle cx="72" cy="72" r="7"/></g>
+</svg></td>
+<td class="cell-name">New Jersey</td>
+<td class="cell-site">Gelboru</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#6fae8f;--bg:#16332a">Gather</span></td>
+<td class="cell-link"><a href="https://gelbooru.com/index.php?page=post&amp;s=view&amp;id=13947365" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="4" data-site="gelboru" data-state="gather" data-name="new jersey">
+<td class="cell-district"><svg class="die" viewBox="0 0 100 100" width="26" height="26" aria-label="District 4">
+<rect x="4" y="4" width="92" height="92" rx="16"/>
+<g class="pips"><circle cx="28" cy="28" r="7"/><circle cx="72" cy="28" r="7"/><circle cx="28" cy="72" r="7"/><circle cx="72" cy="72" r="7"/></g>
+</svg></td>
+<td class="cell-name">New Jersey</td>
+<td class="cell-site">Gelboru</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#6fae8f;--bg:#16332a">Gather</span></td>
+<td class="cell-link"><a href="https://gelbooru.com/index.php?page=post&amp;s=view&amp;id=13925711" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="4" data-site="safebooru" data-state="gather" data-name="new jersey">
+<td class="cell-district"><svg class="die" viewBox="0 0 100 100" width="26" height="26" aria-label="District 4">
+<rect x="4" y="4" width="92" height="92" rx="16"/>
+<g class="pips"><circle cx="28" cy="28" r="7"/><circle cx="72" cy="28" r="7"/><circle cx="28" cy="72" r="7"/><circle cx="72" cy="72" r="7"/></g>
+</svg></td>
+<td class="cell-name">New Jersey</td>
+<td class="cell-site">Safebooru</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#6fae8f;--bg:#16332a">Gather</span></td>
+<td class="cell-link"><a href="https://safebooru.org//images/4405/b841ed8033aee5bce74bf7cba9f4279106e032f4.jpg" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="4" data-site="safebooru" data-state="gather" data-name="new jersey">
+<td class="cell-district"><svg class="die" viewBox="0 0 100 100" width="26" height="26" aria-label="District 4">
+<rect x="4" y="4" width="92" height="92" rx="16"/>
+<g class="pips"><circle cx="28" cy="28" r="7"/><circle cx="72" cy="28" r="7"/><circle cx="28" cy="72" r="7"/><circle cx="72" cy="72" r="7"/></g>
+</svg></td>
+<td class="cell-name">New Jersey</td>
+<td class="cell-site">Safebooru</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#6fae8f;--bg:#16332a">Gather</span></td>
+<td class="cell-link"><a href="https://safebooru.org//images/3860/95f1bcbb75003a49adcbcf2493038ca8.jpeg" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="4" data-site="safebooru" data-state="gather" data-name="new jersey">
+<td class="cell-district"><svg class="die" viewBox="0 0 100 100" width="26" height="26" aria-label="District 4">
+<rect x="4" y="4" width="92" height="92" rx="16"/>
+<g class="pips"><circle cx="28" cy="28" r="7"/><circle cx="72" cy="28" r="7"/><circle cx="28" cy="72" r="7"/><circle cx="72" cy="72" r="7"/></g>
+</svg></td>
+<td class="cell-name">New Jersey</td>
+<td class="cell-site">Safebooru</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#6fae8f;--bg:#16332a">Gather</span></td>
+<td class="cell-link"><a href="https://safebooru.org//images/4362/a28f3d9282c586a438450aa08494f006.jpeg" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="4" data-site="safebooru" data-state="gather" data-name="new jersey">
+<td class="cell-district"><svg class="die" viewBox="0 0 100 100" width="26" height="26" aria-label="District 4">
+<rect x="4" y="4" width="92" height="92" rx="16"/>
+<g class="pips"><circle cx="28" cy="28" r="7"/><circle cx="72" cy="28" r="7"/><circle cx="28" cy="72" r="7"/><circle cx="72" cy="72" r="7"/></g>
+</svg></td>
+<td class="cell-name">New Jersey</td>
+<td class="cell-site">Safebooru</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#6fae8f;--bg:#16332a">Gather</span></td>
+<td class="cell-link"><a href="https://safebooru.org//images/2054/1e09dd7ac18e5a55eb1a01b8b0219d24392d054d.jpg" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="4" data-site="safebooru" data-state="gather" data-name="new jersey">
+<td class="cell-district"><svg class="die" viewBox="0 0 100 100" width="26" height="26" aria-label="District 4">
+<rect x="4" y="4" width="92" height="92" rx="16"/>
+<g class="pips"><circle cx="28" cy="28" r="7"/><circle cx="72" cy="28" r="7"/><circle cx="28" cy="72" r="7"/><circle cx="72" cy="72" r="7"/></g>
+</svg></td>
+<td class="cell-name">New Jersey</td>
+<td class="cell-site">Safebooru</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#6fae8f;--bg:#16332a">Gather</span></td>
+<td class="cell-link"><a href="https://safebooru.org//images/1286/2b98b696be76c3c23fdf3bd6bb4b1a09.jpeg" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="4" data-site="gelboru" data-state="gather" data-name="new jersey">
+<td class="cell-district"><svg class="die" viewBox="0 0 100 100" width="26" height="26" aria-label="District 4">
+<rect x="4" y="4" width="92" height="92" rx="16"/>
+<g class="pips"><circle cx="28" cy="28" r="7"/><circle cx="72" cy="28" r="7"/><circle cx="28" cy="72" r="7"/><circle cx="72" cy="72" r="7"/></g>
+</svg></td>
+<td class="cell-name">New Jersey</td>
+<td class="cell-site">Gelboru</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#6fae8f;--bg:#16332a">Gather</span></td>
+<td class="cell-link"><a href="https://gelbooru.com/index.php?page=post&amp;s=view&amp;id=13911912" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="4" data-site="safebooru" data-state="gather" data-name="new jersey">
+<td class="cell-district"><svg class="die" viewBox="0 0 100 100" width="26" height="26" aria-label="District 4">
+<rect x="4" y="4" width="92" height="92" rx="16"/>
+<g class="pips"><circle cx="28" cy="28" r="7"/><circle cx="72" cy="28" r="7"/><circle cx="28" cy="72" r="7"/><circle cx="72" cy="72" r="7"/></g>
+</svg></td>
+<td class="cell-name">New Jersey</td>
+<td class="cell-site">Safebooru</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#6fae8f;--bg:#16332a">Gather</span></td>
+<td class="cell-link"><a href="https://safebooru.org//images/2560/8f59484deb077075ed295eafa544f67b.jpeg" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="4" data-site="gelboru" data-state="gather" data-name="new jersey">
+<td class="cell-district"><svg class="die" viewBox="0 0 100 100" width="26" height="26" aria-label="District 4">
+<rect x="4" y="4" width="92" height="92" rx="16"/>
+<g class="pips"><circle cx="28" cy="28" r="7"/><circle cx="72" cy="28" r="7"/><circle cx="28" cy="72" r="7"/><circle cx="72" cy="72" r="7"/></g>
+</svg></td>
+<td class="cell-name">New Jersey</td>
+<td class="cell-site">Gelboru</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#6fae8f;--bg:#16332a">Gather</span></td>
+<td class="cell-link"><a href="https://gelbooru.com/index.php?page=post&amp;s=view&amp;id=13825824" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="4" data-site="gelboru" data-state="gather" data-name="new jersey">
+<td class="cell-district"><svg class="die" viewBox="0 0 100 100" width="26" height="26" aria-label="District 4">
+<rect x="4" y="4" width="92" height="92" rx="16"/>
+<g class="pips"><circle cx="28" cy="28" r="7"/><circle cx="72" cy="28" r="7"/><circle cx="28" cy="72" r="7"/><circle cx="72" cy="72" r="7"/></g>
+</svg></td>
+<td class="cell-name">New Jersey</td>
+<td class="cell-site">Gelboru</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#6fae8f;--bg:#16332a">Gather</span></td>
+<td class="cell-link"><a href="https://gelbooru.com/index.php?page=post&amp;s=view&amp;id=13782009" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="4" data-site="gelboru" data-state="gather" data-name="new jersey">
+<td class="cell-district"><svg class="die" viewBox="0 0 100 100" width="26" height="26" aria-label="District 4">
+<rect x="4" y="4" width="92" height="92" rx="16"/>
+<g class="pips"><circle cx="28" cy="28" r="7"/><circle cx="72" cy="28" r="7"/><circle cx="28" cy="72" r="7"/><circle cx="72" cy="72" r="7"/></g>
+</svg></td>
+<td class="cell-name">New Jersey</td>
+<td class="cell-site">Gelboru</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#6fae8f;--bg:#16332a">Gather</span></td>
+<td class="cell-link"><a href="https://gelbooru.com/index.php?page=post&amp;s=view&amp;id=13755912" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="4" data-site="gelboru" data-state="gather" data-name="new jersey">
+<td class="cell-district"><svg class="die" viewBox="0 0 100 100" width="26" height="26" aria-label="District 4">
+<rect x="4" y="4" width="92" height="92" rx="16"/>
+<g class="pips"><circle cx="28" cy="28" r="7"/><circle cx="72" cy="28" r="7"/><circle cx="28" cy="72" r="7"/><circle cx="72" cy="72" r="7"/></g>
+</svg></td>
+<td class="cell-name">New Jersey</td>
+<td class="cell-site">Gelboru</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#6fae8f;--bg:#16332a">Gather</span></td>
+<td class="cell-link"><a href="https://gelbooru.com/index.php?page=post&amp;s=view&amp;id=13668119" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="4" data-site="gelboru" data-state="gather" data-name="new jersey">
+<td class="cell-district"><svg class="die" viewBox="0 0 100 100" width="26" height="26" aria-label="District 4">
+<rect x="4" y="4" width="92" height="92" rx="16"/>
+<g class="pips"><circle cx="28" cy="28" r="7"/><circle cx="72" cy="28" r="7"/><circle cx="28" cy="72" r="7"/><circle cx="72" cy="72" r="7"/></g>
+</svg></td>
+<td class="cell-name">New Jersey</td>
+<td class="cell-site">Gelboru</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#6fae8f;--bg:#16332a">Gather</span></td>
+<td class="cell-link"><a href="https://gelbooru.com/index.php?page=post&amp;s=view&amp;id=13989187" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="4" data-site="gelboru" data-state="gather" data-name="new jersey">
+<td class="cell-district"><svg class="die" viewBox="0 0 100 100" width="26" height="26" aria-label="District 4">
+<rect x="4" y="4" width="92" height="92" rx="16"/>
+<g class="pips"><circle cx="28" cy="28" r="7"/><circle cx="72" cy="28" r="7"/><circle cx="28" cy="72" r="7"/><circle cx="72" cy="72" r="7"/></g>
+</svg></td>
+<td class="cell-name">New Jersey</td>
+<td class="cell-site">Gelboru</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#6fae8f;--bg:#16332a">Gather</span></td>
+<td class="cell-link"><a href="https://gelbooru.com/index.php?page=post&amp;s=view&amp;id=13709375" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="4" data-site="gelboru" data-state="gather" data-name="new jersey">
+<td class="cell-district"><svg class="die" viewBox="0 0 100 100" width="26" height="26" aria-label="District 4">
+<rect x="4" y="4" width="92" height="92" rx="16"/>
+<g class="pips"><circle cx="28" cy="28" r="7"/><circle cx="72" cy="28" r="7"/><circle cx="28" cy="72" r="7"/><circle cx="72" cy="72" r="7"/></g>
+</svg></td>
+<td class="cell-name">New Jersey</td>
+<td class="cell-site">Gelboru</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#6fae8f;--bg:#16332a">Gather</span></td>
+<td class="cell-link"><a href="https://gelbooru.com/index.php?page=post&amp;s=view&amp;id=6154232" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="4" data-site="gelboru" data-state="gather" data-name="new jersey">
+<td class="cell-district"><svg class="die" viewBox="0 0 100 100" width="26" height="26" aria-label="District 4">
+<rect x="4" y="4" width="92" height="92" rx="16"/>
+<g class="pips"><circle cx="28" cy="28" r="7"/><circle cx="72" cy="28" r="7"/><circle cx="28" cy="72" r="7"/><circle cx="72" cy="72" r="7"/></g>
+</svg></td>
+<td class="cell-name">New Jersey</td>
+<td class="cell-site">Gelboru</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#6fae8f;--bg:#16332a">Gather</span></td>
+<td class="cell-link"><a href="https://gelbooru.com/index.php?page=post&amp;s=view&amp;id=6141635" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="4" data-site="safebooru" data-state="gather" data-name="st. louis">
+<td class="cell-district"><svg class="die" viewBox="0 0 100 100" width="26" height="26" aria-label="District 4">
+<rect x="4" y="4" width="92" height="92" rx="16"/>
+<g class="pips"><circle cx="28" cy="28" r="7"/><circle cx="72" cy="28" r="7"/><circle cx="28" cy="72" r="7"/><circle cx="72" cy="72" r="7"/></g>
+</svg></td>
+<td class="cell-name">St. Louis</td>
+<td class="cell-site">Safebooru</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#6fae8f;--bg:#16332a">Gather</span></td>
+<td class="cell-link"><a href="https://safebooru.org//images/2987/d10cacd509e9bc30567a566ed6c8219d999c8ed6.jpg" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="4" data-site="gelbooru" data-state="gather" data-name="st.louis">
+<td class="cell-district"><svg class="die" viewBox="0 0 100 100" width="26" height="26" aria-label="District 4">
+<rect x="4" y="4" width="92" height="92" rx="16"/>
+<g class="pips"><circle cx="28" cy="28" r="7"/><circle cx="72" cy="28" r="7"/><circle cx="28" cy="72" r="7"/><circle cx="72" cy="72" r="7"/></g>
+</svg></td>
+<td class="cell-name">St.Louis</td>
+<td class="cell-site">GelBooru</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#6fae8f;--bg:#16332a">Gather</span></td>
+<td class="cell-link"><a href="https://gelbooru.com/index.php?page=post&amp;s=view&amp;id=14190601" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="4" data-site="safebooru" data-state="gather" data-name="st.louis">
+<td class="cell-district"><svg class="die" viewBox="0 0 100 100" width="26" height="26" aria-label="District 4">
+<rect x="4" y="4" width="92" height="92" rx="16"/>
+<g class="pips"><circle cx="28" cy="28" r="7"/><circle cx="72" cy="28" r="7"/><circle cx="28" cy="72" r="7"/><circle cx="72" cy="72" r="7"/></g>
+</svg></td>
+<td class="cell-name">St.Louis</td>
+<td class="cell-site">Safebooru</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#6fae8f;--bg:#16332a">Gather</span></td>
+<td class="cell-link"><a href="https://safebooru.org/index.php?page=post&amp;s=view&amp;id=2506638" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="4" data-site="safebooru" data-state="gather" data-name="st.louis">
+<td class="cell-district"><svg class="die" viewBox="0 0 100 100" width="26" height="26" aria-label="District 4">
+<rect x="4" y="4" width="92" height="92" rx="16"/>
+<g class="pips"><circle cx="28" cy="28" r="7"/><circle cx="72" cy="28" r="7"/><circle cx="28" cy="72" r="7"/><circle cx="72" cy="72" r="7"/></g>
+</svg></td>
+<td class="cell-name">St.Louis</td>
+<td class="cell-site">SafeBooru</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#6fae8f;--bg:#16332a">Gather</span></td>
+<td class="cell-link"><a href="https://safebooru.org//images/2326/970decaf6664312050175b2d0b488433be8a9526.png?2422956" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="4" data-site="safebooru" data-state="gather" data-name="st.louis">
+<td class="cell-district"><svg class="die" viewBox="0 0 100 100" width="26" height="26" aria-label="District 4">
+<rect x="4" y="4" width="92" height="92" rx="16"/>
+<g class="pips"><circle cx="28" cy="28" r="7"/><circle cx="72" cy="28" r="7"/><circle cx="28" cy="72" r="7"/><circle cx="72" cy="72" r="7"/></g>
+</svg></td>
+<td class="cell-name">St.Louis</td>
+<td class="cell-site">Safebooru</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#6fae8f;--bg:#16332a">Gather</span></td>
+<td class="cell-link"><a href="https://safebooru.org//images/2381/3b3842828c794c57addcf2d6b8c8b6642f74eb6a.jpg?2480599" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="4" data-site="safebooru" data-state="gather" data-name="st.louis">
+<td class="cell-district"><svg class="die" viewBox="0 0 100 100" width="26" height="26" aria-label="District 4">
+<rect x="4" y="4" width="92" height="92" rx="16"/>
+<g class="pips"><circle cx="28" cy="28" r="7"/><circle cx="72" cy="28" r="7"/><circle cx="28" cy="72" r="7"/><circle cx="72" cy="72" r="7"/></g>
+</svg></td>
+<td class="cell-name">St.Louis</td>
+<td class="cell-site">Safebooru</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#6fae8f;--bg:#16332a">Gather</span></td>
+<td class="cell-link"><a href="https://safebooru.org/index.php?page=post&amp;s=view&amp;id=2460346" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="4" data-site="gelbooru" data-state="gather" data-name="vestal">
+<td class="cell-district"><svg class="die" viewBox="0 0 100 100" width="26" height="26" aria-label="District 4">
+<rect x="4" y="4" width="92" height="92" rx="16"/>
+<g class="pips"><circle cx="28" cy="28" r="7"/><circle cx="72" cy="28" r="7"/><circle cx="28" cy="72" r="7"/><circle cx="72" cy="72" r="7"/></g>
+</svg></td>
+<td class="cell-name">Vestal</td>
+<td class="cell-site">GelBooru</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#6fae8f;--bg:#16332a">Gather</span></td>
+<td class="cell-link"><a href="https://img2.gelbooru.com//samples/44/ca/sample_44cab4ffbd44dffa2a1da64e834e5132.jpg" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="4" data-site="pixiv" data-state="gather" data-name="hms belfast">
+<td class="cell-district"><svg class="die" viewBox="0 0 100 100" width="26" height="26" aria-label="District 4">
+<rect x="4" y="4" width="92" height="92" rx="16"/>
+<g class="pips"><circle cx="28" cy="28" r="7"/><circle cx="72" cy="28" r="7"/><circle cx="28" cy="72" r="7"/><circle cx="72" cy="72" r="7"/></g>
+</svg></td>
+<td class="cell-name">HMS Belfast</td>
+<td class="cell-site">Pixiv</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#6fae8f;--bg:#16332a">Gather</span></td>
+<td class="cell-link"><a href="https://www.pixiv.net/en/artworks/145495361" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="4" data-site="pixiv" data-state="gather" data-name="hms belfast">
+<td class="cell-district"><svg class="die" viewBox="0 0 100 100" width="26" height="26" aria-label="District 4">
+<rect x="4" y="4" width="92" height="92" rx="16"/>
+<g class="pips"><circle cx="28" cy="28" r="7"/><circle cx="72" cy="28" r="7"/><circle cx="28" cy="72" r="7"/><circle cx="72" cy="72" r="7"/></g>
+</svg></td>
+<td class="cell-name">HMS Belfast</td>
+<td class="cell-site">Pixiv</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#6fae8f;--bg:#16332a">Gather</span></td>
+<td class="cell-link"><a href="https://www.pixiv.net/en/artworks/145835588" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="4" data-site="pixiv" data-state="gather" data-name="hms belfast">
+<td class="cell-district"><svg class="die" viewBox="0 0 100 100" width="26" height="26" aria-label="District 4">
+<rect x="4" y="4" width="92" height="92" rx="16"/>
+<g class="pips"><circle cx="28" cy="28" r="7"/><circle cx="72" cy="28" r="7"/><circle cx="28" cy="72" r="7"/><circle cx="72" cy="72" r="7"/></g>
+</svg></td>
+<td class="cell-name">HMS Belfast</td>
+<td class="cell-site">Pixiv</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#6fae8f;--bg:#16332a">Gather</span></td>
+<td class="cell-link"><a href="https://www.pixiv.net/en/artworks/137295988" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="4" data-site="pixiv" data-state="gather" data-name="ijn atago">
+<td class="cell-district"><svg class="die" viewBox="0 0 100 100" width="26" height="26" aria-label="District 4">
+<rect x="4" y="4" width="92" height="92" rx="16"/>
+<g class="pips"><circle cx="28" cy="28" r="7"/><circle cx="72" cy="28" r="7"/><circle cx="28" cy="72" r="7"/><circle cx="72" cy="72" r="7"/></g>
+</svg></td>
+<td class="cell-name">IJN Atago</td>
+<td class="cell-site">Pixiv</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#6fae8f;--bg:#16332a">Gather</span></td>
+<td class="cell-link"><a href="https://www.pixiv.net/en/artworks/142076381" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="4" data-site="pixiv" data-state="gather" data-name="kms bismarck">
+<td class="cell-district"><svg class="die" viewBox="0 0 100 100" width="26" height="26" aria-label="District 4">
+<rect x="4" y="4" width="92" height="92" rx="16"/>
+<g class="pips"><circle cx="28" cy="28" r="7"/><circle cx="72" cy="28" r="7"/><circle cx="28" cy="72" r="7"/><circle cx="72" cy="72" r="7"/></g>
+</svg></td>
+<td class="cell-name">KMS Bismarck</td>
+<td class="cell-site">Pixiv</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#6fae8f;--bg:#16332a">Gather</span></td>
+<td class="cell-link"><a href="https://www.pixiv.net/en/artworks/145770568" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="4" data-site="pixiv" data-state="gather" data-name="ijn shinano">
+<td class="cell-district"><svg class="die" viewBox="0 0 100 100" width="26" height="26" aria-label="District 4">
+<rect x="4" y="4" width="92" height="92" rx="16"/>
+<g class="pips"><circle cx="28" cy="28" r="7"/><circle cx="72" cy="28" r="7"/><circle cx="28" cy="72" r="7"/><circle cx="72" cy="72" r="7"/></g>
+</svg></td>
+<td class="cell-name">IJN Shinano</td>
+<td class="cell-site">Pixiv</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#6fae8f;--bg:#16332a">Gather</span></td>
+<td class="cell-link"><a href="https://www.pixiv.net/en/artworks/140477248" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="4" data-site="pixiv" data-state="gather" data-name="bagpipe">
+<td class="cell-district"><svg class="die" viewBox="0 0 100 100" width="26" height="26" aria-label="District 4">
+<rect x="4" y="4" width="92" height="92" rx="16"/>
+<g class="pips"><circle cx="28" cy="28" r="7"/><circle cx="72" cy="28" r="7"/><circle cx="28" cy="72" r="7"/><circle cx="72" cy="72" r="7"/></g>
+</svg></td>
+<td class="cell-name">Bagpipe</td>
+<td class="cell-site">Pixiv</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#6fae8f;--bg:#16332a">Gather</span></td>
+<td class="cell-link"><a href="https://www.pixiv.net/en/artworks/145164740" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="6" data-site="pixiv" data-state="gather" data-name="vuspoglia">
+<td class="cell-district"><svg class="die" viewBox="0 0 100 100" width="26" height="26" aria-label="District 6">
+<rect x="4" y="4" width="92" height="92" rx="16"/>
+<g class="pips"><circle cx="28" cy="25" r="7"/><circle cx="72" cy="25" r="7"/><circle cx="28" cy="50" r="7"/><circle cx="72" cy="50" r="7"/><circle cx="28" cy="75" r="7"/><circle cx="72" cy="75" r="7"/></g>
+</svg></td>
+<td class="cell-name">Vuspoglia</td>
+<td class="cell-site">Pixiv</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#6fae8f;--bg:#16332a">Gather</span></td>
+<td class="cell-link"><a href="https://www.pixiv.net/en/artworks/145247762" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="4" data-site="pixiv" data-state="gather" data-name="ijn takao">
+<td class="cell-district"><svg class="die" viewBox="0 0 100 100" width="26" height="26" aria-label="District 4">
+<rect x="4" y="4" width="92" height="92" rx="16"/>
+<g class="pips"><circle cx="28" cy="28" r="7"/><circle cx="72" cy="28" r="7"/><circle cx="28" cy="72" r="7"/><circle cx="72" cy="72" r="7"/></g>
+</svg></td>
+<td class="cell-name">IJN Takao</td>
+<td class="cell-site">Pixiv</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#6fae8f;--bg:#16332a">Gather</span></td>
+<td class="cell-link"><a href="https://www.pixiv.net/en/artworks/144705755" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="4" data-site="pixiv" data-state="gather" data-name="ijn takao">
+<td class="cell-district"><svg class="die" viewBox="0 0 100 100" width="26" height="26" aria-label="District 4">
+<rect x="4" y="4" width="92" height="92" rx="16"/>
+<g class="pips"><circle cx="28" cy="28" r="7"/><circle cx="72" cy="28" r="7"/><circle cx="28" cy="72" r="7"/><circle cx="72" cy="72" r="7"/></g>
+</svg></td>
+<td class="cell-name">IJN Takao</td>
+<td class="cell-site">Pixiv</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#6fae8f;--bg:#16332a">Gather</span></td>
+<td class="cell-link"><a href="https://www.pixiv.net/en/artworks/144093523" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="12" data-site="pixiv" data-state="gather" data-name="kirifuji nagisa">
+<td class="cell-district"><span class="chip">D12</span></td>
+<td class="cell-name">Kirifuji Nagisa</td>
+<td class="cell-site">Pixiv</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#6fae8f;--bg:#16332a">Gather</span></td>
+<td class="cell-link"><a href="https://www.pixiv.net/en/artworks/134812771" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="12" data-site="pixiv" data-state="gather" data-name="kirifuji nagisa">
+<td class="cell-district"><span class="chip">D12</span></td>
+<td class="cell-name">Kirifuji Nagisa</td>
+<td class="cell-site">Pixiv</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#6fae8f;--bg:#16332a">Gather</span></td>
+<td class="cell-link"><a href="https://www.pixiv.net/en/artworks/133585351" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="12" data-site="pixiv" data-state="gather" data-name="izayoi nonomi">
+<td class="cell-district"><span class="chip">D12</span></td>
+<td class="cell-name">Izayoi Nonomi</td>
+<td class="cell-site">Pixiv</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#6fae8f;--bg:#16332a">Gather</span></td>
+<td class="cell-link"><a href="https://www.pixiv.net/en/artworks/145595847" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="12" data-site="pixiv" data-state="gather" data-name="kirifuji nagisa">
+<td class="cell-district"><span class="chip">D12</span></td>
+<td class="cell-name">Kirifuji Nagisa</td>
+<td class="cell-site">Pixiv</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#6fae8f;--bg:#16332a">Gather</span></td>
+<td class="cell-link"><a href="https://www.pixiv.net/en/artworks/130754108" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="12" data-site="pixiv" data-state="gather" data-name="kirifuji nagisa">
+<td class="cell-district"><span class="chip">D12</span></td>
+<td class="cell-name">Kirifuji Nagisa</td>
+<td class="cell-site">Pixiv</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#6fae8f;--bg:#16332a">Gather</span></td>
+<td class="cell-link"><a href="https://www.pixiv.net/en/artworks/121142621" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="12" data-site="pixiv" data-state="gather" data-name="haruhara shun">
+<td class="cell-district"><span class="chip">D12</span></td>
+<td class="cell-name">Haruhara Shun</td>
+<td class="cell-site">Pixiv</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#6fae8f;--bg:#16332a">Gather</span></td>
+<td class="cell-link"><a href="https://www.pixiv.net/en/artworks/145169085" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="12" data-site="pixiv" data-state="gather" data-name="kirifuji nagisa">
+<td class="cell-district"><span class="chip">D12</span></td>
+<td class="cell-name">Kirifuji Nagisa</td>
+<td class="cell-site">Pixiv</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#6fae8f;--bg:#16332a">Gather</span></td>
+<td class="cell-link"><a href="https://www.pixiv.net/en/artworks/115281098" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="12" data-site="pixiv" data-state="gather" data-name="kirifuji nagisa">
+<td class="cell-district"><span class="chip">D12</span></td>
+<td class="cell-name">Kirifuji Nagisa</td>
+<td class="cell-site">Pixiv</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#6fae8f;--bg:#16332a">Gather</span></td>
+<td class="cell-link"><a href="https://www.pixiv.net/en/artworks/122038269" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="4" data-site="pixiv" data-state="gather" data-name="hms hood">
+<td class="cell-district"><svg class="die" viewBox="0 0 100 100" width="26" height="26" aria-label="District 4">
+<rect x="4" y="4" width="92" height="92" rx="16"/>
+<g class="pips"><circle cx="28" cy="28" r="7"/><circle cx="72" cy="28" r="7"/><circle cx="28" cy="72" r="7"/><circle cx="72" cy="72" r="7"/></g>
+</svg></td>
+<td class="cell-name">HMS Hood</td>
+<td class="cell-site">Pixiv</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#6fae8f;--bg:#16332a">Gather</span></td>
+<td class="cell-link"><a href="https://www.pixiv.net/en/artworks/145814878" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="4" data-site="pixiv" data-state="gather" data-name="hms neptune">
+<td class="cell-district"><svg class="die" viewBox="0 0 100 100" width="26" height="26" aria-label="District 4">
+<rect x="4" y="4" width="92" height="92" rx="16"/>
+<g class="pips"><circle cx="28" cy="28" r="7"/><circle cx="72" cy="28" r="7"/><circle cx="28" cy="72" r="7"/><circle cx="72" cy="72" r="7"/></g>
+</svg></td>
+<td class="cell-name">HMS Neptune</td>
+<td class="cell-site">Pixiv</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#6fae8f;--bg:#16332a">Gather</span></td>
+<td class="cell-link"><a href="https://www.pixiv.net/en/artworks/141821064" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="4" data-site="pixiv" data-state="gather" data-name="hms belfast">
+<td class="cell-district"><svg class="die" viewBox="0 0 100 100" width="26" height="26" aria-label="District 4">
+<rect x="4" y="4" width="92" height="92" rx="16"/>
+<g class="pips"><circle cx="28" cy="28" r="7"/><circle cx="72" cy="28" r="7"/><circle cx="28" cy="72" r="7"/><circle cx="72" cy="72" r="7"/></g>
+</svg></td>
+<td class="cell-name">HMS Belfast</td>
+<td class="cell-site">Pixiv</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#6fae8f;--bg:#16332a">Gather</span></td>
+<td class="cell-link"><a href="https://www.pixiv.net/en/artworks/137935407" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="4" data-site="pixiv" data-state="gather" data-name="ijn amagi">
+<td class="cell-district"><svg class="die" viewBox="0 0 100 100" width="26" height="26" aria-label="District 4">
+<rect x="4" y="4" width="92" height="92" rx="16"/>
+<g class="pips"><circle cx="28" cy="28" r="7"/><circle cx="72" cy="28" r="7"/><circle cx="28" cy="72" r="7"/><circle cx="72" cy="72" r="7"/></g>
+</svg></td>
+<td class="cell-name">IJN Amagi</td>
+<td class="cell-site">Pixiv</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#6fae8f;--bg:#16332a">Gather</span></td>
+<td class="cell-link"><a href="https://www.pixiv.net/en/artworks/145145201" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="12" data-site="pixiv" data-state="gather" data-name="sumi serina">
+<td class="cell-district"><span class="chip">D12</span></td>
+<td class="cell-name">Sumi Serina</td>
+<td class="cell-site">Pixiv</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#6fae8f;--bg:#16332a">Gather</span></td>
+<td class="cell-link"><a href="https://www.pixiv.net/en/artworks/145989528" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="1" data-site="pixiv" data-state="gather" data-name="hms hood">
+<td class="cell-district"><svg class="die" viewBox="0 0 100 100" width="26" height="26" aria-label="District 1">
+<rect x="4" y="4" width="92" height="92" rx="16"/>
+<g class="pips"><circle cx="50" cy="50" r="7"/></g>
+</svg></td>
+<td class="cell-name">HMS Hood</td>
+<td class="cell-site">Pixiv</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#6fae8f;--bg:#16332a">Gather</span></td>
+<td class="cell-link"><a href="https://www.pixiv.net/en/artworks/120921292" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="4" data-site="pixiv" data-state="gather" data-name="kms bismarck">
+<td class="cell-district"><svg class="die" viewBox="0 0 100 100" width="26" height="26" aria-label="District 4">
+<rect x="4" y="4" width="92" height="92" rx="16"/>
+<g class="pips"><circle cx="28" cy="28" r="7"/><circle cx="72" cy="28" r="7"/><circle cx="28" cy="72" r="7"/><circle cx="72" cy="72" r="7"/></g>
+</svg></td>
+<td class="cell-name">KMS Bismarck</td>
+<td class="cell-site">Pixiv</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#6fae8f;--bg:#16332a">Gather</span></td>
+<td class="cell-link"><a href="https://www.pixiv.net/en/artworks/131096984" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="4" data-site="pixiv" data-state="gather" data-name="hms hood">
+<td class="cell-district"><svg class="die" viewBox="0 0 100 100" width="26" height="26" aria-label="District 4">
+<rect x="4" y="4" width="92" height="92" rx="16"/>
+<g class="pips"><circle cx="28" cy="28" r="7"/><circle cx="72" cy="28" r="7"/><circle cx="28" cy="72" r="7"/><circle cx="72" cy="72" r="7"/></g>
+</svg></td>
+<td class="cell-name">HMS Hood</td>
+<td class="cell-site">Pixiv</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#6fae8f;--bg:#16332a">Gather</span></td>
+<td class="cell-link"><a href="https://www.pixiv.net/en/artworks/139857507" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="12" data-site="pixiv" data-state="gather" data-name="murokase ayane">
+<td class="cell-district"><span class="chip">D12</span></td>
+<td class="cell-name">Murokase Ayane</td>
+<td class="cell-site">Pixiv</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#6fae8f;--bg:#16332a">Gather</span></td>
+<td class="cell-link"><a href="https://www.pixiv.net/en/artworks/142928438" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="12" data-site="pixiv" data-state="gather" data-name="ryuuge kisaki">
+<td class="cell-district"><span class="chip">D12</span></td>
+<td class="cell-name">Ryuuge Kisaki</td>
+<td class="cell-site">Pixiv</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#6fae8f;--bg:#16332a">Gather</span></td>
+<td class="cell-link"><a href="https://www.pixiv.net/en/artworks/146378348" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="12" data-site="pixiv" data-state="gather" data-name="kirifuji nagisa">
+<td class="cell-district"><span class="chip">D12</span></td>
+<td class="cell-name">Kirifuji Nagisa</td>
+<td class="cell-site">Pixiv</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#6fae8f;--bg:#16332a">Gather</span></td>
+<td class="cell-link"><a href="https://www.pixiv.net/en/artworks/146212363" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="12" data-site="pixiv" data-state="gather" data-name="ushio noa">
+<td class="cell-district"><span class="chip">D12</span></td>
+<td class="cell-name">Ushio Noa</td>
+<td class="cell-site">Pixiv</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#6fae8f;--bg:#16332a">Gather</span></td>
+<td class="cell-link"><a href="https://www.pixiv.net/en/artworks/147001601" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="6" data-site="pixiv" data-state="gather" data-name="typhoon">
+<td class="cell-district"><svg class="die" viewBox="0 0 100 100" width="26" height="26" aria-label="District 6">
+<rect x="4" y="4" width="92" height="92" rx="16"/>
+<g class="pips"><circle cx="28" cy="25" r="7"/><circle cx="72" cy="25" r="7"/><circle cx="28" cy="50" r="7"/><circle cx="72" cy="50" r="7"/><circle cx="28" cy="75" r="7"/><circle cx="72" cy="75" r="7"/></g>
+</svg></td>
+<td class="cell-name">Typhoon</td>
+<td class="cell-site">Pixiv</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#6fae8f;--bg:#16332a">Gather</span></td>
+<td class="cell-link"><a href="https://www.pixiv.net/en/artworks/147055921" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="12" data-site="pixiv" data-state="gather" data-name="izumimoto eimi">
+<td class="cell-district"><span class="chip">D12</span></td>
+<td class="cell-name">Izumimoto Eimi</td>
+<td class="cell-site">Pixiv</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#6fae8f;--bg:#16332a">Gather</span></td>
+<td class="cell-link"><a href="https://www.pixiv.net/en/artworks/141772988" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="12" data-site="pixiv" data-state="gather" data-name="shirao eri">
+<td class="cell-district"><span class="chip">D12</span></td>
+<td class="cell-name">Shirao Eri</td>
+<td class="cell-site">Pixiv</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#6fae8f;--bg:#16332a">Gather</span></td>
+<td class="cell-link"><a href="https://www.pixiv.net/en/artworks/134264679" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="12" data-site="pixiv" data-state="gather" data-name="haruhara shun">
+<td class="cell-district"><span class="chip">D12</span></td>
+<td class="cell-name">Haruhara Shun</td>
+<td class="cell-site">Pixiv</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#6fae8f;--bg:#16332a">Gather</span></td>
+<td class="cell-link"><a href="https://www.pixiv.net/en/artworks/146279049" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="12" data-site="pixiv" data-state="gather" data-name="haruhara shun">
+<td class="cell-district"><span class="chip">D12</span></td>
+<td class="cell-name">Haruhara Shun</td>
+<td class="cell-site">Pixiv</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#6fae8f;--bg:#16332a">Gather</span></td>
+<td class="cell-link"><a href="https://www.pixiv.net/en/artworks/146279049" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="12" data-site="pixiv" data-state="gather" data-name="mayoi shigure">
+<td class="cell-district"><span class="chip">D12</span></td>
+<td class="cell-name">Mayoi Shigure</td>
+<td class="cell-site">Pixiv</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#6fae8f;--bg:#16332a">Gather</span></td>
+<td class="cell-link"><a href="https://www.pixiv.net/en/artworks/146279049" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="12" data-site="pixiv" data-state="gather" data-name="sunohara shun">
+<td class="cell-district"><span class="chip">D12</span></td>
+<td class="cell-name">Sunohara Shun</td>
+<td class="cell-site">Pixiv</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#6fae8f;--bg:#16332a">Gather</span></td>
+<td class="cell-link"><a href="https://www.pixiv.net/en/artworks/146249783" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="4" data-site="pixiv" data-state="gather" data-name="ijn amagi">
+<td class="cell-district"><svg class="die" viewBox="0 0 100 100" width="26" height="26" aria-label="District 4">
+<rect x="4" y="4" width="92" height="92" rx="16"/>
+<g class="pips"><circle cx="28" cy="28" r="7"/><circle cx="72" cy="28" r="7"/><circle cx="28" cy="72" r="7"/><circle cx="72" cy="72" r="7"/></g>
+</svg></td>
+<td class="cell-name">IJN Amagi</td>
+<td class="cell-site">Pixiv</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#6fae8f;--bg:#16332a">Gather</span></td>
+<td class="cell-link"><a href="https://www.pixiv.net/en/artworks/122283459" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="4" data-site="pixiv" data-state="gather" data-name="ijn amagi">
+<td class="cell-district"><svg class="die" viewBox="0 0 100 100" width="26" height="26" aria-label="District 4">
+<rect x="4" y="4" width="92" height="92" rx="16"/>
+<g class="pips"><circle cx="28" cy="28" r="7"/><circle cx="72" cy="28" r="7"/><circle cx="28" cy="72" r="7"/><circle cx="72" cy="72" r="7"/></g>
+</svg></td>
+<td class="cell-name">IJN Amagi</td>
+<td class="cell-site">Pixiv</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#6fae8f;--bg:#16332a">Gather</span></td>
+<td class="cell-link"><a href="https://www.pixiv.net/en/artworks/144975932" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="4" data-site="pixiv" data-state="gather" data-name="ijn amagi">
+<td class="cell-district"><svg class="die" viewBox="0 0 100 100" width="26" height="26" aria-label="District 4">
+<rect x="4" y="4" width="92" height="92" rx="16"/>
+<g class="pips"><circle cx="28" cy="28" r="7"/><circle cx="72" cy="28" r="7"/><circle cx="28" cy="72" r="7"/><circle cx="72" cy="72" r="7"/></g>
+</svg></td>
+<td class="cell-name">IJN Amagi</td>
+<td class="cell-site">Pixiv</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#6fae8f;--bg:#16332a">Gather</span></td>
+<td class="cell-link"><a href="https://www.pixiv.net/en/artworks/135136660" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="4" data-site="pixiv" data-state="gather" data-name="kms z23">
+<td class="cell-district"><svg class="die" viewBox="0 0 100 100" width="26" height="26" aria-label="District 4">
+<rect x="4" y="4" width="92" height="92" rx="16"/>
+<g class="pips"><circle cx="28" cy="28" r="7"/><circle cx="72" cy="28" r="7"/><circle cx="28" cy="72" r="7"/><circle cx="72" cy="72" r="7"/></g>
+</svg></td>
+<td class="cell-name">KMS Z23</td>
+<td class="cell-site">Pixiv</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#6fae8f;--bg:#16332a">Gather</span></td>
+<td class="cell-link"><a href="https://www.pixiv.net/en/artworks/139723204" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+<tr class="row" data-district="4" data-site="pixiv" data-state="gather" data-name="kms z23">
+<td class="cell-district"><svg class="die" viewBox="0 0 100 100" width="26" height="26" aria-label="District 4">
+<rect x="4" y="4" width="92" height="92" rx="16"/>
+<g class="pips"><circle cx="28" cy="28" r="7"/><circle cx="72" cy="28" r="7"/><circle cx="28" cy="72" r="7"/><circle cx="72" cy="72" r="7"/></g>
+</svg></td>
+<td class="cell-name">KMS Z23</td>
+<td class="cell-site">Pixiv</td>
+<td class="cell-state"><span class="state-pill" style="--fg:#6fae8f;--bg:#16332a">Gather</span></td>
+<td class="cell-link"><a href="https://www.pixiv.net/en/artworks/140990532" target="_blank" rel="noopener noreferrer" class="link-btn">Open ↗</a></td>
+</tr>
+    </tbody>
+  </table>
+  <div class="empty-state" id="emptyState" style="display:none;">No entries match those filters.</div>
+
+  <footer>Source · Xano hunt endpoint — state = Gather</footer>
+</div>
+
+<script>
+const search = document.getElementById('search');
+const districtFilter = document.getElementById('districtFilter');
+const siteFilter = document.getElementById('siteFilter');
+const stateFilter = document.getElementById('stateFilter');
+const rows = Array.from(document.querySelectorAll('#tbody .row'));
+const emptyState = document.getElementById('emptyState');
+
+function applyFilters() {
+  const q = search.value.trim().toLowerCase();
+  const dist = districtFilter.value;
+  const site = siteFilter.value;
+  const state = stateFilter.value;
+  let visible = 0;
+  rows.forEach(r => {
+    const matchesQ = !q || r.dataset.name.includes(q);
+    const matchesDist = !dist || r.dataset.district === dist;
+    const matchesSite = !site || r.dataset.site === site;
+    const matchesState = !state || r.dataset.state === state;
+    const show = matchesQ && matchesDist && matchesSite && matchesState;
+    r.style.display = show ? '' : 'none';
+    if (show) visible++;
+  });
+  emptyState.style.display = visible === 0 ? 'block' : 'none';
+}
+
+[search, districtFilter, siteFilter, stateFilter].forEach(el => {
+  el.addEventListener('input', applyFilters);
+  el.addEventListener('change', applyFilters);
+});
+</script>
+</body>
+</html>
