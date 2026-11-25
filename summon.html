@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Summon — Pilih Acak</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Sora:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --bg:#0f0f1a;
+    --bg-elevated:#181829;
+    --bg-elevated-2:#1f1f36;
+    --line:#312f4d;
+    --gold:#e8b84b;
+    --gold-dim:#7a6430;
+    --violet:#8b6bff;
+    --text:#f2f0fa;
+    --text-muted:#9491b0;
+    --danger:#ff6b6b;
+    --radius:10px;
+    --font-display:'Cinzel', serif;
+    --font-body:'Sora', sans-serif;
+    --font-mono:'JetBrains Mono', monospace;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:
+      radial-gradient(1200px 700px at 50% -10%, rgba(139,107,255,0.16), transparent 60%),
+      radial-gradient(800px 500px at 50% 110%, rgba(232,184,75,0.10), transparent 60%),
+      var(--bg);
+    color:var(--text);
+    font-family:var(--font-body);
+    min-height:100vh;
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:inherit;}
+  .wrap{max-width:640px;margin:0 auto;padding:48px 24px 80px;display:flex;flex-direction:column;align-items:center;text-align:center;}
+
+  .topnav{width:100%;display:flex;justify-content:space-between;align-items:center;margin-bottom:44px;flex-wrap:wrap;gap:16px;}
+  .brand{display:flex;align-items:center;gap:10px;}
+  .brand-mark{width:30px;height:30px;border:1.5px solid var(--gold);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--font-mono);font-size:12px;color:var(--gold);}
+  .brand-name{font-family:var(--font-mono);font-size:12px;letter-spacing:0.14em;color:var(--text-muted);text-transform:uppercase;}
+  .navlink{font-family:var(--font-mono);font-size:13px;letter-spacing:0.04em;text-decoration:none;color:var(--text-muted);border:1px solid var(--line);padding:9px 16px;border-radius:100px;transition:border-color .18s,color .18s;}
+  .navlink:hover{border-color:var(--violet);color:var(--violet);}
+
+  .eyebrow{font-family:var(--font-mono);font-size:12px;letter-spacing:0.2em;color:var(--gold);text-transform:uppercase;margin:0 0 10px;}
+  h1{font-family:var(--font-display);font-weight:600;font-size:clamp(30px,5vw,44px);margin:0 0 12px;}
+  .sub{color:var(--text-muted);font-size:15px;line-height:1.6;max-width:44ch;margin:0 0 40px;}
+
+  /* --- summon circle (signature element) --- */
+  .circle-stage{position:relative;width:260px;height:260px;margin:0 auto 36px;display:flex;align-items:center;justify-content:center;}
+  .circle-stage svg{width:100%;height:100%;}
+  .ring-outer{transform-origin:130px 130px;animation:spin 14s linear infinite;}
+  .ring-inner{transform-origin:130px 130px;animation:spin-rev 9s linear infinite;}
+  .circle-stage.rolling .ring-outer{animation-duration:0.9s;}
+  .circle-stage.rolling .ring-inner{animation-duration:0.5s;}
+  .circle-glow{fill:url(#glow);opacity:0.55;transition:opacity .3s;}
+  .circle-stage.rolling .circle-glow{opacity:0.95;}
+  @keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+  @keyframes spin-rev{from{transform:rotate(360deg)}to{transform:rotate(0deg)}}
+  .orb-label{position:absolute;font-family:var(--font-mono);font-size:11px;letter-spacing:0.12em;color:var(--gold);text-transform:uppercase;}
+
+  .btn-summon{
+    font-family:var(--font-display);font-weight:600;font-size:17px;letter-spacing:0.03em;
+    background:var(--gold);color:#1a1408;border:none;border-radius:100px;
+    padding:16px 44px;cursor:pointer;transition:transform .15s, box-shadow .15s;
+    box-shadow:0 10px 30px rgba(232,184,75,0.18);
+  }
+  .btn-summon:hover{transform:translateY(-2px);box-shadow:0 14px 36px rgba(232,184,75,0.28);}
+  .btn-summon:active{transform:translateY(0);}
+  .btn-summon:disabled{opacity:0.55;cursor:not-allowed;transform:none;}
+
+  .status{margin-top:18px;font-family:var(--font-mono);font-size:12.5px;color:var(--text-muted);min-height:18px;}
+  .status.error{color:var(--danger);}
+
+  .result-card{
+    margin-top:36px;width:100%;background:var(--bg-elevated);border:1px solid var(--line);
+    border-radius:var(--radius);padding:28px 24px;opacity:0;transform:translateY(10px);
+    transition:opacity .35s ease, transform .35s ease;
+  }
+  .result-card.show{opacity:1;transform:translateY(0);}
+  .result-eyebrow{font-family:var(--font-mono);font-size:11px;letter-spacing:0.18em;color:var(--violet);text-transform:uppercase;margin:0 0 10px;}
+  .result-name{font-family:var(--font-display);font-size:28px;font-weight:600;margin:0 0 6px;}
+  .result-id{font-family:var(--font-mono);font-size:12px;color:var(--text-muted);margin:0 0 20px;}
+  .result-dest{font-size:13.5px;color:var(--text-muted);line-height:1.6;}
+  .result-dest a{color:var(--gold);text-decoration:none;border-bottom:1px dotted var(--gold-dim);}
+  .redirect-note{margin-top:14px;font-family:var(--font-mono);font-size:12px;color:var(--gold);}
+
+  .history{margin-top:28px;width:100%;text-align:left;}
+  .history-title{font-family:var(--font-mono);font-size:11px;letter-spacing:0.14em;color:var(--text-muted);text-transform:uppercase;margin:0 0 10px;}
+  .history-list{display:flex;flex-wrap:wrap;gap:8px;}
+  .history-chip{font-family:var(--font-mono);font-size:12px;color:var(--text-muted);border:1px solid var(--line);border-radius:100px;padding:5px 12px;}
+
+  @media (max-width:480px){
+    .circle-stage{width:200px;height:200px;}
+    .btn-summon{padding:14px 34px;font-size:15.5px;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="topnav">
+    <div class="brand">
+      <div class="brand-mark">✦</div>
+      <div class="brand-name">Summon Registry</div>
+    </div>
+    <a class="navlink" href="roster.html">← Kelola Roster</a>
+  </div>
+
+  <p class="eyebrow">Page 2 · Acak</p>
+  <h1>Ruang Summon</h1>
+  <p class="sub">Tarik satu nama secara acak dari roster. Jika nama itu punya tujuan
+    terdaftar di <span style="color:var(--gold)">destination-map.js</span>, kamu akan
+    diarahkan ke sana.</p>
+
+  <div class="circle-stage" id="circle-stage">
+    <svg viewBox="0 0 260 260">
+      <defs>
+        <radialGradient id="glow" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="#8b6bff" stop-opacity="0.9" />
+          <stop offset="100%" stop-color="#8b6bff" stop-opacity="0" />
+        </radialGradient>
+      </defs>
+      <circle class="circle-glow" cx="130" cy="130" r="110" />
+      <g class="ring-outer">
+        <circle cx="130" cy="130" r="118" fill="none" stroke="#312f4d" stroke-width="1.5" />
+        <circle cx="130" cy="130" r="118" fill="none" stroke="#e8b84b" stroke-width="1.5"
+          stroke-dasharray="4 10" stroke-linecap="round" />
+        <g fill="#e8b84b" opacity="0.85">
+          <circle cx="130" cy="12" r="3" />
+          <circle cx="248" cy="130" r="3" />
+          <circle cx="130" cy="248" r="3" />
+          <circle cx="12" cy="130" r="3" />
+        </g>
+      </g>
+      <g class="ring-inner">
+        <circle cx="130" cy="130" r="86" fill="none" stroke="#8b6bff" stroke-width="1" stroke-opacity="0.5" />
+        <polygon points="130,58 156,104 210,104 168,138 184,190 130,160 76,190 92,138 50,104 104,104"
+          fill="none" stroke="#8b6bff" stroke-width="1" stroke-opacity="0.55" />
+      </g>
+      <circle cx="130" cy="130" r="46" fill="#181829" stroke="#e8b84b" stroke-width="1.5" />
+    </svg>
+    <span class="orb-label" id="orb-label">Siap</span>
+  </div>
+
+  <button class="btn-summon" id="btn-summon">Panggil Nama</button>
+  <div class="status" id="status">Memuat roster…</div>
+
+  <div class="result-card" id="result-card">
+    <p class="result-eyebrow">Terpanggil</p>
+    <p class="result-name" id="result-name">—</p>
+    <p class="result-id" id="result-id">—</p>
+    <p class="result-dest" id="result-dest"></p>
+    <p class="redirect-note" id="redirect-note" style="display:none"></p>
+  </div>
+
+  <div class="history" id="history" style="display:none">
+    <p class="history-title">Riwayat sesi ini</p>
+    <div class="history-list" id="history-list"></div>
+  </div>
+
+</div>
+
+<!-- File ekstensi: kamus Nama -> URL tujuan -->
+<script src="destination-map.js"></script>
+<script>
+  const API_BASE = "https://x8ki-letl-twmt.n7.xano.io/api:ZBg3zfDx/name_list";
+  const REDIRECT_DELAY_MS = 2200;
+
+  const stageEl = document.getElementById("circle-stage");
+  const orbLabel = document.getElementById("orb-label");
+  const btnSummon = document.getElementById("btn-summon");
+  const statusEl = document.getElementById("status");
+  const resultCard = document.getElementById("result-card");
+  const resultName = document.getElementById("result-name");
+  const resultId = document.getElementById("result-id");
+  const resultDest = document.getElementById("result-dest");
+  const redirectNote = document.getElementById("redirect-note");
+  const historyEl = document.getElementById("history");
+  const historyList = document.getElementById("history-list");
+
+  let pool = [];
+  let history = [];
+
+  async function loadPool() {
+    try {
+      const res = await fetch(API_BASE);
+      if (!res.ok) throw new Error(`Gagal memuat data (${res.status})`);
+      const data = await res.json();
+      pool = Array.isArray(data) ? data.filter(x => x.Nama) : [];
+      if (pool.length === 0) {
+        statusEl.textContent = "Roster kosong — tambahkan data di Page 1 dulu.";
+        statusEl.classList.add("error");
+        btnSummon.disabled = true;
+        return;
+      }
+      statusEl.textContent = `${pool.length} nama siap ditarik.`;
+      orbLabel.textContent = "Siap";
+    } catch (err) {
+      statusEl.textContent = err.message;
+      statusEl.classList.add("error");
+      btnSummon.disabled = true;
+    }
+  }
+
+  function lookupDestination(nama) {
+    const map = window.DESTINATION_MAP || {};
+    const entry = map[nama];
+    if (entry && typeof entry.url === "string" && entry.url.trim() !== "") {
+      return entry.url.trim();
+    }
+    return null;
+  }
+
+  function isSafeUrl(url) {
+    try {
+      const u = new URL(url, window.location.href);
+      return u.protocol === "http:" || u.protocol === "https:";
+    } catch (e) {
+      return false;
+    }
+  }
+
+  function pushHistory(nama) {
+    history.unshift(nama);
+    history = history.slice(0, 8);
+    historyEl.style.display = "block";
+    historyList.innerHTML = history.map(n => `<span class="history-chip">${escapeHtml(n)}</span>`).join("");
+  }
+
+  function escapeHtml(s) {
+    return s.replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  }
+
+  async function handleSummon() {
+    if (pool.length === 0) return;
+    btnSummon.disabled = true;
+    resultCard.classList.remove("show");
+    redirectNote.style.display = "none";
+    stageEl.classList.add("rolling");
+    orbLabel.textContent = "Memanggil…";
+    statusEl.classList.remove("error");
+    statusEl.textContent = "Menggulirkan dadu…";
+
+    // brief roll animation before revealing the pick
+    await new Promise(r => setTimeout(r, 1400));
+
+    const picked = pool[Math.floor(Math.random() * pool.length)];
+
+    stageEl.classList.remove("rolling");
+    orbLabel.textContent = "Terpilih";
+    statusEl.textContent = `${pool.length} nama siap ditarik.`;
+
+    resultName.textContent = picked.Nama;
+    resultId.textContent = `#${picked.id}`;
+    pushHistory(picked.Nama);
+
+    const destUrl = lookupDestination(picked.Nama);
+    if (destUrl && isSafeUrl(destUrl)) {
+      resultDest.innerHTML = `Tujuan terdaftar: <a href="${destUrl}" target="_blank" rel="noopener">${escapeHtml(destUrl)}</a>`;
+      redirectNote.style.display = "block";
+      redirectNote.textContent = `Mengarahkan otomatis dalam ${(REDIRECT_DELAY_MS / 1000).toFixed(1)} detik…`;
+      resultCard.classList.add("show");
+      btnSummon.disabled = false;
+      setTimeout(() => { window.location.href = destUrl; }, REDIRECT_DELAY_MS);
+    } else {
+      resultDest.textContent = "Belum ada URL tujuan untuk nama ini. Isi kamusnya di destination-map.js.";
+      resultCard.classList.add("show");
+      btnSummon.disabled = false;
+    }
+  }
+
+  btnSummon.addEventListener("click", handleSummon);
+  loadPool();
+</script>
+</body>
+</html>
