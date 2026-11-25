@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Roster Ledger — Kelola Data</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Sora:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --bg:#0f0f1a;
+    --bg-elevated:#181829;
+    --bg-elevated-2:#1f1f36;
+    --line:#312f4d;
+    --gold:#e8b84b;
+    --gold-dim:#7a6430;
+    --violet:#8b6bff;
+    --text:#f2f0fa;
+    --text-muted:#9491b0;
+    --danger:#ff6b6b;
+    --danger-dim:#3a2230;
+    --radius:10px;
+    --font-display:'Cinzel', serif;
+    --font-body:'Sora', sans-serif;
+    --font-mono:'JetBrains Mono', monospace;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:
+      radial-gradient(1100px 600px at 85% -10%, rgba(139,107,255,0.12), transparent 60%),
+      radial-gradient(900px 500px at -10% 110%, rgba(232,184,75,0.08), transparent 60%),
+      var(--bg);
+    color:var(--text);
+    font-family:var(--font-body);
+    min-height:100vh;
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:inherit;}
+  .wrap{max-width:980px;margin:0 auto;padding:48px 24px 80px;}
+
+  .topnav{display:flex;justify-content:space-between;align-items:center;margin-bottom:40px;flex-wrap:wrap;gap:16px;}
+  .brand{display:flex;align-items:center;gap:10px;}
+  .brand-mark{width:30px;height:30px;border:1.5px solid var(--gold);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--font-mono);font-size:12px;color:var(--gold);}
+  .brand-name{font-family:var(--font-mono);font-size:12px;letter-spacing:0.14em;color:var(--text-muted);text-transform:uppercase;}
+  .navlink{font-family:var(--font-mono);font-size:13px;letter-spacing:0.04em;text-decoration:none;color:var(--text-muted);border:1px solid var(--line);padding:9px 16px;border-radius:100px;transition:border-color .18s,color .18s;}
+  .navlink:hover{border-color:var(--gold);color:var(--gold);}
+
+  .eyebrow{font-family:var(--font-mono);font-size:12px;letter-spacing:0.2em;color:var(--gold);text-transform:uppercase;margin:0 0 10px;}
+  h1{font-family:var(--font-display);font-weight:600;font-size:clamp(30px,4.2vw,44px);margin:0 0 12px;letter-spacing:0.01em;}
+  .sub{color:var(--text-muted);font-size:15px;line-height:1.6;max-width:60ch;margin:0 0 36px;}
+  .sub code{font-family:var(--font-mono);font-size:12.5px;color:var(--violet);background:rgba(139,107,255,0.1);padding:2px 6px;border-radius:4px;}
+
+  .panel{background:var(--bg-elevated);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;}
+  .panel + .panel{margin-top:24px;}
+
+  .panel-head{display:flex;align-items:center;justify-content:space-between;padding:18px 22px;border-bottom:1px solid var(--line);}
+  .panel-head h2{font-family:var(--font-display);font-size:17px;font-weight:600;margin:0;letter-spacing:0.02em;}
+  .count-badge{font-family:var(--font-mono);font-size:11.5px;color:var(--gold);border:1px solid var(--gold-dim);border-radius:100px;padding:4px 10px;}
+
+  table{width:100%;border-collapse:collapse;}
+  thead th{text-align:left;font-family:var(--font-mono);font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-muted);padding:14px 22px;border-bottom:1px solid var(--line);font-weight:500;}
+  tbody td{padding:14px 22px;border-bottom:1px solid rgba(49,47,77,0.6);font-size:14.5px;vertical-align:middle;}
+  tbody tr:last-child td{border-bottom:none;}
+  tbody tr:hover{background:rgba(139,107,255,0.05);}
+  .id-badge{font-family:var(--font-mono);font-size:12px;color:var(--text-muted);}
+  .nama-cell{font-weight:500;}
+  .nama-cell input{width:100%;background:var(--bg-elevated-2);border:1px solid var(--violet);border-radius:6px;color:var(--text);font-family:var(--font-body);font-size:14.5px;padding:8px 10px;}
+  .date-cell{font-family:var(--font-mono);font-size:12.5px;color:var(--text-muted);}
+  .actions{display:flex;gap:8px;justify-content:flex-end;white-space:nowrap;}
+
+  button{font-family:var(--font-mono);font-size:12px;letter-spacing:0.03em;border-radius:7px;border:1px solid var(--line);background:transparent;color:var(--text-muted);padding:7px 13px;cursor:pointer;transition:all .15s;}
+  button:hover{border-color:var(--violet);color:var(--text);}
+  button:disabled{opacity:0.4;cursor:not-allowed;}
+  .btn-edit:hover{border-color:var(--gold);color:var(--gold);}
+  .btn-save{border-color:var(--gold-dim);color:var(--gold);}
+  .btn-save:hover{border-color:var(--gold);background:rgba(232,184,75,0.08);}
+  .btn-delete:hover{border-color:var(--danger);color:var(--danger);background:var(--danger-dim);}
+  .btn-cancel:hover{border-color:var(--text-muted);color:var(--text);}
+
+  .add-row{display:flex;gap:10px;padding:18px 22px;}
+  .add-row input{flex:1;background:var(--bg-elevated-2);border:1px solid var(--line);border-radius:7px;color:var(--text);font-family:var(--font-body);font-size:14.5px;padding:11px 14px;}
+  .add-row input:focus{outline:none;border-color:var(--gold);}
+  .btn-primary{background:var(--gold);color:#1a1408;border-color:var(--gold);font-weight:600;padding:11px 20px;white-space:nowrap;}
+  .btn-primary:hover{background:#f0c869;color:#1a1408;}
+
+  .empty{padding:48px 22px;text-align:center;color:var(--text-muted);font-size:14px;}
+  .loading{padding:48px 22px;text-align:center;color:var(--text-muted);font-family:var(--font-mono);font-size:13px;}
+  .toast{position:fixed;bottom:26px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--bg-elevated-2);border:1px solid var(--line);color:var(--text);font-size:13.5px;padding:12px 20px;border-radius:8px;opacity:0;pointer-events:none;transition:all .25s;box-shadow:0 12px 30px rgba(0,0,0,0.4);z-index:50;}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+  .toast.error{border-color:var(--danger);color:var(--danger);}
+  .toast.success{border-color:var(--gold-dim);}
+
+  @media (max-width:640px){
+    thead th:nth-child(3), tbody td:nth-child(3){display:none;}
+    .wrap{padding:32px 16px 60px;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="topnav">
+    <div class="brand">
+      <div class="brand-mark">✦</div>
+      <div class="brand-name">Summon Registry</div>
+    </div>
+    <a class="navlink" href="summon.html">Ke Halaman Summon →</a>
+  </div>
+
+  <p class="eyebrow">Page 1 · CRUD</p>
+  <h1>Roster Ledger</h1>
+  <p class="sub">Kelola data mentah di <code>name_list</code>. Tambah, ubah, dan hapus entri langsung
+    terhubung ke API Xano: <code>x8ki-letl-twmt.n7.xano.io</code></p>
+
+  <div class="panel">
+    <div class="panel-head">
+      <h2>Tambah Entri Baru</h2>
+    </div>
+    <div class="add-row">
+      <input type="text" id="new-nama" placeholder="Nama karakter baru…" />
+      <button class="btn-primary" id="btn-add">+ Tambah</button>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-head">
+      <h2>Daftar Roster</h2>
+      <span class="count-badge" id="count-badge">— entri</span>
+    </div>
+    <div id="table-container">
+      <div class="loading">Memuat data dari API…</div>
+    </div>
+  </div>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+  const API_BASE = "https://x8ki-letl-twmt.n7.xano.io/api:ZBg3zfDx/name_list";
+
+  const tableContainer = document.getElementById("table-container");
+  const countBadge = document.getElementById("count-badge");
+  const toastEl = document.getElementById("toast");
+  const newNamaInput = document.getElementById("new-nama");
+  const btnAdd = document.getElementById("btn-add");
+
+  let rows = [];
+  let editingId = null;
+
+  function showToast(msg, type = "success") {
+    toastEl.textContent = msg;
+    toastEl.className = "toast show " + type;
+    setTimeout(() => { toastEl.className = "toast " + type; }, 2400);
+  }
+
+  function fmtDate(ts) {
+    if (!ts) return "—";
+    const d = new Date(ts);
+    return d.toLocaleDateString("id-ID", { day: "2-digit", month: "short", year: "numeric" });
+  }
+
+  async function apiRequest(method, path = "", body) {
+    const res = await fetch(API_BASE + path, {
+      method,
+      headers: { "Content-Type": "application/json" },
+      body: body ? JSON.stringify(body) : undefined,
+    });
+    if (!res.ok) {
+      let detail = "";
+      try { detail = (await res.json()).message || ""; } catch (e) {}
+      throw new Error(`${method} ${path || "/"} gagal (${res.status}). ${detail}`);
+    }
+    if (res.status === 204) return null;
+    return res.json();
+  }
+
+  async function loadRows() {
+    tableContainer.innerHTML = '<div class="loading">Memuat data dari API…</div>';
+    try {
+      const data = await apiRequest("GET");
+      rows = Array.isArray(data) ? data : [];
+      render();
+    } catch (err) {
+      tableContainer.innerHTML = `<div class="empty">Gagal memuat data.<br>${err.message}</div>`;
+      showToast(err.message, "error");
+    }
+  }
+
+  function render() {
+    countBadge.textContent = `${rows.length} entri`;
+    if (rows.length === 0) {
+      tableContainer.innerHTML = '<div class="empty">Belum ada data. Tambahkan entri pertama di atas.</div>';
+      return;
+    }
+    const sorted = [...rows].sort((a, b) => a.id - b.id);
+    const body = sorted.map(rowHtml).join("");
+    tableContainer.innerHTML = `
+      <table>
+        <thead>
+          <tr>
+            <th style="width:70px">ID</th>
+            <th>Nama</th>
+            <th style="width:140px">Dibuat</th>
+            <th style="width:170px;text-align:right">Aksi</th>
+          </tr>
+        </thead>
+        <tbody>${body}</tbody>
+      </table>`;
+    attachRowHandlers();
+  }
+
+  function rowHtml(item) {
+    const isEditing = editingId === item.id;
+    return `
+      <tr data-id="${item.id}">
+        <td class="id-badge">#${item.id}</td>
+        <td class="nama-cell">
+          ${isEditing
+            ? `<input type="text" class="edit-input" value="${escapeAttr(item.Nama || "")}" />`
+            : escapeHtml(item.Nama || "(tanpa nama)")}
+        </td>
+        <td class="date-cell">${fmtDate(item.created_at)}</td>
+        <td class="actions">
+          ${isEditing
+            ? `<button class="btn-save" data-action="save">Simpan</button>
+               <button class="btn-cancel" data-action="cancel">Batal</button>`
+            : `<button class="btn-edit" data-action="edit">Ubah</button>
+               <button class="btn-delete" data-action="delete">Hapus</button>`}
+        </td>
+      </tr>`;
+  }
+
+  function escapeHtml(s) {
+    return s.replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  }
+  function escapeAttr(s) { return escapeHtml(s); }
+
+  function attachRowHandlers() {
+    tableContainer.querySelectorAll("tr[data-id]").forEach(tr => {
+      const id = Number(tr.dataset.id);
+      tr.querySelectorAll("button").forEach(btn => {
+        btn.addEventListener("click", () => handleAction(id, btn.dataset.action, tr));
+      });
+    });
+  }
+
+  async function handleAction(id, action, tr) {
+    if (action === "edit") {
+      editingId = id;
+      render();
+      const input = tableContainer.querySelector(`tr[data-id="${id}"] .edit-input`);
+      if (input) { input.focus(); input.select(); }
+      return;
+    }
+    if (action === "cancel") {
+      editingId = null;
+      render();
+      return;
+    }
+    if (action === "save") {
+      const input = tr.querySelector(".edit-input");
+      const newNama = input.value.trim();
+      if (!newNama) { showToast("Nama tidak boleh kosong", "error"); return; }
+      setRowButtonsDisabled(tr, true);
+      try {
+        const updated = await apiRequest("PATCH", `/${id}`, { Nama: newNama });
+        const idx = rows.findIndex(r => r.id === id);
+        if (idx > -1) rows[idx] = { ...rows[idx], ...updated, Nama: newNama };
+        editingId = null;
+        render();
+        showToast(`"${newNama}" tersimpan.`);
+      } catch (err) {
+        showToast(err.message, "error");
+        setRowButtonsDisabled(tr, false);
+      }
+      return;
+    }
+    if (action === "delete") {
+      const item = rows.find(r => r.id === id);
+      if (!confirm(`Hapus "${item?.Nama || id}" dari roster?`)) return;
+      setRowButtonsDisabled(tr, true);
+      try {
+        await apiRequest("DELETE", `/${id}`);
+        rows = rows.filter(r => r.id !== id);
+        render();
+        showToast(`"${item?.Nama || id}" dihapus.`);
+      } catch (err) {
+        showToast(err.message, "error");
+        setRowButtonsDisabled(tr, false);
+      }
+    }
+  }
+
+  function setRowButtonsDisabled(tr, disabled) {
+    tr.querySelectorAll("button").forEach(b => b.disabled = disabled);
+  }
+
+  async function handleAdd() {
+    const nama = newNamaInput.value.trim();
+    if (!nama) { showToast("Isi nama terlebih dahulu", "error"); return; }
+    btnAdd.disabled = true;
+    try {
+      const created = await apiRequest("POST", "", { Nama: nama });
+      rows.push(created);
+      newNamaInput.value = "";
+      render();
+      showToast(`"${nama}" ditambahkan.`);
+    } catch (err) {
+      showToast(err.message, "error");
+    } finally {
+      btnAdd.disabled = false;
+    }
+  }
+
+  btnAdd.addEventListener("click", handleAdd);
+  newNamaInput.addEventListener("keydown", e => { if (e.key === "Enter") handleAdd(); });
+
+  loadRows();
+</script>
+</body>
+</html>
